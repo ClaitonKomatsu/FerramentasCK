@@ -1,1 +1,494 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Boas Notícias para Você</title>
+  <!-- CSS Embutido e Autônomo (não depende de scripts ou CDNs externos) -->
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f1f5f9;
+      color: #1e293b;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      -webkit-tap-highlight-color: transparent;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      line-height: 1.45;
+    }
+
+    /* Cabeçalho */
+    header {
+      background-color: #1b4e89;
+      color: #ffffff;
+      padding: 26px 16px 22px 16px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.1);
+    }
+
+    .header-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      background-color: rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 13px;
+      color: #dbeafe;
+      max-width: 330px;
+      margin: 0 auto;
+      line-height: 1.4;
+    }
+
+    /* Container principal */
+    main {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex-grow: 1;
+    }
+
+    /* Cartões */
+    .card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .card-icon-box {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      max-width: 38px;
+      border-radius: 10px;
+      background-color: #eff6ff;
+      color: #1b4e89;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #1d4ed8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+
+    .card-text {
+      font-size: 13px;
+      color: #475569;
+      margin-bottom: 12px;
+      line-height: 1.45;
+    }
+
+    .address-box {
+      margin-bottom: 10px;
+    }
+
+    .address-label {
+      font-size: 11px;
+      color: #64748b;
+      font-weight: 600;
+      display: block;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .address-val {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1.35;
+    }
+
+    /* Botões */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.15s ease, transform 0.08s ease;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .btn:active {
+      transform: scale(0.985);
+    }
+
+    .btn-primary {
+      background-color: #1b4e89;
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(27, 78, 137, 0.2);
+    }
+
+    .btn-primary:hover {
+      background-color: #153e6d;
+    }
+
+    .btn-green {
+      background-color: #047857;
+      color: #ffffff;
+      box-shadow: 0 1px 2px rgba(4, 120, 87, 0.2);
+    }
+
+    .btn-green:hover {
+      background-color: #065f46;
+    }
+
+    .btn-dark {
+      background-color: #1e293b;
+      color: #ffffff;
+    }
+
+    .btn-dark:hover {
+      background-color: #0f172a;
+    }
+
+    .btn-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Grade de tópicos */
+    .topic-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .btn-topic {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 8px;
+      background-color: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #1e293b;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn-topic-full {
+      grid-column: span 2;
+    }
+
+    .btn-topic:active {
+      background-color: #eff6ff;
+      border-color: #1b4e89;
+      color: #1b4e89;
+    }
+
+    .notice {
+      font-size: 11px;
+      color: #94a3b8;
+      text-align: center;
+      font-style: italic;
+      margin-top: 8px;
+    }
+
+    /* Rodapé */
+    footer {
+      padding: 18px 14px;
+      text-align: center;
+      font-size: 11.5px;
+      color: #64748b;
+      background-color: #ffffff;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    /* Regras fixas e obrigatórias para SVG */
+    svg {
+      width: 20px !important;
+      height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      display: inline-block !important;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    .btn svg {
+      width: 17px !important;
+      height: 17px !important;
+      max-width: 17px !important;
+      max-height: 17px !important;
+      min-width: 17px !important;
+      min-height: 17px !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho Principal -->
+  <header>
+    <div>
+      <span class="header-badge">JW.ORG | TESTEMUNHAS DE JEOVÁ</span>
+      <h1>Boas Notícias para Você</h1>
+      <p>Descubra como a Bíblia pode ajudar você e sua família, e saiba onde nos encontrar.</p>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main>
+
+    <!-- 1. Salão do Reino -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+        </div>
+        <div>
+          <span class="card-tag">Local de Reuniões</span>
+          <h2 class="card-title">Salão do Reino</h2>
+        </div>
+      </div>
+
+      <div class="address-box">
+        <span class="address-label">Endereço:</span>
+        <p class="address-val">
+          Av. Elias Maluf, 3648<br>
+          Sorocaba – SP, CEP 18055-215
+        </p>
+      </div>
+
+      <p class="card-text">
+        As reuniões são abertas ao público. Consulte os dias e horários ou abra o mapa para ver a rota:
+      </p>
+
+      <div class="btn-stack">
+        <!-- Botão JW Hub -->
+        <a href="https://hub.jw.org/meetings/pt?q=%7B%22meetingType%22:%22meetings%22,%22location%22:%22Av.%20Elias%20Maluf,%20Sorocaba%20-%20SP,%2018055-215,%20Brasil%22%7D" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="btn btn-primary">
+          <span>Ver Dias e Horários das Reuniões</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <!-- Botão Google Maps / Waze -->
+        <a href="https://www.google.com/maps/search/?api=1&query=Av.+Elias+Maluf,+3648+-+Sorocaba+-+SP" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="btn btn-green">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+          </svg>
+          <span>Como Chegar (Maps / Waze)</span>
+        </a>
+      </div>
+
+      <p class="notice">Entrada gratuita • Não se fazem coletas</p>
+    </section>
+
+    <!-- 2. Ler ou Ouvir a Bíblia -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="card-tag">Escrituras Sagradas</span>
+          <h2 class="card-title">Ler ou Ouvir a Bíblia</h2>
+        </div>
+      </div>
+
+      <p class="card-text">
+        Acesse o texto bíblico completo para leitura, gravação em áudio e notas explicativas gratuitas.
+      </p>
+
+      <a href="https://www.jw.org/pt/biblioteca/biblia/nwt/livros/" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="btn btn-primary">
+        <span>Acessar Bíblia</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </section>
+
+    <!-- 3. Site Oficial JW.ORG -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="card-tag">Portal Oficial</span>
+          <h2 class="card-title">Site Oficial JW.ORG</h2>
+        </div>
+      </div>
+
+      <p class="card-text">
+        Matérias atuais, revistas, vídeos e respostas a perguntas bíblicas frequentes.
+      </p>
+
+      <a href="https://www.jw.org/pt" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="btn btn-dark">
+        <span>Visitar JW.ORG</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </section>
+
+    <!-- 4. Artigos e Vídeos Sugeridos -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </div>
+        <div>
+          <span class="card-tag">Pesquisa Temática</span>
+          <h2 class="card-title">Artigos e Vídeos Sugeridos</h2>
+        </div>
+      </div>
+
+      <p class="card-text">
+        Escolha um dos temas abaixo para acessar conteúdos baseados na Bíblia:
+      </p>
+
+      <div class="topic-grid">
+        <a href="https://www.jw.org/pt/busca/?q=fam%C3%ADlia" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Família
+        </a>
+        <a href="https://www.jw.org/pt/busca/?q=jovens&link=%2Fresults%2FT%2Fall%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Jovens
+        </a>
+        <a href="https://www.jw.org/pt/busca/?q=morte&link=%2Fresults%2FT%2Fvideos%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Morte
+        </a>
+        <a href="https://www.jw.org/pt/busca/?q=depress%C3%A3o&link=%2Fresults%2FT%2Fvideos%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Depressão
+        </a>
+        <a href="https://www.jw.org/pt/ensinos-biblicos/perguntas/" target="_blank" rel="noopener noreferrer" class="btn-topic btn-topic-full">
+          Perguntas Bíblicas
+        </a>
+      </div>
+    </section>
+
+    <!-- 5. Peça uma Visita -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <span class="card-tag">Conversa Bíblica</span>
+          <h2 class="card-title">Peça uma Visita</h2>
+        </div>
+      </div>
+
+      <p class="card-text">
+        Você pode solicitar a visita de uma Testemunha de Jeová para tirar dúvidas ou conversar sobre a Bíblia.
+      </p>
+
+      <a href="https://hub.jw.org/request-visit/pt/request" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="btn btn-primary">
+        <span>Solicitar Visita Gratuita</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <p>Material preparado para consulta e compartilhamento direto.</p>
+  </footer>
+
+</body>
+</html>
