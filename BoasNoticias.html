@@ -138,16 +138,6 @@
       justify-content: center;
     }
 
-    .card-tag {
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #1d4ed8;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 2px;
-    }
-
     .card-title {
       font-size: 16px;
       font-weight: 700;
@@ -353,7 +343,6 @@
           </svg>
         </div>
         <div>
-          <span class="card-tag">Local de Reuniões</span>
           <h2 class="card-title">Salão do Reino</h2>
         </div>
       </div>
@@ -424,7 +413,6 @@
           </svg>
         </div>
         <div>
-          <span class="card-tag">Escrituras Sagradas</span>
           <h2 class="card-title">Ler ou Ouvir a Bíblia</h2>
         </div>
       </div>
@@ -456,14 +444,9 @@
           </svg>
         </div>
         <div>
-          <span class="card-tag">Portal Oficial</span>
           <h2 class="card-title">Site Oficial JW.ORG</h2>
         </div>
       </div>
-
-      <p class="card-text">
-        Matérias atuais, revistas, vídeos e respostas a perguntas bíblicas frequentes.
-      </p>
 
       <a href="https://www.jw.org/pt" 
          target="_blank" 
@@ -477,7 +460,7 @@
       </a>
     </section>
 
-    <!-- 4. Artigos e Vídeos Sugeridos -->
+    <!-- 4. Assuntos Sugeridos -->
     <section class="card">
       <div class="card-header">
         <div class="card-icon-box">
@@ -487,31 +470,63 @@
           </svg>
         </div>
         <div>
-          <span class="card-tag">Pesquisa Temática</span>
-          <h2 class="card-title">Artigos e Vídeos Sugeridos</h2>
+          <h2 class="card-title">Assuntos Sugeridos</h2>
         </div>
       </div>
 
       <div class="topic-grid">
-        <a href="https://www.jw.org/pt/busca/?q=fam%C3%ADlia" target="_blank" rel="noopener noreferrer" class="btn-topic">
-          Família
+        <a href="https://www.jw.org/pt/ensinos-biblicos/familia/" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Casamento e Família
         </a>
         <a href="https://www.jw.org/pt/busca/?q=jovens&link=%2Fresults%2FT%2Fall%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
           Jovens
         </a>
         <a href="https://www.jw.org/pt/busca/?q=morte&link=%2Fresults%2FT%2Fvideos%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
-          Morte
+          Consolo na Morte
         </a>
         <a href="https://www.jw.org/pt/busca/?q=depress%C3%A3o&link=%2Fresults%2FT%2Fvideos%3Fq%3D" target="_blank" rel="noopener noreferrer" class="btn-topic">
           Depressão
         </a>
-        <a href="https://www.jw.org/pt/ensinos-biblicos/perguntas/" target="_blank" rel="noopener noreferrer" class="btn-topic btn-topic-full">
-          Perguntas Bíblicas
+        <a href="https://www.jw.org/pt/ensinos-biblicos/" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Ensinos Bíblicos
+        </a>
+        <a href="https://www.jw.org/pt/ensinos-biblicos/perguntas/" target="_blank" rel="noopener noreferrer" class="btn-topic">
+          Perguntas Bíblicas Respondidas
         </a>
       </div>
     </section>
 
-    <!-- 5. Peça uma Visita -->
+    <!-- 5. Curso Bíblico Gratuito -->
+    <section class="card">
+      <div class="card-header">
+        <div class="card-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;max-width:20px;display:inline-block;">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+          </svg>
+        </div>
+        <div>
+          <h2 class="card-title">Curso Bíblico Gratuito</h2>
+        </div>
+      </div>
+
+      <p class="card-text">
+        Aprenda o que a Bíblia ensina por meio de um curso interativo com instrutor pessoal.
+      </p>
+
+      <a href="https://www.jw.org/pt/ensinos-biblicos/curso-biblia-instrutor/" 
+         target="_blank" 
+         rel="noopener noreferrer"
+         class="btn btn-primary">
+        <span>Saber Mais Sobre o Curso</span>
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+    </section>
+
+    <!-- 6. Peça uma Visita -->
     <section class="card">
       <div class="card-header">
         <div class="card-icon-box">
@@ -520,13 +535,12 @@
           </svg>
         </div>
         <div>
-          <span class="card-tag">Conversa Bíblica</span>
           <h2 class="card-title">Peça uma Visita</h2>
         </div>
       </div>
 
       <p class="card-text">
-        Você pode solicitar a visita de uma Testemunha de Jeová para tirar dúvidas ou conversar sobre a Bíblia.
+        Você pode solicitar a visita de uma Testemunha de Jeová para tirar dúvidas ou conversar sobre a Bíblia[cite: 1].
       </p>
 
       <a href="https://hub.jw.org/request-visit/pt/request" 
@@ -545,7 +559,7 @@
 
   <!-- Rodapé -->
   <footer>
-    <p>Material preparado para consulta e compartilhamento direto.</p>
+    <p>Material preparado para consulta e compartilhamento direto[cite: 1].</p>
   </footer>
 
 </body>
