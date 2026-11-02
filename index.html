@@ -132,7 +132,7 @@
     }
 
     .address-box {
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .address-label {
@@ -149,6 +149,13 @@
       font-weight: 700;
       color: #1e293b;
       line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .meeting-times {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.45;
     }
 
     /* Botões */
@@ -312,30 +319,22 @@
       </div>
 
       <div class="address-box">
-        <span class="address-label">Endereço:</span>
+        <span class="address-label">Congregação Terra Nova</span>
         <p class="address-val">
           Av. Elias Maluf, 3648<br>
-          Sorocaba – SP, CEP 18055-215
+          Sorocaba, SP - CEP 18.055-215
+        </p>
+        <p class="meeting-times">
+          Reunião meio de semana: Quarta-feira às 19:45 hrs<br>
+          Reunião de final de semana: Sábado às 19:00 hrs
         </p>
       </div>
 
       <p class="card-text">
-        As reuniões são abertas ao público. Consulte os dias e horários ou abra o mapa para ver a rota:
+        As reuniões são abertas ao público e não se faz coleta
       </p>
 
       <div class="btn-stack">
-        <!-- Botão JW Hub -->
-        <a href="https://hub.jw.org/meetings/pt?q=%7B%22meetingType%22:%22meetings%22,%22location%22:%22Av.%20Elias%20Maluf,%20Sorocaba%20-%20SP,%2018055-215,%20Brasil%22%7D" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           class="btn btn-primary">
-          <span>Ver Dias e Horários das Reuniões</span>
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </a>
-
         <!-- Botão Google Maps / Waze -->
         <a href="https://www.google.com/maps/search/?api=1&query=Av.+Elias+Maluf,+3648+-+Sorocaba+-+SP" 
            target="_blank" 
@@ -344,7 +343,31 @@
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
             <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
           </svg>
-          <span>Como Chegar (Maps / Waze)</span>
+          <span>Como chegar na Congregação Terra Nova</span>
+        </a>
+
+        <!-- Botão Consultar outros locais e horários -->
+        <a href="https://hub.jw.org/meetings/pt?q=%7B%22meetingType%22:%22meetings%22,%22location%22:%22Sua%20localiza%C3%A7%C3%A3o%22%7D" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="btn btn-primary">
+          <span>Consultar outros locais e horários</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <!-- Botão O que acontece nestas reuniões? -->
+        <a href="https://www.jw.org/pt/testemunhas-de-jeova/reunioes/" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           class="btn btn-primary">
+          <span>O que acontece nestas reuniões?</span>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:17px;height:17px;max-width:17px;display:inline-block;">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
         </a>
       </div>
 
@@ -367,7 +390,7 @@
       </div>
 
       <p class="card-text">
-        Acesse o texto bíblico completo para leitura, gravação em áudio e notas explicativas gratuitas.
+        Acesse a bíblia complea com texto, notas, áudio e vídeos.
       </p>
 
       <a href="https://www.jw.org/pt/biblioteca/biblia/nwt/livros/" 
@@ -428,10 +451,6 @@
           <h2 class="card-title">Artigos e Vídeos Sugeridos</h2>
         </div>
       </div>
-
-      <p class="card-text">
-        Escolha um dos temas abaixo para acessar conteúdos baseados na Bíblia:
-      </p>
 
       <div class="topic-grid">
         <a href="https://www.jw.org/pt/busca/?q=fam%C3%ADlia" target="_blank" rel="noopener noreferrer" class="btn-topic">
