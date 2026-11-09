@@ -19,6 +19,8 @@
             --text-secondary: #555555;
             --accent-color: #2e5984;
             --border-color: #e0e0e0;
+            --whatsapp-color: #25D366;
+            --whatsapp-hover: #1EBE5D;
         }
 
         * {
@@ -61,6 +63,45 @@
             outline: none;
             background: #fff;
             color: var(--text-color);
+            margin-bottom: 12px;
+        }
+
+        .share-btn-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .whatsapp-share-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: var(--whatsapp-color);
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .whatsapp-share-btn:hover {
+            background-color: var(--whatsapp-hover);
+        }
+
+        .whatsapp-share-btn:active {
+            transform: scale(0.98);
+        }
+
+        .whatsapp-icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .section-card {
@@ -154,6 +195,14 @@
     <header>
         <h1>Examinando as Escrituras - 2026</h1>
         <select id="dateSelector" class="date-picker"></select>
+        <div class="share-btn-container">
+            <button id="whatsappShareBtn" class="whatsapp-share-btn" type="button">
+                <svg class="whatsapp-icon" viewBox="0 0 24 24">
+                    <path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.838.502 3.56 1.373 5.044L2 22l5.068-1.332a9.98 9.98 0 0 0 4.963 1.363h.005c5.535 0 10.031-4.496 10.031-10.031C22.067 6.496 17.566 2 12.031 2zm5.882 14.183c-.244.686-1.42 1.31-1.954 1.365-.516.052-1.18.074-3.413-.85-2.855-1.183-4.69-4.088-4.832-4.277-.142-.189-1.155-1.536-1.155-2.929 0-1.393.73-2.079.99-2.363.26-.284.568-.355.757-.355.189 0 .378.002.544.01.176.009.414-.067.647.494.244.59.832 2.031.905 2.18.073.149.122.325.024.52-.098.195-.147.316-.293.488-.146.172-.307.385-.439.516-.146.146-.298.305-.129.595.17.29.754 1.243 1.616 2.012 1.111.99 2.049 1.296 2.339 1.442.29.146.46.122.631-.073.171-.195.732-.853.927-1.146.195-.293.39-.244.659-.146.268.098 1.707.805 2 .951.293.146.488.22.561.341.073.122.073.707-.171 1.393z"/>
+                </svg>
+                Compartilhar via WhatsApp
+            </button>
+        </div>
     </header>
 
     <div id="content-container"></div>
@@ -371,6 +420,8 @@
             }
         ];
 
+        let currentSelectedIndex = 0;
+
         function getSystemDateString() {
             const now = new Date();
             const year = now.getFullYear();
@@ -379,14 +430,44 @@
             return `${year}-${month}-${day}`;
         }
 
+        function buildShareText(dayData) {
+            return `*Examinando as Escrituras Diariamente*\n` +
+                   `📅 *${dayData.displayDate}*\n\n` +
+                   `📖 *TEXTO BÍBLICO*\n_${dayData.textoBiblicoRef}_\n"${dayData.textoBiblico}"\n\n` +
+                   `📝 *EXAMINE*\n${dayData.examine}\n\n` +
+                   `📌 *RESUMO*\n${dayData.resumo}\n\n` +
+                   `💡 *COMENTÁRIO*\n${dayData.comentario}\n\n` +
+                   `🔍 *CURIOSIDADE*\n${dayData.curiosidade}\n\n` +
+                   `✅ *BOM EXEMPLO*\n${dayData.bomExemplo}\n\n` +
+                   `⚠️ *MAU EXEMPLO*\n${dayData.mauExemplo}\n\n` +
+                   `👑 *SOBRE JEOVÁ*\n${dayData.sobreJeova}\n\n` +
+                   `🤔 *PARA MEDITAÇÃO*\n${dayData.paraMeditacao}\n\n` +
+                   `🎯 *APLICAÇÃO PESSOAL*\n${dayData.aplicacaoPessoal}\n\n` +
+                   `💼 *APLICAÇÃO PARA O MINISTÉRIO*\n${dayData.aplicacaoMinisterio}\n\n` +
+                   `✨ *FRASE DE IMPACTO*\n"${dayData.fraseImpacto}"\n\n` +
+                   `🎥 *INDICAÇÃO DE VÍDEO*\n${dayData.videoTitle}\n${dayData.videoLink}`;
+        }
+
+        function shareToWhatsApp() {
+            const dayData = appData[currentSelectedIndex];
+            if (!dayData) return;
+            const message = buildShareText(dayData);
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
         function loadDateSelect() {
             const select = document.getElementById("dateSelector");
+            const shareBtn = document.getElementById("whatsappShareBtn");
             const todayStr = getSystemDateString();
             
             let targetIndex = appData.findIndex(d => d.date === todayStr);
             if (targetIndex === -1) {
                 targetIndex = 0;
             }
+
+            currentSelectedIndex = targetIndex;
 
             appData.forEach((day, index) => {
                 const option = document.createElement("option");
@@ -399,8 +480,11 @@
             });
 
             select.addEventListener("change", (e) => {
-                renderContent(appData[e.target.value]);
+                currentSelectedIndex = parseInt(e.target.value, 10);
+                renderContent(appData[currentSelectedIndex]);
             });
+
+            shareBtn.addEventListener("click", shareToWhatsApp);
 
             renderContent(appData[targetIndex]);
         }
