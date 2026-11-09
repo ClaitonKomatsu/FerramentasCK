@@ -346,13 +346,28 @@
             }
         ];
 
+        function getSystemDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         function loadDateSelect() {
             const select = document.getElementById("dateSelector");
+            const todayStr = getSystemDateString();
+            
+            let targetIndex = appData.findIndex(d => d.date === todayStr);
+            if (targetIndex === -1) {
+                targetIndex = 0;
+            }
+
             appData.forEach((day, index) => {
                 const option = document.createElement("option");
                 option.value = index;
                 option.textContent = day.displayDate;
-                if (day.date === "2026-11-06") {
+                if (index === targetIndex) {
                     option.selected = true;
                 }
                 select.appendChild(option);
@@ -362,8 +377,7 @@
                 renderContent(appData[e.target.value]);
             });
 
-            const initialIndex = appData.findIndex(d => d.date === "2026-11-06");
-            renderContent(appData[initialIndex !== -1 ? initialIndex : 0]);
+            renderContent(appData[targetIndex]);
         }
 
         function createSection(title, content, isBiblicalText = false, isQuote = false) {
@@ -431,7 +445,6 @@
             const vContent = document.createElement("div");
             vContent.className = "section-content";
             
-            // Opcional: Adicionado o título acima do botão para não perder o contexto
             const labelEl = document.createElement("span");
             labelEl.className = "video-title-label";
             labelEl.textContent = dayData.videoTitle;
