@@ -21,6 +21,8 @@
             --border-color: #e0e0e0;
             --whatsapp-color: #25D366;
             --whatsapp-hover: #1EBE5D;
+            --wol-btn-bg: #ffffff;
+            --wol-btn-hover: #f0f4f8;
         }
 
         * {
@@ -48,10 +50,36 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        h1 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-            font-weight: 600;
+        .wol-link-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: var(--wol-btn-bg);
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .wol-link-btn:hover {
+            background-color: var(--wol-btn-hover);
+        }
+
+        .wol-link-btn:active {
+            transform: scale(0.98);
+        }
+
+        .wol-icon {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
 
         .date-picker {
@@ -64,6 +92,7 @@
             background: #fff;
             color: var(--text-color);
             margin-bottom: 12px;
+            font-weight: 600;
         }
 
         .share-btn-container {
@@ -193,7 +222,12 @@
 <body>
 
     <header>
-        <h1>Examinando as Escrituras - 2026</h1>
+        <a id="wolLinkBtn" href="https://wol.jw.org/pt/wol/h/r5/lp-t" target="_blank" rel="noopener noreferrer" class="wol-link-btn" style="display: none;">
+            <svg class="wol-icon" viewBox="0 0 24 24">
+                <path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+            </svg>
+            Leia no wol.jw.org
+        </a>
         <select id="dateSelector" class="date-picker"></select>
         <div class="share-btn-container">
             <button id="whatsappShareBtn" class="whatsapp-share-btn" type="button">
@@ -420,14 +454,23 @@
             }
         ];
 
-        let currentSelectedIndex = 0;
+        let currentSelectedData = null;
+        let todayIsoDate = "";
 
-        function getSystemDateString() {
-            const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
+        function formatDateToISO(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
+        }
+
+        function updateWolButtonVisibility() {
+            const wolBtn = document.getElementById("wolLinkBtn");
+            if (currentSelectedData && currentSelectedData.date === todayIsoDate) {
+                wolBtn.style.display = "inline-flex";
+            } else {
+                wolBtn.style.display = "none";
+            }
         }
 
         function buildShareText(dayData) {
@@ -449,9 +492,8 @@
         }
 
         function shareToWhatsApp() {
-            const dayData = appData[currentSelectedIndex];
-            if (!dayData) return;
-            const message = buildShareText(dayData);
+            if (!currentSelectedData) return;
+            const message = buildShareText(currentSelectedData);
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodedMessage}`;
             window.open(whatsappUrl, '_blank');
@@ -460,33 +502,68 @@
         function loadDateSelect() {
             const select = document.getElementById("dateSelector");
             const shareBtn = document.getElementById("whatsappShareBtn");
-            const todayStr = getSystemDateString();
-            
-            let targetIndex = appData.findIndex(d => d.date === todayStr);
-            if (targetIndex === -1) {
-                targetIndex = 0;
-            }
+            select.innerHTML = "";
 
-            currentSelectedIndex = targetIndex;
+            const now = new Date();
+            todayIsoDate = formatDateToISO(now);
 
-            appData.forEach((day, index) => {
+            const yesterday = new Date(now);
+            yesterday.setDate(now.getDate() - 1);
+            const yesterdayIso = formatDateToISO(yesterday);
+
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            const tomorrowIso = formatDateToISO(tomorrow);
+
+            const optionsMap = [
+                { key: yesterdayIso, label: "Ontem" },
+                { key: todayIsoDate, label: "HOJE" },
+                { key: tomorrowIso, label: "Amanhã" }
+            ];
+
+            const availableDays = [];
+
+            optionsMap.forEach(item => {
+                const dayFound = appData.find(d => d.date === item.key);
+                if (dayFound) {
+                    availableDays.push({
+                        label: `${item.label} (${dayFound.displayDate.split(" de ")[0]}/${dayFound.date.split("-")[1]})`,
+                        dayData: dayFound,
+                        isToday: item.key === todayIsoDate
+                    });
+                }
+            });
+
+            const daysToUse = availableDays.length > 0 ? availableDays : appData.slice(0, 3).map((d, i) => ({
+                label: i === 1 ? "HOJE" : (i === 0 ? "Ontem" : "Amanhã"),
+                dayData: d,
+                isToday: i === 1
+            }));
+
+            let defaultDayObj = daysToUse.find(d => d.isToday) || daysToUse[0];
+
+            daysToUse.forEach((item, index) => {
                 const option = document.createElement("option");
                 option.value = index;
-                option.textContent = day.displayDate;
-                if (index === targetIndex) {
+                option.textContent = item.label;
+                if (item === defaultDayObj) {
                     option.selected = true;
                 }
                 select.appendChild(option);
             });
 
+            currentSelectedData = defaultDayObj.dayData;
+            renderContent(currentSelectedData);
+            updateWolButtonVisibility();
+
             select.addEventListener("change", (e) => {
-                currentSelectedIndex = parseInt(e.target.value, 10);
-                renderContent(appData[currentSelectedIndex]);
+                const selectedIndex = parseInt(e.target.value, 10);
+                currentSelectedData = daysToUse[selectedIndex].dayData;
+                renderContent(currentSelectedData);
+                updateWolButtonVisibility();
             });
 
             shareBtn.addEventListener("click", shareToWhatsApp);
-
-            renderContent(appData[targetIndex]);
         }
 
         function createSection(title, content, isBiblicalText = false, isQuote = false) {
