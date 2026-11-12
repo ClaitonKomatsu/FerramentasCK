@@ -10,7 +10,7 @@
 body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.4}
 .wrap{max-width:980px;margin:0 auto;padding:20px 14px 40px}
 header{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-header img{height:52px}
+header img{height:52px;mix-blend-mode:multiply}
 header h1{font-size:20px;margin:0}
 header p{margin:2px 0 0;color:var(--mut);font-size:13px}
 .passo{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;opacity:.55}
@@ -20,20 +20,38 @@ header p{margin:2px 0 0;color:var(--mut);font-size:13px}
 .passo.feito h2 span{background:var(--ok);color:#fff}
 .passo:not(.on) .corpo{pointer-events:none}
 #e1.feito:not(.on) .corpo,#e2.feito:not(.on) .corpo{display:none}
-.linha{display:flex;gap:10px;flex-wrap:wrap}
+.linha{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
 .campo{flex:1;min-width:200px}
 label{display:block;font-size:12px;color:var(--mut);margin-bottom:4px}
+.lb2{margin-top:10px}
 input[type=text],input[type=password]{width:100%;font-size:16px;padding:10px 12px;border:1px solid #c9d0d8;border-radius:8px}
+.linha input[type=text]{flex:1;min-width:180px;width:auto}
 input[type=file]{font-size:14px;margin:4px 0 8px}
+input:disabled{background:#f3f4f6;color:var(--mut)}
 button{border:none;border-radius:8px;background:var(--acc);color:#fff;font-weight:700;font-size:14px;padding:11px 18px;cursor:pointer;margin-top:10px}
 button:disabled{opacity:.45;cursor:not-allowed}
-button.sec{background:#fff;color:var(--acc);border:1px solid var(--acc)}
+button.sec,button.sec2{background:#fff;color:var(--acc);border:1px solid var(--acc)}
+button.pq{padding:9px 14px;font-size:13px;margin-top:8px}
+button.perigo{background:#fff;color:var(--up);border:1px solid var(--up)}
+button.x{background:none;color:var(--up);padding:0 6px;margin:0;font-size:18px;line-height:1}
 .msg{font-size:13px;color:var(--mut);margin-top:10px}
 .msg.er{color:var(--up);font-weight:600}
 .msg.ok{color:var(--ok)}
 .msg.av{background:#fff7e6;border:1px solid #f5c26b;color:#7a4b00;border-radius:8px;padding:8px 10px}
 .msg a{color:var(--acc);font-weight:700}
-ul#lista{margin:6px 0 0;padding-left:18px}
+.caixa{background:var(--accs);border-radius:8px;padding:10px 12px;margin-top:12px}
+.caixa input{margin-top:2px;background:#fff}
+.sec{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-top:10px}
+.sec h4{margin:0 0 8px;font-size:13px}
+.sec code{background:#f3f4f6;border:1px solid var(--line);border-radius:4px;padding:2px 8px;font-size:14px;font-weight:700}
+.chk label{display:flex;align-items:center;gap:6px;color:var(--ink);font-size:13px;margin:4px 0}
+.chk label span{color:var(--mut)}
+label.rd{display:flex;gap:8px;align-items:flex-start;color:var(--ink);font-size:13px;margin:6px 0}
+.dica{font-size:12px;color:var(--mut);margin-top:6px}
+ul.lst{margin:6px 0 0;padding-left:18px}
+ul.lst li{margin:3px 0}
+.tag{font-size:11px;background:#fff7e6;color:#7a4b00;border:1px solid #f5c26b;border-radius:10px;padding:1px 7px}
+.tag.novo{background:#ecfdf3;color:var(--ok);border-color:#a6e3b8}
 .ver{border-top:1px solid var(--line);padding-top:12px;margin-top:12px}
 .ver h3{margin:0;font-size:14px}
 .vi{font-size:12px;color:var(--mut);margin:2px 0 8px}
@@ -43,8 +61,6 @@ figure img{width:100%;height:96px;object-fit:contain}
 figcaption{font-size:11px;font-weight:600;margin-top:4px;word-break:break-all}
 .barra{height:10px;background:var(--accs);border-radius:6px;overflow:hidden;margin-top:10px}
 .barra div{height:100%;width:0;background:var(--acc);transition:width .3s}
-.subst{margin-top:10px;font-size:13px}
-.dica{font-size:12px;color:var(--mut);margin-top:6px}
 </style>
 </head>
 <body>
@@ -58,12 +74,13 @@ figcaption{font-size:11px;font-weight:600;margin-top:4px;word-break:break-all}
   </div>
   <button type="button" id="b1" onclick="continuar()">Continuar</button>
   <div class="msg" id="m1"></div>
+  <div id="painel"></div>
 </div></div>
 
 <div class="passo" id="e2"><h2><span>2</span>PDFs das versões da proposta <b id="pnum"></b></h2><div class="corpo">
   <label for="arqs">Selecione todos os PDFs de uma vez (nomes V01.pdf, V02.pdf, V03.pdf...)</label>
   <input id="arqs" type="file" accept="application/pdf,.pdf" multiple onchange="escolheu()">
-  <ul id="lista"></ul>
+  <ul id="lista" class="lst"></ul>
   <button type="button" id="b2" onclick="extrair()" disabled>Extrair imagens</button>
   <div class="msg" id="m2"></div>
 </div></div>
@@ -71,15 +88,21 @@ figcaption{font-size:11px;font-weight:600;margin-top:4px;word-break:break-all}
 <div class="passo" id="e3"><h2><span>3</span>Prévia das imagens</h2><div class="corpo">
   <div class="msg" id="m3"></div>
   <div id="previa"></div>
-  <div class="subst" id="subst" style="display:none"><label style="display:inline;font-size:13px;color:var(--ink)"><input type="checkbox" id="ckSub"> Substituir os arquivos da proposta existente</label></div>
-  <button type="button" id="b3" onclick="gravar()" disabled>Gravar no Drive</button>
-  <div class="dica">Será criada a pasta Orçamentos / número, com os PDFs, uma subpasta por versão (V01, V02...) com as imagens nomeadas pelo TIPO e, se ainda não existir, o Senha.txt com o número da proposta como senha inicial.</div>
+  <button type="button" id="b3" onclick="irAnexosDaPrevia()" disabled>Próximo: Anexos</button>
 </div></div>
 
-<div class="passo" id="e4"><h2><span>4</span>Gravação</h2><div class="corpo">
-  <div class="barra"><div id="barra"></div></div>
+<div class="passo" id="e4"><h2><span>4</span>Anexos</h2><div class="corpo">
+  <label for="anx">Arquivos para a pasta Anexos da proposta (memorial, projeto, fotos, planilhas...). Opcional. Arquivo com o mesmo nome de um existente será substituído.</label>
+  <input id="anx" type="file" multiple onchange="escolheuAnexos()">
+  <ul id="lstAnx" class="lst"></ul>
   <div class="msg" id="m4"></div>
-  <button type="button" class="sec" id="b4" onclick="novo()" style="display:none">Cadastrar outra proposta</button>
+  <button type="button" id="b4" onclick="gravar()" disabled>Gravar no Drive</button>
+</div></div>
+
+<div class="passo" id="e5"><h2><span>5</span>Gravação</h2><div class="corpo">
+  <div class="barra"><div id="barra"></div></div>
+  <div class="msg" id="m5"></div>
+  <button type="button" class="sec" id="b5" onclick="novo()" style="display:none">Cadastrar outra proposta</button>
 </div></div>
 </div>
 
@@ -135,18 +158,23 @@ figcaption{font-size:11px;font-weight:600;margin-top:4px;word-break:break-all}
    CONFIGURAÇÃO: o mesmo endereço do Apps Script usado no Comparativo (termina em /exec)
    ===================================================================================== */
 var API_URL="https://script.google.com/macros/s/AKfycbz9UPwT8_4FRDIjgpHD8xaR5X3X7B6gv6FahLIsD-weOcWdjsLbTAgr2TRQ-bOCYekE/exec";
-// Opcional: endereço da página do Comparativo, para mostrar o link no final (ex.: https://ferramentasck.pages.dev/Comparativo.html)
+// Opcional: endereço da página do Comparativo, para mostrar o link no final (ex.: https://ferramentasck.pages.dev/Orcamento_Compara.html)
 var COMPARATIVO_URL="";
+var MAX_ANEXO_MB=25;   // limite por anexo (o servidor do Google aceita até ~50 MB por envio)
 
 function api(q){return fetch(API_URL,{method:"POST",body:JSON.stringify(q)}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}
 function $(id){return document.getElementById(id)}
 function esc(t){return String(t==null?"":t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function brl(v){var p=Math.abs(v).toFixed(2).split(".");return (v<0?"-":"")+"R$ "+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,".")+","+p[1]}
+function tam(n){return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
 function msg(id,t,tipo){var e=$(id);e.innerHTML=t||"";e.className="msg"+(tipo?" "+tipo:"")}
-function etapa(n){[1,2,3,4].forEach(function(k){$("e"+k).classList.toggle("on",k===n);$("e"+k).classList.toggle("feito",k<n)})}
+function etapa(n){[1,2,3,4,5].forEach(function(k){$("e"+k).classList.toggle("on",k===n);$("e"+k).classList.toggle("feito",k<n)});
+  var e=$("e"+n);if(e&&e.scrollIntoView)e.scrollIntoView({behavior:"smooth",block:"start"})}
 function blobB64(b){return new Promise(function(ok,falha){var r=new FileReader();r.onload=function(){ok(String(r.result).split(",")[1])};r.onerror=falha;r.readAsDataURL(b)})}
+function com(o){var b={chave:CAD.chave,proposta:CAD.proposta};for(var k in o)b[k]=o[k];return b}
+var EXT_PROIBIDAS=/\.(exe|bat|cmd|com|scr|msi|vbs|vbe|js|jse|wsf|ps1|jar|reg|lnk|hta|html?)$/i;
 
-var CAD={chave:"",proposta:"",existe:false,temSenha:false,arquivos:[],versoes:[]};
+var CAD={chave:"",proposta:"",existe:false,sit:null,senha:"",modo:"sub",arquivos:[],versoes:[],anexos:[]};
 
 /* ---------- 1. código da equipe + número da proposta ---------- */
 function continuar(){
@@ -158,11 +186,74 @@ function continuar(){
   api({acao:"cadastro_inicio",chave:chave,proposta:num}).then(function(r){
     $("b1").disabled=false;
     if(!r.ok){msg("m1",esc(r.erro||"Não foi possível continuar."),"er");return}
-    CAD.chave=chave;CAD.proposta=r.proposta;CAD.existe=r.existe;CAD.temSenha=r.temSenha;
-    msg("m1",r.existe?"<b>A proposta "+r.proposta+" já existe</b> no Drive ("+r.arquivos+" arquivo(s) na pasta"+(r.temSenha?", senha já configurada":"")+"). Ao gravar, os PDFs e imagens com o mesmo nome serão substituídos. O Senha.txt nunca é alterado.":
-      "Proposta <b>"+r.proposta+"</b> nova: a pasta será criada ao gravar.",r.existe?"av":"ok");
-    $("pnum").textContent=r.proposta;etapa(2);$("arqs").focus()})
+    CAD.chave=chave;CAD.proposta=r.proposta;CAD.existe=r.existe;CAD.sit=r;
+    $("chave").disabled=$("num").disabled=true;$("b1").style.display="none";
+    msg("m1","");mostrarPainel()})
   .catch(function(e){$("b1").disabled=false;msg("m1","Falha de comunicação com o servidor ("+esc(e.message)+").","er")})}
+
+function mostrarPainel(){var s=CAD.sit,h;
+  if(!s.existe){
+    h='<div class="caixa"><b>Proposta '+s.proposta+' nova:</b> a pasta será criada ao gravar.'+
+      '<label for="senhaNova" class="lb2">Senha de acesso do cliente (será gravada no Senha.txt)</label>'+
+      '<input id="senhaNova" type="text" autocomplete="off" placeholder="Digite a senha desejada" onkeydown="if(event.key===\'Enter\')irPdfs()">'+
+      '<div class="dica">Evite usar o número da proposta: ele aparece no PDF e é fácil de adivinhar.</div></div>'+
+      '<button type="button" onclick="irPdfs()">Próximo: PDFs das versões</button>';
+  }else{
+    h='<div class="caixa"><b>A proposta '+s.proposta+' já existe.</b> Escolha o que deseja fazer:</div>'+
+    '<div class="sec"><h4>Senha de acesso do cliente</h4>'+
+      (s.temSenha?'<div>Senha atual: <code>'+esc(s.senha)+'</code></div>':'<div class="msg er">Sem Senha.txt: o cliente ainda não consegue abrir esta proposta.</div>')+
+      '<div class="linha"><input id="senhaAlt" type="text" autocomplete="off" placeholder="Nova senha" onkeydown="if(event.key===\'Enter\')salvarSenha()"><button type="button" class="pq" onclick="salvarSenha()">Salvar nova senha</button></div>'+
+      '<div class="msg" id="mSenha"></div></div>'+
+    '<div class="sec"><h4>Pastas existentes</h4>'+(s.pastas.length?'<div class="chk" id="lstPastas">'+s.pastas.map(function(p){
+        return '<label><input type="checkbox" value="'+esc(p.nome)+'"> '+esc(p.nome)+' <span>('+p.arquivos+' arquivo'+(p.arquivos===1?'':'s')+')</span></label>'}).join("")+'</div>'+
+      '<button type="button" class="pq perigo" onclick="excluirPastas()">Excluir pastas selecionadas</button>':'<div class="dica">Nenhuma subpasta.</div>')+
+      (s.pdfs.length?'<div class="dica">PDFs das versões na pasta: '+s.pdfs.map(esc).join(", ")+'</div>':'')+
+      '<div class="msg" id="mPastas"></div></div>'+
+    '<div class="sec"><h4>Arquivos da pasta Anexos</h4>'+(s.anexos.length?'<div class="chk" id="lstAnexos">'+s.anexos.map(function(a){
+        return '<label><input type="checkbox" value="'+esc(a.id)+'"> '+esc(a.nome)+' <span>('+tam(a.tam)+')</span></label>'}).join("")+'</div>'+
+      '<button type="button" class="pq perigo" onclick="excluirAnexos()">Excluir anexos selecionados</button>':'<div class="dica">Nenhum anexo.</div>')+
+      '<div class="msg" id="mAnexos"></div></div>'+
+    '<div class="sec"><h4>Ao gravar novas versões</h4>'+
+      '<label class="rd"><input type="radio" name="modo" value="sub"'+(CAD.modo!=="limpar"?" checked":"")+'> Substituir apenas as versões enviadas (as demais continuam)</label>'+
+      '<label class="rd"><input type="radio" name="modo" value="limpar"'+(CAD.modo==="limpar"?" checked":"")+'> Excluir todo o conteúdo atual das versões (PDFs e pastas V01, V02...) e gravar só as enviadas. A senha e os Anexos são mantidos.</label></div>'+
+    '<button type="button" onclick="irPdfs()">Próximo: PDFs das versões</button> '+
+    '<button type="button" class="sec2" onclick="irAnexos()">Pular versões (só anexos)</button>';
+  }
+  $("painel").innerHTML=h;$("pnum").textContent=CAD.proposta;
+  var f=$("senhaNova");if(f)f.focus()}
+
+function modoGravacao(){var el=document.querySelector('input[name=modo]:checked');return el?el.value:"sub"}
+function recarregar(r){CAD.modo=modoGravacao();CAD.sit=r;mostrarPainel()}
+function salvarSenha(){var s=$("senhaAlt").value.trim();
+  if(!s){msg("mSenha","Digite a nova senha.","er");return}
+  msg("mSenha","Gravando...");
+  api(com({acao:"senha",senha:s})).then(function(r){
+    if(!r.ok){msg("mSenha",esc(r.erro),"er");return}
+    CAD.sit.senha=r.senha;CAD.sit.temSenha=true;recarregar(CAD.sit);msg("mSenha","Senha alterada para <b>"+esc(r.senha)+"</b>.","ok")})
+  .catch(function(e){msg("mSenha","Falha: "+esc(e.message),"er")})}
+function marcados(id){var l=$(id);return l?[].slice.call(l.querySelectorAll("input:checked")).map(function(i){return i.value}):[]}
+function excluirPastas(){var p=marcados("lstPastas");
+  if(!p.length){msg("mPastas","Selecione ao menos uma pasta.","er");return}
+  if(!confirm("Excluir as pastas "+p.join(", ")+" da proposta "+CAD.proposta+"?\nElas vão para a lixeira do Google Drive (recuperáveis por 30 dias)."))return;
+  msg("mPastas","Excluindo...");
+  api(com({acao:"excluir",itens:p.map(function(n){return {tipo:"pasta",nome:n}})})).then(function(r){
+    if(!r.ok){msg("mPastas",esc(r.erro),"er");return}
+    recarregar(r);msg("mPastas",r.excluidos+" pasta(s) excluída(s).","ok")})
+  .catch(function(e){msg("mPastas","Falha: "+esc(e.message),"er")})}
+function excluirAnexos(){var ids=marcados("lstAnexos");
+  if(!ids.length){msg("mAnexos","Selecione ao menos um anexo.","er");return}
+  if(!confirm("Excluir "+ids.length+" anexo(s) da proposta "+CAD.proposta+"?\nEles vão para a lixeira do Google Drive (recuperáveis por 30 dias)."))return;
+  msg("mAnexos","Excluindo...");
+  api(com({acao:"excluir",itens:ids.map(function(id){return {tipo:"anexo",id:id}})})).then(function(r){
+    if(!r.ok){msg("mAnexos",esc(r.erro),"er");return}
+    recarregar(r);msg("mAnexos",r.excluidos+" anexo(s) excluído(s).","ok")})
+  .catch(function(e){msg("mAnexos","Falha: "+esc(e.message),"er")})}
+
+function lerSenhaNova(){if(CAD.existe)return true;var el=$("senhaNova"),s=(el&&el.value||"").trim();
+  if(!s){msg("m1","Informe a senha de acesso do cliente.","er");if(el)el.focus();return false}
+  CAD.senha=s;msg("m1","");return true}
+function irPdfs(){if(!lerSenhaNova())return;CAD.modo=modoGravacao();etapa(2)}
+function irAnexos(){CAD.modo="sub";CAD.versoes=[];CAD.arquivos=[];etapa(4);atualizaAnexos()}
 
 /* ---------- 2. escolha dos PDFs V01, V02, V03... ---------- */
 function escolheu(){
@@ -171,29 +262,28 @@ function escolheu(){
   ok.sort(function(a,b){return a.name.localeCompare(b.name,"pt-BR",{numeric:true})});
   var nomes=ok.map(function(f){return f.name.toUpperCase()}),dup=nomes.filter(function(n,i){return nomes.indexOf(n)!==i});
   CAD.arquivos=ok;
-  var h=ok.map(function(f){return '<li><b>'+esc(f.name)+'</b> · '+(f.size/1048576).toFixed(1).replace(".",",")+' MB</li>'}).join("");
-  $("lista").innerHTML=h;
+  $("lista").innerHTML=ok.map(function(f){return '<li><b>'+esc(f.name)+'</b> · '+tam(f.size)+'</li>'}).join("");
   var av=[];
   if(ruins.length)av.push("Ignorados (o nome deve ser V01.pdf, V02.pdf...): "+ruins.map(esc).join(", "));
   if(dup.length)av.push("Nome repetido: "+dup.map(esc).join(", "));
-  ok.forEach(function(f,i){var n=parseInt(f.name.slice(1,3),10);if(n!==i+1)av.push("Falta a versão V"+String(i+1).padStart(2,"0")+" antes de "+esc(f.name)+" (a ordem dos nomes define Versão 1, 2, 3...).")});
+  if(!CAD.existe||CAD.modo==="limpar")ok.forEach(function(f,i){var n=parseInt(f.name.slice(1,3),10);if(n!==i+1)av.push("Falta a versão V"+String(i+1).padStart(2,"0")+" antes de "+esc(f.name)+" (a ordem dos nomes define Versão 1, 2, 3...).")});
   var bloqueia=!ok.length||dup.length;
   msg("m2",av.join("<br>")||(ok.length?ok.length+" PDF(s) prontos para extrair.":""),av.length?(bloqueia?"er":"av"):"ok");
   $("b2").disabled=!!bloqueia}
 
 /* ---------- 3. leitura dos PDFs e recorte das imagens ---------- */
+var WORKER_OK=false;
 async function extrair(){
-  $("b2").disabled=true;etapa(3);CAD.versoes=[];$("previa").innerHTML="";
-  pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([$("pdfjs-worker").textContent],{type:"text/javascript"}));
-  var total=0;
+  $("b2").disabled=true;etapa(3);CAD.versoes=[];$("previa").innerHTML="";$("b3").disabled=true;
+  if(!WORKER_OK){pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([$("pdfjs-worker").textContent],{type:"text/javascript"}));WORKER_OK=true}
+  var total=0,f=null;
   try{
     for(var k=0;k<CAD.arquivos.length;k++){
-      var f=CAD.arquivos[k],nome=f.name.replace(/\.pdf$/i,"").toUpperCase();
+      f=CAD.arquivos[k];var nome=f.name.replace(/\.pdf$/i,"").toUpperCase();
       msg("m3","Lendo "+esc(f.name)+"...");
       var bytes=new Uint8Array(await f.arrayBuffer());
       var pags=await palavrasPdf(bytes.slice(0)),prop=lerProposta(pags),geo=geometriaItens(pags);
       var v={arq:f,nome:nome,prop:prop,imgs:[],avisos:[]};
-      // conferência dos totais
       var soma=prop.itens.reduce(function(a,i){return a+i.total},0),q=prop.itens.reduce(function(a,i){return a+i.qtd},0);
       if(!prop.itens.length)v.avisos.push("Nenhuma peça encontrada: confira se é um PDF de proposta do sistema.");
       if(prop.tot.valor!=null&&Math.abs(prop.tot.valor-soma)>0.01)v.avisos.push("Soma das peças "+brl(soma)+" diferente do total do PDF "+brl(prop.tot.valor)+".");
@@ -209,53 +299,78 @@ async function extrair(){
         if(!c){v.avisos.push("Peça "+g.tipo+": desenho não encontrado.");continue}
         var png=await canvasPng(c);
         v.imgs.push({tipo:g.tipo,nome:g.arq+".png",blob:png,url:URL.createObjectURL(png)});total++}
-      CAD.versoes.push(v);mostrarVersao(v,k)}
-    msg("m3","Extração concluída: "+CAD.versoes.length+" PDF(s), "+total+" imagens. Confira a prévia abaixo e clique em Gravar no Drive.","ok");
-    $("b3").disabled=false;$("b3").textContent="Gravar no Drive ("+CAD.versoes.length+" PDFs + "+total+" imagens)";
-    $("subst").style.display=CAD.existe?"":"none";
+      CAD.versoes.push(v);mostrarVersao(v)}
+    msg("m3","Extração concluída: "+CAD.versoes.length+" PDF(s), "+total+" imagens. Confira a prévia e siga para os Anexos.","ok");
+    $("b3").disabled=false;
   }catch(e){msg("m3","Erro ao ler "+esc((f||{}).name||"")+": "+esc(e.message),"er");$("b2").disabled=false;etapa(2)}}
-function mostrarVersao(v,k){var c=v.prop.cab||{};
-  var h='<section class="ver"><h3>'+esc(v.arq.name)+' · Versão '+(k+1)+'</h3><div class="vi">'+
+function mostrarVersao(v){var c=v.prop.cab||{};
+  var h='<section class="ver"><h3>'+esc(v.arq.name)+'</h3><div class="vi">'+
     [c.numero?"Proposta "+esc(c.numero):"",c.sub?esc(c.sub):"",c.nome?esc(c.nome):"",v.prop.itens.length+" peças",v.imgs.length+" imagens"].filter(Boolean).join(" · ")+'</div>'+
     (v.avisos.length?'<div class="msg av">'+v.avisos.map(esc).join("<br>")+'</div>':'')+
     '<div class="grade">'+v.imgs.map(function(m){return '<figure><img src="'+m.url+'" alt="'+esc(m.tipo)+'"><figcaption>'+esc(m.nome)+'</figcaption></figure>'}).join("")+'</div></section>';
   $("previa").insertAdjacentHTML("beforeend",h)}
+function irAnexosDaPrevia(){etapa(4);atualizaAnexos()}
 
-/* ---------- 4. gravação no Drive ---------- */
+/* ---------- 4. anexos ---------- */
+function escolheuAnexos(){
+  [].slice.call($("anx").files).forEach(function(f){
+    var i=CAD.anexos.findIndex(function(a){return a.name.toLowerCase()===f.name.toLowerCase()});
+    if(i>=0)CAD.anexos[i]=f;else CAD.anexos.push(f)});
+  $("anx").value="";atualizaAnexos()}
+function tirarAnexo(i){CAD.anexos.splice(i,1);atualizaAnexos()}
+function atualizaAnexos(){
+  var exist=((CAD.sit&&CAD.sit.anexos)||[]).map(function(a){return a.nome.toLowerCase()}),av=[];
+  $("lstAnx").innerHTML=CAD.anexos.map(function(f,i){
+    if(f.size>MAX_ANEXO_MB*1048576)av.push(esc(f.name)+": maior que "+MAX_ANEXO_MB+" MB.");
+    if(EXT_PROIBIDAS.test(f.name))av.push(esc(f.name)+": tipo de arquivo não permitido.");
+    return '<li><b>'+esc(f.name)+'</b> · '+tam(f.size)+(exist.indexOf(f.name.toLowerCase())>=0?' <span class="tag">substitui o existente</span>':' <span class="tag novo">novo</span>')+
+      ' <button type="button" class="x" onclick="tirarAnexo('+i+')" title="Tirar da lista">×</button></li>'}).join("");
+  msg("m4",av.length?av.join("<br>"):(CAD.anexos.length?CAD.anexos.length+" anexo(s) para gravar na pasta Anexos.":"Nenhum anexo selecionado (opcional)."),av.length?"er":"");
+  var resumo=[];if(CAD.versoes.length)resumo.push(CAD.versoes.length+" PDF(s) + "+CAD.versoes.reduce(function(s,v){return s+v.imgs.length},0)+" imagens");
+  if(CAD.anexos.length)resumo.push(CAD.anexos.length+" anexo(s)");
+  $("b4").textContent="Gravar no Drive"+(resumo.length?" ("+resumo.join(" + ")+")":"");
+  $("b4").disabled=!!av.length||(!CAD.versoes.length&&!CAD.anexos.length)}
+
+/* ---------- 5. gravação no Drive ---------- */
 async function gravar(){
-  if(CAD.existe&&!$("ckSub").checked){msg("m3","A proposta "+CAD.proposta+" já existe. Marque \"Substituir os arquivos\" para continuar.","er");return}
-  $("b3").disabled=true;etapa(4);
+  if(CAD.existe&&CAD.modo==="limpar"&&CAD.versoes.length&&!confirm("Todas as versões atuais da proposta "+CAD.proposta+" serão excluídas antes de gravar as novas. Continuar?"))return;
+  $("b4").disabled=true;etapa(5);
   var tarefas=[];
   CAD.versoes.forEach(function(v){tarefas.push({pasta:"",nome:v.nome+".pdf",mime:"application/pdf",blob:v.arq})});
+  var nPdf=tarefas.length;
   CAD.versoes.forEach(function(v){v.imgs.forEach(function(m){tarefas.push({pasta:v.nome,nome:m.nome,mime:"image/png",blob:m.blob})})});
+  var nImg=tarefas.length-nPdf;
+  CAD.anexos.forEach(function(f){tarefas.push({pasta:"Anexos",nome:f.name,mime:f.type||"application/octet-stream",blob:f})});
   var feitas=0,erros=[],n=tarefas.length;
-  function prog(){$("barra").style.width=Math.round(100*feitas/n)+"%";msg("m4","Gravando no Drive: "+feitas+" de "+n+" arquivos...")}
+  function prog(){$("barra").style.width=Math.round(100*feitas/n)+"%";msg("m5","Gravando no Drive: "+feitas+" de "+n+" arquivos...")}
+  async function envia(t){
+    var b64=await blobB64(t.blob),ult;
+    for(var tent=0;tent<3;tent++){
+      try{var x=await api(com({acao:"gravar",pasta:t.pasta,nome:t.nome,mime:t.mime,b64:b64}));
+        if(x.ok)return;ult=x.erro;if(x.etapa==="chave")break}catch(e){ult=e.message}
+      await new Promise(function(ok){setTimeout(ok,1500*(tent+1))})}
+    erros.push((t.pasta?t.pasta+"/":"")+t.nome+": "+ult)}
   try{
-    msg("m4","Criando as pastas...");
-    var r=await api({acao:"cadastro_inicio",chave:CAD.chave,proposta:CAD.proposta,criar:true,substituir:CAD.existe,versoes:CAD.versoes.map(function(v){return v.nome})});
+    if(CAD.existe&&CAD.modo==="limpar"&&CAD.versoes.length){msg("m5","Excluindo as versões atuais...");
+      var l=await api(com({acao:"limpar_versoes"}));if(!l.ok)throw new Error(l.erro||"não foi possível excluir as versões")}
+    msg("m5","Criando as pastas...");
+    var sub=CAD.versoes.map(function(v){return v.nome});if(CAD.anexos.length)sub.push("Anexos");
+    var r=await api(com({acao:"cadastro_inicio",criar:true,subpastas:sub,senha:CAD.existe?"":CAD.senha}));
     if(!r.ok)throw new Error(r.erro||"não foi possível criar as pastas");
-    CAD.senhaCriada=!!r.senhaCriada;
-    prog();
-    async function envia(t){
-      var b64=await blobB64(t.blob),ult;
-      for(var tent=0;tent<3;tent++){
-        try{var r=await api({acao:"gravar",chave:CAD.chave,proposta:CAD.proposta,pasta:t.pasta,nome:t.nome,mime:t.mime,b64:b64});
-          if(r.ok)return;ult=r.erro;if(r.etapa==="chave")break}catch(e){ult=e.message}
-        await new Promise(function(ok){setTimeout(ok,1500*(tent+1))})}
-      erros.push((t.pasta?t.pasta+"/":"")+t.nome+": "+ult)}
-    // PDFs primeiro, um por vez; depois as imagens, 3 de cada vez
-    for(var i=0;i<CAD.versoes.length;i++){await envia(tarefas[i]);feitas++;prog()}
-    var fila=tarefas.slice(CAD.versoes.length),idx=0;
+    CAD.existe=true;prog();
+    for(var i=0;i<nPdf;i++){await envia(tarefas[i]);feitas++;prog()}       // PDFs, um por vez
+    var fila=tarefas.slice(nPdf),idx=0;                                     // imagens e anexos, 3 de cada vez
     async function trab(){while(idx<fila.length){var t=fila[idx++];await envia(t);feitas++;prog()}}
     await Promise.all([trab(),trab(),trab()]);
     $("barra").style.width="100%";
-    if(erros.length){msg("m4","<b>Gravação terminou com "+erros.length+" erro(s):</b><br>"+erros.map(esc).join("<br>")+"<br>Clique em Gravar de novo para tentar só depois de conferir a internet.","er");$("b3").disabled=false;return}
+    if(erros.length){msg("m5","<b>Gravação terminou com "+erros.length+" erro(s):</b><br>"+erros.map(esc).join("<br>")+"<br>Confira a internet e clique em Gravar de novo.","er");$("b4").disabled=false;return}
     var link=COMPARATIVO_URL?'<br><a href="'+esc(COMPARATIVO_URL)+(COMPARATIVO_URL.indexOf("?")<0?"?":"&")+'p='+CAD.proposta+'" target="_blank" rel="noopener">Abrir no Comparativo</a>':"";
-    msg("m4","<b>Proposta "+CAD.proposta+" cadastrada:</b> "+CAD.versoes.length+" PDF(s) e "+(n-CAD.versoes.length)+" imagens gravados em Orçamentos / "+CAD.proposta+".<br>"+
-      (CAD.senhaCriada?"<b>Senha inicial criada:</b> o arquivo Senha.txt foi gravado com a senha <b>"+CAD.proposta+"</b> (o número da proposta). O responsável pode trocá-la editando o Senha.txt antes de enviar o acesso ao cliente.":
-       "A senha já estava configurada e não foi alterada: a proposta já pode ser aberta no Comparativo.")+link,"ok");
-    $("b4").style.display="";
-  }catch(e){msg("m4","Erro na gravação: "+esc(e.message),"er");$("b3").disabled=false}}
+    var partes=[];if(nPdf)partes.push(nPdf+" PDF(s), "+nImg+" imagens");if(CAD.anexos.length)partes.push(CAD.anexos.length+" anexo(s)");
+    var sen=CAD.sit&&CAD.sit.existe?(CAD.sit.temSenha?"Senha de acesso do cliente (sem alteração): <b>"+esc(CAD.sit.senha)+"</b>.":"<b>Atenção:</b> a proposta ainda não tem senha; use \"Cadastrar outra proposta\", informe o mesmo número e salve uma senha."):
+      "Senha de acesso do cliente gravada: <b>"+esc(CAD.senha)+"</b>.";
+    msg("m5","<b>Proposta "+CAD.proposta+" gravada:</b> "+partes.join(" e ")+" em Orçamentos / "+CAD.proposta+".<br>"+sen+link,"ok");
+    $("b5").style.display="";
+  }catch(e){msg("m5","Erro na gravação: "+esc(e.message),"er");$("b4").disabled=false}}
 function novo(){location.reload()}
 
 /* ================== LEITURA DOS PDFs DE PROPOSTA (padrão PrefSuite / Perfecta) ================== */
