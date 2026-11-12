@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>Comparativo de Orçamento, Fernando Elias, Perfecta Esquadrias</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1d2330;--mut:#6b7280;--line:#e3e6eb;--acc:#1f4e79;--accs:#e7eef7;--up:#b42318;--down:#1a7f37;--wa:#25d366}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.35}
+button,input{font-family:inherit}
+button{-webkit-appearance:none;appearance:none;touch-action:manipulation}
+.up{color:var(--up)}.down{color:var(--down)}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:var(--mut);margin-bottom:16px}
+.note{color:var(--mut);font-size:12px;margin-top:12px}
+
+/* ============ DESKTOP (tabela) ============ */
+#desk{display:block}
+#mob{display:none}
+.wrap{max-width:1600px;margin:0 auto;padding:24px}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;table-layout:fixed;background:var(--card);border:1px solid var(--line);border-radius:10px}
+col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:52px}col.c-exc{width:66px}col.c-v{width:15.5%}col.c-esc{width:12%}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
+/* cabeçalho congelado: cada th é "sticky" com o topo calculado em JS (funciona em Chrome, Edge, Firefox e Safari) */
+thead th{position:-webkit-sticky;position:sticky;z-index:10;background:#fafbfc;font-size:12px;color:var(--mut)}
+thead tr.tot th{background:var(--bg);border-bottom:none;padding:10px 6px;vertical-align:bottom}
+thead tr.tot th:first-child{padding-left:0}
+thead tr.tot th:last-child{padding-right:0}
+.vl{border-left:1px solid var(--line)}
+.esc{border-left:2px solid var(--acc)}
+th.vh{color:var(--ink);text-align:center;font-size:13px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+th.exch{text-align:center;color:var(--up)!important;border-left:1px solid var(--line)}
+
+.box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+.box>*{flex-shrink:0}
+.box .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);font-weight:400}
+.box .nm{font-weight:600;color:var(--ink);font-size:13px;margin:2px 0 6px}
+.box .val{font-size:clamp(14px,1.2vw,19px);white-space:nowrap;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.box .qt{font-size:12px;color:var(--mut);font-weight:600;margin-top:2px}
+.box .sq{font-size:12px;color:var(--ink);font-weight:700;margin-top:1px}
+.box .xq{font-size:12px;color:var(--up);font-weight:600;margin-top:1px}
+.box .dif{font-size:12px;margin-top:3px;white-space:nowrap;font-weight:400;font-variant-numeric:tabular-nums}
+.box button{margin-top:auto;width:100%;padding:6px;border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:6px;cursor:pointer;font-size:12px}
+.box button:hover{background:var(--accs)}
+.box .sp{height:8px}
+.box.custom{background:var(--acc);border-color:var(--acc)}
+.box.custom .lbl,.box.custom .dif,.box.custom .qt{color:#d6e2f0}
+.box.custom .nm,.box.custom .val,.box.custom .sq{color:#fff}
+.box.custom .xq{color:#ffd2cc}
+button.wa{background:var(--wa)!important;border-color:var(--wa)!important;color:#fff!important;font-weight:700;letter-spacing:.05em}
+button.wa:hover{background:#1ebe5b!important}
+.box.info{background:transparent;border:none;box-shadow:none;justify-content:flex-end;padding:0 4px}
+.box.info .val{font-size:15px}
+.box.info .ex{font-size:12px;color:var(--up);margin-top:4px;font-weight:600}
+
+td.opt{cursor:pointer}
+td.opt:hover{background:#f6f8fb}
+td.opt.sel{background:var(--accs);box-shadow:inset 3px 0 0 var(--acc)}
+.opt .pr{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt .md{font-size:12px;color:var(--mut);margin-top:2px}
+.opt .qd{font-size:11px;color:var(--mut)}
+.opt .vd{font-size:11px;color:var(--mut)}
+td.opt.na .pr,td.opt.na .md{color:#a3a8b1}
+td.opt.na .md{font-style:italic}
+td.chosen .nc{color:var(--mut);font-weight:700}
+.opt .df{font-size:11px;font-variant-numeric:tabular-nums}
+input[type=radio]{margin:0 6px 0 0;accent-color:var(--acc);vertical-align:-2px;pointer-events:none}
+td.exc{text-align:center;cursor:pointer;border-left:1px solid var(--line);vertical-align:middle}
+td.exc:hover{background:#fdf3f2}
+td.exc input{accent-color:var(--up);width:16px;height:16px;margin:0}
+td.exc.on{background:#fdecea;box-shadow:inset 3px 0 0 var(--up)}
+tr.rowx td:not(.exc):not(.chosen){color:#a3a8b1}
+tr.rowx td.p-loc{text-decoration:line-through}
+tr.rowx td.opt .pr,tr.rowx td.opt .df span{color:#a3a8b1}
+td.chosen{background:#fbfcfe;font-weight:700}
+td.chosen .md{font-weight:400;font-size:12px;color:var(--mut)}
+td.chosen .xl{color:var(--up);font-weight:700}
+
+/* ---------- botão olho e visualizador de imagem ---------- */
+.eye{display:inline-flex;align-items:center;justify-content:center;width:28px;height:24px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--acc);cursor:pointer;padding:0;vertical-align:middle;flex:0 0 auto}
+.eye:hover{background:var(--accs);border-color:var(--acc)}
+.eye svg{width:16px;height:16px;pointer-events:none}
+.opt .pr{display:flex;align-items:center}
+.opt .pr .eye{margin-left:auto}
+#lb{position:fixed;inset:0;background:rgba(15,20,30,.78);z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+#lb.on{display:flex}
+#lb .lbc{background:#fff;border-radius:12px;max-width:min(96vw,1100px);max-height:94vh;width:100%;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+#lb .lbh{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+#lb .lbt{flex:1;min-width:0;font-weight:600;font-size:14px}
+#lb .lbt span{display:block;font-weight:400;font-size:12px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#lb .lbx{border:none;background:var(--bg);border-radius:8px;width:36px;height:36px;font-size:20px;cursor:pointer;color:var(--ink)}
+#lb .lbb{flex:1;min-height:200px;overflow:auto;display:flex;align-items:center;justify-content:center;padding:14px;background:#fff}
+#lb .lbb img{max-width:100%;max-height:calc(94vh - 130px);object-fit:contain}
+#lb .lbe{display:none;text-align:center;color:var(--mut);font-size:13px;max-width:420px}
+#lb.err .lbe{display:block}#lb.err img{display:none}
+#lb .lbf{padding:10px 14px;border-top:1px solid var(--line);text-align:right;font-size:13px}
+#lb .lbf a{color:var(--acc);font-weight:600;text-decoration:none}
+
+/* ============ CELULAR / TABLET (cartões) ============ */
+@media (max-width:1000px){
+  #desk{display:none}
+  #mob{display:block}
+  .wrap{padding:14px 12px calc(14px + env(safe-area-inset-bottom))}
+  h1{font-size:18px}
+  .mbar{position:-webkit-sticky;position:sticky;top:0;z-index:20;background:var(--acc);color:#fff;margin:0 -12px 12px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top));display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+  .mbar .mt{flex:1;min-width:0}
+  .mbar .ml{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#d6e2f0}
+  .mbar .mv{font-size:19px;font-weight:700;white-space:nowrap}
+  .mbar .mq{font-size:12px;color:#d6e2f0}
+  .mbar .mq b{color:#fff}
+  .mbar .mx{font-size:12px;color:#ffd2cc}
+  .mbar button{border:none;border-radius:8px;padding:12px 16px;font-size:14px;cursor:pointer}
+  .mvers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+  .mvers .box{padding:10px}
+  .mvers .box .val{font-size:16px}
+  .mvers .box button{padding:9px;font-size:13px;margin-top:8px}
+  .mres{font-size:12px;color:var(--mut);margin-bottom:10px}
+  .mres .ex{color:var(--up);font-weight:600}
+  .pc{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}
+  .pc .ph{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .pc .ph b{font-size:15px}
+  .pc .ph .pd{font-size:12px;color:var(--mut);margin-top:2px}
+  .pc.rowx .ph b,.pc.rowx .ph .pd{color:#a3a8b1}
+  .pc.rowx .ph .loc{text-decoration:line-through}
+  .po{display:flex;width:100%;text-align:left;align-items:flex-start;gap:8px;padding:10px 12px;border:none;border-bottom:1px solid var(--line);background:#fff;color:var(--ink);font-size:14px;cursor:pointer}
+  .po:last-child{border-bottom:none}
+  .po .pi{flex:1;min-width:0}
+  .po .pv{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.03em}
+  .po .pm{font-size:12px;color:var(--mut)}
+  .po .pr{font-weight:700;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+  .po .df{font-size:11px;text-align:right}
+  .po .vd{font-size:11px;color:var(--mut)}
+  .po.na .pm,.po.na .pr{color:#a3a8b1;font-style:italic}
+  .mvers .box:last-child:nth-child(odd){grid-column:1/-1}
+  .po.sel{background:var(--accs);box-shadow:inset 4px 0 0 var(--acc)}
+  .po.exb{color:var(--up);font-weight:600;justify-content:center}
+  .po.exb.sel{background:#fdecea;box-shadow:inset 4px 0 0 var(--up)}
+  .pc.rowx .po:not(.exb) .pr{color:#a3a8b1}
+  .po .eye{width:34px;height:30px;margin-top:-2px}
+  .po .rd{width:18px;height:18px;border-radius:50%;border:2px solid #9aa3af;flex:0 0 18px;margin-top:1px;position:relative}
+  .po.sel .rd{border-color:var(--acc)}
+  .po.sel .rd:after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--acc)}
+  .po.exb .rd{border-color:var(--up)}
+  .po.exb.sel .rd:after{background:var(--up)}
+}
+@media print{
+  #desk{display:block!important}#mob{display:none!important}
+  .box button,.eye{display:none}body{background:#fff}thead th{position:static!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Perfecta Esquadrias, Proposta Comercial</h1>
+<div class="sub"><b>Cliente: Fernando Elias de Oliveira</b> · Obra: Condomínio Porto São Pedro, Porto Feliz (SP) · PVC Peltre · Propostas 2.013/1, 2.013/3 e 2.013/4<br>Comparativo de orçamento por versão. Escolha uma versão em cada item para montar a composição personalizada. Use EXCLUIR para retirar um item do valor.</div>
+
+<!-- Desktop -->
+<div id="desk">
+<table>
+<colgroup><col class="c-pos"><col class="c-tipo"><col><col class="c-dim"><col class="c-dim"><col class="c-qtd"><col class="c-exc"><col class="c-v"><col class="c-v"><col class="c-v"><col class="c-esc"></colgroup>
+<thead>
+<tr class="tot" id="totais"></tr>
+<tr><th colspan="6">Produto</th><th class="exch">&nbsp;</th><th class="vh vl" id="h0"></th><th class="vh vl" id="h1"></th><th class="vh vl" id="h2"></th><th class="vh esc">Escolhida</th></tr>
+<tr><th>Pos.</th><th>Tipo</th><th>Localização</th><th class="num">Largura (mm)</th><th class="num">Altura (mm)</th><th class="num">Qtde</th><th class="exch">EXCLUIR</th>
+<th class="vl">Valor / Modelo</th><th class="vl">Valor / Modelo</th><th class="vl">Valor / Modelo</th><th class="esc num">Valor</th></tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+</div>
+
+<!-- Celular / tablet -->
+<div id="mob">
+  <div class="mbar" id="mbar"></div>
+  <div class="mvers" id="mvers"></div>
+  <div class="mres" id="mres"></div>
+  <div id="mlist"></div>
+</div>
+
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão: escolher essa opção equivale a não incluir a peça (valor zero). O ícone de olho em cada versão abre a imagem da peça daquela versão (Google Drive). A coluna Pos. segue a numeração da Versão 3; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+</div>
+
+<div id="lb" role="dialog" aria-modal="true" aria-label="Imagem da peça">
+  <div class="lbc">
+    <div class="lbh"><div class="lbt" id="lbt"></div><button type="button" class="lbx" data-lbclose="1" aria-label="Fechar">×</button></div>
+    <div class="lbb"><img id="lbi" alt=""><div class="lbe">Não foi possível exibir a imagem aqui.<br>Use o link "Abrir no Google Drive" abaixo. Se ainda assim não abrir, a imagem precisa estar compartilhada com quem está acessando.</div></div>
+    <div class="lbf"><a id="lba" href="#" target="_blank" rel="noopener">Abrir no Google Drive ↗</a></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+var VERSOES=[{n:"Versão 1",d:"Original (2.013/1)"},{n:"Versão 2",d:"Revisão 01 (2.013/3)"},{n:"Versão 3",d:"Gourmet fechado (2.013/4)"}];
+const DADOS=[{"pos": "1", "tipo": "P06", "loc": "DEPÓSITO", "larg": 1000, "alt": 1450, "qtd": 1, "v": [[4196.95, "Porta de giro 01 folha", "Sem vidro", 1, "6", "18wobiqwaG03xtYS7_hReWbpmveeD57qn"], [4196.95, "Porta de giro 01 folha", "Sem vidro", 1, "1", "1q7RNMdwkoOGF_lGVIhg9F57Xw_1s9ROo"], [4196.95, "Porta de giro 01 folha", "Sem vidro", 1, "1", "1uW-G8A6JNVvnFyIGUES_skJC6nUN_fDm"]]}, {"pos": "2", "tipo": "P07", "loc": "CASA DE MÁQUINAS", "larg": 1000, "alt": 1650, "qtd": 1, "v": [[4653.07, "Porta de giro 01 folha", "Sem vidro", 1, "7", "1mIdx0sCG5swC5pAAbX8-JRUTPIo-UtUr"], [4653.07, "Porta de giro 01 folha", "Sem vidro", 1, "2", "1RH_IgTD7tA2s2-0KO3vxgKfBbbN-9Iah"], [4653.07, "Porta de giro 01 folha", "Sem vidro", 1, "2", "1HKGw0Umc6yhl9csNi8vD8xqmkuIW3Xu3"]]}, {"pos": "3", "tipo": "P04", "loc": "LAVANDERIA EXTERNA E INTERNA", "larg": 1000, "alt": 2100, "qtd": 2, "v": [[0, "Peça não orçada nesta versão", "", 0, "", ""], [16726.4, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "3", "1bf8B04IyvcOqA2miwuq_ImT7mLCNjhfS"], [16726.4, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "3", "1eus8qekgUivFZVVGFgyWk30EWrB_TvX7"]]}, {"pos": "4", "tipo": "P05", "loc": "LAVANDERIA", "larg": 2550, "alt": 2100, "qtd": 1, "v": [[17923.67, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "5", "1ynFYJ7VaggHerLWJHvmpPCz-4TowX1fB"], [16634.36, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "4", "1vnHy_isjvw_JvHHb4xr-xFCrLDUkc0L7"], [16634.36, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "4", "18jusF_CbQrWRQ62n1ESPPLeDfhKthc5k"]]}, {"pos": "5", "tipo": "J04", "loc": "LAVANDERIA INTERNA", "larg": 3600, "alt": 1000, "qtd": 1, "v": [[16280.46, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "4", "19eIc6pItAvJCYN_tz_YItP2PrfknHSfh"], [16280.46, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "5", "1QlQzmv3y-U-uhU5TvA-xIRhckrHBVMzM"], [16280.46, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "5", "1dMKgfAiv_sP3Zmkv43_GrdiAyVe2-lZr"]]}, {"pos": "6", "tipo": "P02", "loc": "LAVANDERIA EXTERNA E INTERNA, WC PISCINA", "larg": 820, "alt": 2100, "qtd": 3, "v": [[0, "Peça não orçada nesta versão", "", 0, "", ""], [23366.58, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 3, "6", "1ERBrqsxVhbsB0PUNTgUBeCAwu3CZEoZ0"], [23366.58, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 3, "6", "1fyuA-_C0WZwBiw2S4OqDeHoYvzVtQ8QQ"]]}, {"pos": "17 (V1)", "tipo": "P14", "loc": "WC PISCINA", "larg": 820, "alt": 2100, "qtd": 1, "v": [[5087.69, "Porta de giro 01 folha", "Sem vidro", 1, "17", "1g0eY4cfwp7Ti2s-29_wWWC9eyrJ0rXUt"], [0, "Peça não orçada nesta versão", "", 0, "", ""], [0, "Peça não orçada nesta versão", "", 0, "", ""]]}, {"pos": "7", "tipo": "J03", "loc": "SUÍTE INFERIOR", "larg": 1400, "alt": 1000, "qtd": 1, "v": [[8206.82, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "3", "1FZ6TBoGqF8clp5RiwX06XApR0CqyfxqJ"], [8206.82, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "7", "1fZItzK05oXW1gTgQqSPPoxttPlqtbwQo"], [8206.82, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "7", "1P3i9fzLUUSNkB5_3LpovMLL427uXcN7h"]]}, {"pos": "8", "tipo": "P03", "loc": "BANHO SERVIÇO, LAVABO SERVIÇO", "larg": 720, "alt": 2100, "qtd": 2, "v": [[0, "Peça não orçada nesta versão", "", 0, "", ""], [14963.52, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "8", "1HPb2R6X0VqnvwJ4VExxWLDKhHNmCXZBt"], [14963.52, "Porta de giro 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "8", "1Op92mrVfbNdyvuCCGRYZVSWyr5w-uykx"]]}, {"pos": "9", "tipo": "J02", "loc": "LAVABO SERVIÇO, BANHO SERVIÇO", "larg": 630, "alt": 1200, "qtd": 2, "v": [[7757.66, "Maxim-ar 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "2", "16OdDubJu0UUEdk74RdUMPLwUlKZ3RaYV"], [7757.66, "Maxim-ar 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "9", "12NOaVze7XysfdvY0SQH3YPcPiYbDizcD"], [7757.66, "Maxim-ar 01 folha", "Vidro: laminado 08mm (4+4) opaco", 2, "9", "1_ZOp_7zgOM5ZpBuVzABRFJzzOb_HoS5p"]]}, {"pos": "10", "tipo": "J01", "loc": "DESPENSA INFERIOR", "larg": 950, "alt": 1200, "qtd": 1, "v": [[7953.36, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) opaco", 1, "1", "14JAQff7EwrvSUJerqZlokht0bXdNWHRg"], [7953.36, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) opaco", 1, "10", "1jrg4YaZJ_-epI09fToAQ5GhmKPVGQ4zM"], [7953.36, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) opaco", 1, "10", "1ASXkGtqEzUUee8ZduxyLA0sOKV98ppZS"]]}, {"pos": "11", "tipo": "P01", "loc": "ESCADA", "larg": 1100, "alt": 2500, "qtd": 1, "v": [[0, "Peça não orçada nesta versão", "", 0, "", ""], [19985.35, "Porta pivotante 01 folha · abertura exterior", "Vidro: temperado de 8 mm incolor", 1, "11", "1JmyaK7ffrXwACvcGLNocV5gre0CKSEd0"], [19985.35, "Porta pivotante 01 folha · abertura exterior", "Vidro: temperado de 8 mm incolor", 1, "11", "1aPR6Dp1OwE0kp_MeD2JBffY4GPYnkPXd"]]}, {"pos": "12", "tipo": "J07+J08", "loc": "ESCADA", "larg": 3000, "alt": 5500, "qtd": 1, "v": [[36449.9, "Marco fixo", "Vidro: temperado de 10 mm super jumbo incolor", 1, "8", "1pnqDEnUTlz1i6dBFpNSBoE_LcfcJD942"], [36449.9, "Marco fixo", "Vidro: temperado de 10 mm super jumbo incolor", 1, "12", "16zQivXfkagUTvhqtZN7-php1iJEJddfN"], [36449.9, "Marco fixo", "Vidro: temperado de 10 mm super jumbo incolor", 1, "12", "13rgkNBqiQlCdCTfq9qzItXiXQVN4A84F"]]}, {"pos": "13", "tipo": "P08", "loc": "ESCADA / LIVING", "larg": 3590, "alt": 2900, "qtd": 1, "v": [[18862.24, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "9", "1wKcVDaliB-qCPv-SfNXWUv2txpgqXjzF"], [18862.24, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "13", "1nu4GkqXrHewFfkDi-8BoyUKI_MsEVroY"], [18862.24, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "13", "1DjeOJJt1SDelKQwUExbG1AN94Vi1lXjI"]]}, {"pos": "14", "tipo": "P20", "loc": "LIVING / VARANDA", "larg": 6840, "alt": 2900, "qtd": 1, "v": [[40249.81, "Porta de correr 04 folhas encontro central", "Vidro: temperado de 8 mm incolor", 1, "10", "12gUSP8ksFdXPhIIxMu2sWetl4weyiOJA"], [40249.81, "Porta de correr 04 folhas encontro central", "Vidro: temperado de 8 mm incolor", 1, "14", "1RrX91n92fw3_xBGy0rsTqe5ilnsgA8ES"], [40249.81, "Porta de correr 04 folhas encontro central", "Vidro: temperado de 8 mm incolor", 1, "14", "1Is70kBIvQYSF0qbXlfdX5oMFQLWvptNK"]]}, {"pos": "15", "tipo": "J09", "loc": "COZINHA", "larg": 3850, "alt": 1250, "qtd": 1, "v": [[18472.58, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "11", "1nWzrDAThTDqAaaINZ6FPxua2fxOu6YuM"], [18472.58, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "15", "1k_uRmFHkKKysw9uzQkj1-b_wavm7OYDL"], [18472.58, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "15", "1yVW5TavpqLFmfTmNe4Q5vQ8WrQJifCWW"]]}, {"pos": "16", "tipo": "P11", "loc": "COZINHA / GOURMET", "larg": 4150, "alt": 2900, "qtd": 1, "v": [[30731.09, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "12", "1WiPaVasGokAEuU-C4erL2AtJG-nVOmQy"], [31548.52, "Porta de correr 04 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "16", "10I27mLvlkLPcAtl0oXkU2TDPCRs59YK7"], [31548.52, "Porta de correr 04 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "16", "11164rdXgy61vETYUa8V6-dfJ854nASXx"]]}, {"pos": "17", "tipo": "J10", "loc": "GOURMET", "larg": 3550, "alt": 1300, "qtd": 1, "v": [[12954.13, "Janela de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "13", "1V--tQydFEQkTx40dn0PU1AEYQXF7mAbF"], [12954.13, "Janela de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "17", "1OGeU9rLWQ8GfOD9_Vui8kVrgs6CtqSSs"], [15383.35, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "17", "139FyFIwNDUxPv9oXIXUuQh7BVRoHZ7FJ"]]}, {"pos": "18", "tipo": "P12", "loc": "JANTAR / GOURMET", "larg": 3300, "alt": 2900, "qtd": 1, "v": [[21361.57, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "14", "1wMSFhaFPE64PsbDgWudh_9YjKqDoVwWF"], [26655.19, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "18", "1b2TtY5SzkzSBCXJdm9fVSWVx3qiYG8ne"], [26655.19, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "18", "1uW615en4S93FXnKgKB0mCOWTnynp9hCq"]]}, {"pos": "19", "tipo": "P13", "loc": "JANTAR / LIVING EXTERNO", "larg": 5670, "alt": 2900, "qtd": 1, "v": [[35908.81, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "16", "1LSrlb0JWOmtx71DdqVOwysu7zG0bZrE3"], [43359.01, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "19", "1Rb90qj3q7gxlKzc9kRn56LrRgeIDBPns"], [43359.01, "Porta de correr 03 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "19", "1tkq8ovFfzSDWW4MlDXMz8cbdYE2UU4i6"]]}, {"pos": "20", "tipo": "J11", "loc": "GOURMET LIVING EXTERNO", "larg": 3000, "alt": 2500, "qtd": 1, "v": [[16677.84, "Janela de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "15", "1eFeunorj0BxGU3_CUrLNnSuttQDKObkE"], [13441.42, "Marco fixo", "Vidro: temperado de 10 mm jumbo incolor", 1, "20", "1TTUriL9H4LvrM-hExiehPvjBnOtXwv59"], [22773.22, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "20", "1hx-2Pn4O34ZeI3qDk_1mA6N_dikNQlu1"]]}, {"pos": "21", "tipo": "P22", "loc": "GOURMET EXTERNO", "larg": 9900, "alt": 2900, "qtd": 1, "v": [[0, "Peça não orçada nesta versão", "", 0, "", ""], [0, "Peça não orçada nesta versão", "", 0, "", ""], [85224.87, "Porta de correr 05 folhas sequenciais", "Vidro: temperado de 8 mm incolor", 1, "21", "18ip0iKbnlk7EFS9lkmZQzuspoD-ybsFO"]]}, {"pos": "22", "tipo": "J13+P21", "loc": "SAUNA", "larg": 7280, "alt": 2500, "qtd": 1, "v": [[38082.01, "Porta de giro + marco fixo", "Vidro: temperado de 10 mm incolor", 1, "18", "18QHUt9szgqEw3O8GjPteOOIbYlNp5nTd"], [41766.24, "Forma geometrica canto 90° janela 03 vãos horizontais", "Vidro: laminado temperado 10mm (5+5) incolor", 1, "21", "1x7HjY__mHiHWvUcHlJ7XHgmDZO4Boatv"], [41766.24, "Forma geometrica canto 90° janela 03 vãos horizontais", "Vidro: laminado temperado 10mm (5+5) incolor", 1, "22", "1OUb9qFhxZxjiXGf9IyYq7WvdiB6fHeP7"]]}, {"pos": "23", "tipo": "J14", "loc": "SAUNA", "larg": 2000, "alt": 2750, "qtd": 1, "v": [[10020.37, "Marco fixo", "Vidro: laminado temperado 10mm (5+5) incolor", 1, "19", "1dx6s1zG4W5fl_Iwzg71uBQlmG7tQwOUd"], [10020.37, "Marco fixo", "Vidro: laminado temperado 10mm (5+5) incolor", 1, "22", "1dB-uSg3byCbvqbf8XgSgmbRx__McHzxR"], [10020.37, "Marco fixo", "Vidro: laminado temperado 10mm (5+5) incolor", 1, "23", "1703nuznHvpf3GbUZhXtslBvs1V6VgcWq"]]}, {"pos": "24", "tipo": "J15", "loc": "WC 05", "larg": 1000, "alt": 2600, "qtd": 1, "v": [[8474.86, "Maxim-ar + peitoril fixo", "Vidro: laminado 08mm (4+4) opaco", 1, "20", "1cIOEQG6yUvpLzCxv_G1_8ATiiqoLrAhO"], [8474.86, "Maxim-ar + peitoril fixo", "Vidro: laminado 08mm (4+4) opaco", 1, "23", "15qQXJsZKwIOz6HcgnO3FI9WeI7li42cu"], [8474.86, "Maxim-ar + peitoril fixo", "Vidro: laminado 08mm (4+4) opaco", 1, "24", "1KjIsIk8mTz7Nr51z_4KlgS9DosJ9uH_j"]]}, {"pos": "25", "tipo": "P16", "loc": "SUÍTE 05", "larg": 3750, "alt": 2700, "qtd": 1, "v": [[28428.78, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "21", "1K5HsaEOqe6iyatpdzfK5Mz1tgwosRC9W"], [28428.78, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "24", "1xQ9tfjfWdSkZrYprevSd7_sirKUO708d"], [28428.78, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "25", "1Z1FwHCYEXoYaSLY29pjYiYxyXg5msfjk"]]}, {"pos": "26", "tipo": "P17", "loc": "SUÍTE 02, 03 E 04", "larg": 4350, "alt": 2700, "qtd": 3, "v": [[92690.19, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 3, "22", "1t-z4CXHvoBPipAC3zHPcQ7MmS8Xdg_K-"], [92690.19, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 3, "25", "1cv9lGVXtR71bzpEdY7MAq9Xrh1_zEKLf"], [92690.19, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 3, "26", "1uerW86dtg8Bj06QVEFiCBUZLskdBw3nX"]]}, {"pos": "27", "tipo": "P09", "loc": "SALA DE TV", "larg": 4000, "alt": 2700, "qtd": 1, "v": [[20582.19, "Porta de correr 02 folhas", "Vidro: temperado de 8 mm incolor", 1, "23", "16IzTTBCeLAGLhzejVJJJ-JXjO1asf9Ee"], [27773.41, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "26", "1rSlxfwmqaSYOevIjKYjhJ5Fj0dI9ho3i"], [27773.41, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: temperado de 8 mm incolor", 1, "27", "1zUHQEZEUasU5LGn0MX1jPt7r5iDFEn4j"]]}, {"pos": "28", "tipo": "P18", "loc": "SUÍTE MASTER", "larg": 3390, "alt": 2700, "qtd": 1, "v": [[27028.33, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "24", "1kz6SM9uTsb04YewusQ4tDMFNqPfls5GV"], [27028.33, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "27", "1jBNyuExJtcw9pz-5TE51b-p3alcKSPGh"], [27028.33, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "28", "19p-yFgMbDlE89WQDh3kOffrnz-S1g37_"]]}, {"pos": "29", "tipo": "P19", "loc": "SUÍTE MASTER", "larg": 3510, "alt": 2700, "qtd": 1, "v": [[27495.63, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "25", "1fXNCjrp-TI0yUjMturOYs5RIqyDCJL4y"], [27495.63, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "28", "1LdGBJNJXRArKPfMDt58zB68v1UHrnw3o"], [27495.63, "Porta de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) incolor", 1, "29", "1-6h4sQN93DcVD46Xb3IwmMD1GsbZ3EeX"]]}, {"pos": "30", "tipo": "J16", "loc": "WC MASTER", "larg": 1620, "alt": 2100, "qtd": 1, "v": [[12370.36, "Janela de correr 02 folhas", "Vidro: laminado 08mm (4+4) opaco", 1, "26", "10V8PIraas65iNVy4VXjdTNNg9z8AVvlE"], [16779.3, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) opaco", 1, "29", "1Pd8_2RpvIn7T9SGfRy2YHKP_m7rvlbK6"], [16779.3, "Janela de correr 03 folhas (2 vidros + 1 tela interna)", "Vidro: laminado 08mm (4+4) opaco", 1, "30", "19cXoQSx9D4fuLDZsUusVv_DDPq58RTzW"]]}, {"pos": "31", "tipo": "J20", "loc": "PÉ DIREITO ALTO (CAIXA D'ÁGUA)", "larg": 3300, "alt": 650, "qtd": 6, "v": [[28493.58, "Marco fixo", "Vidro: temperado de 8 mm incolor", 6, "27", "1S3bn3VEY_5JdBd9w3nwrs9dU0Ma3ItuZ"], [28493.58, "Marco fixo", "Vidro: temperado de 8 mm incolor", 6, "30", "16RmYYBgu_9xm8Sf2bLHRsufD-xWr66r8"], [28493.58, "Marco fixo", "Vidro: temperado de 8 mm incolor", 6, "31", "1FhhxWzLdCczM5oemue5RppTJgRmWeX6r"]]}];
+var NV=VERSOES.length;                  // número de versões
+var EXC=NV;                             // seleção "EXCLUIR"
+var sel=DADOS.map(function(){return 0});// por item: 0 a NV-1 = versão, NV = excluído
+
+// Formatação própria (não depende do suporte a idioma do navegador)
+function brl(v){var s=v<0?"-":"",p=Math.abs(v).toFixed(2).split(".");
+  return s+"R$ "+p[0].replace(/\B(?=(\d{3})+(?!\d))/g,".")+","+p[1]}
+function num(v){return String(v).replace(/\B(?=(\d{3})+(?!\d))/g,".")}
+function dif(v){if(Math.abs(v)<0.005)return '<span>sem diferença</span>';
+  return '<span class="'+(v>0?'up':'down')+'">'+(v>0?'+ ':'− ')+brl(Math.abs(v))+'</span>'}
+var OLHO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+function olho(r,i,tag){var id=DADOS[r].v[i][5];if(!id)return "";tag=tag||"button";
+  return '<'+tag+(tag==="button"?' type="button"':' role="button" tabindex="0"')+' class="eye" data-img="'+r+'_'+i+'" title="Ver imagem da peça" aria-label="Ver imagem da peça">'+OLHO+'</'+tag+'>'}
+function abrirImagem(r,i){var x=DADOS[r],o=x.v[i],id=o[5],lb=document.getElementById("lb"),img=document.getElementById("lbi");
+  lb.classList.remove("err");img.removeAttribute("src");
+  document.getElementById("lbt").innerHTML=x.tipo+' · '+VERSOES[i].n+' ('+VERSOES[i].d+')<span>'+x.loc+' · '+num(x.larg)+' × '+num(x.alt)+' mm · '+o[1]+'</span>';
+  document.getElementById("lba").href="https://drive.google.com/file/d/"+id+"/view";
+  img.alt=x.tipo+" "+VERSOES[i].n;
+  img.onerror=function(){lb.classList.add("err")};
+  img.src="https://drive.google.com/thumbnail?id="+id+"&sz=w2000";
+  lb.classList.add("on");document.body.style.overflow="hidden"}
+function fecharImagem(){document.getElementById("lb").classList.remove("on");document.body.style.overflow=""}
+function un(n){return n+" "+(n===1?"unidade":"unidades")}
+function tot(i){return DADOS.reduce(function(s,x){return s+x.v[i][0]},0)}
+var BASE=tot(0);
+
+// Quantidade por versão vem de cada PDF (v[i][3]); 0 = peça não consta naquela versão.
+var QTDE_VERSAO=DADOS.map(function(x){return x.v.map(function(o){return o[3]})});
+function na(r,i){return QTDE_VERSAO[r][i]===0}
+
+var QT_TOTAL=DADOS.reduce(function(s,x){return s+x.qtd},0);    // maior quantidade de cada peça entre as versões
+function qtVer(i){return QTDE_VERSAO.reduce(function(s,q){return s+q[i]},0)}   // soma da quantidade de cada versão
+function qtSelVer(i){return DADOS.reduce(function(s,x,r){return s+(sel[r]===i?QTDE_VERSAO[r][i]:0)},0)}
+function excl(){return DADOS.reduce(function(a,x,r){return sel[r]===EXC?{n:a.n+1,q:a.q+x.qtd}:a},{n:0,q:0})}
+// Selecionada (personalizada): itens com versão + itens excluídos (excluído conta como decidido, nunca subtrai)
+function qtSelTotal(){return DADOS.reduce(function(s,x,r){return s+(sel[r]===EXC?x.qtd:QTDE_VERSAO[r][sel[r]])},0)}
+function valSelTotal(){return DADOS.reduce(function(s,x,r){return s+(sel[r]===EXC?0:x.v[sel[r]][0])},0)}
+function difTxt(dc){return Math.abs(dc)<0.005?'igual à Versão 1':(dc>0?'+ ':'− ')+brl(Math.abs(dc))+'<br>vs Versão 1'}
+
+for(var k=0;k<NV;k++)document.getElementById("h"+k).textContent=VERSOES[k].n+": "+VERSOES[k].d;
+
+/* ---------- desktop ---------- */
+function renderBody(){
+  document.getElementById("body").innerHTML=DADOS.map(function(x,r){
+    var ex=sel[r]===EXC;
+    var opts=x.v.map(function(o,i){var on=sel[r]===i,n=na(r,i);
+      return '<td class="opt vl'+(on?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'">'+
+        '<div class="pr"><input type="radio" tabindex="-1" '+(on?'checked':'')+'>'+(n?'Não consta':brl(o[0]))+(n?'':olho(r,i))+'</div>'+
+        '<div class="md">'+o[1]+'</div>'+(n?'':'<div class="vd">'+o[2]+'</div><div class="qd">Pos. '+o[4]+' · Qtde: '+o[3]+'</div>')+
+        (i>0?'<div class="df">'+dif(o[0]-x.v[0][0])+'</div>':'')+'</td>'}).join("");
+    var esc=ex?'<span class="xl">Excluído</span><div class="md">não somado</div>'
+              :na(r,sel[r])?'<span class="nc">Não consta</span><div class="md">'+VERSOES[sel[r]].n+' · não somado</div>'
+              :brl(x.v[sel[r]][0])+'<div class="md">'+VERSOES[sel[r]].n+' · Qtde '+QTDE_VERSAO[r][sel[r]]+'</div>';
+    return '<tr class="'+(ex?'rowx':'')+'"><td>'+x.pos+'</td><td>'+x.tipo+'</td><td class="p-loc">'+x.loc+'</td>'+
+      '<td class="num">'+num(x.larg)+'</td><td class="num">'+num(x.alt)+'</td><td class="num">'+x.qtd+'</td>'+
+      '<td class="exc'+(ex?' on':'')+'" data-r="'+r+'" data-i="'+EXC+'" title="Excluir este item do valor"><input type="radio" tabindex="-1" '+(ex?'checked':'')+'></td>'+
+      opts+'<td class="chosen num esc">'+esc+'</td></tr>'}).join("");
+}
+function cardsVersoes(){
+  return VERSOES.map(function(v,i){var t=tot(i);
+    return '<div class="box vbox"><div class="lbl">'+v.n+'</div><div class="nm">'+v.d+'</div>'+
+      '<div class="val">'+brl(t)+'</div><div class="qt">Qtde total: '+qtVer(i)+'</div>'+
+      '<div class="sq">Selecionada: '+qtSelVer(i)+'</div>'+
+      '<div class="dif">'+(i?dif(t-BASE)+'<br><span style="color:var(--mut)">vs Versão 1</span>':'Referência<br>&nbsp;')+'</div>'+
+      '<div class="sp"></div><button type="button" data-all="'+i+'">Aplicar a todos</button></div>'});
+}
+function renderTotais(){
+  var e=excl(),c=cardsVersoes();
+  var h='<th colspan="7"><div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
+    '<div class="ex">'+(e.n?'Excluídos: '+e.n+' '+(e.n===1?'item':'itens')+' ('+un(e.q)+')':'Nenhum item excluído')+'</div></div></th>';
+  h+=c.map(function(b){return '<th>'+b+'</th>'}).join("");
+  h+='<th><div class="box vbox custom"><div class="lbl">Personalizada</div><div class="nm">Escolhidas</div>'+
+    '<div class="val">'+brl(valSelTotal())+'</div><div class="qt">Qtde total: '+QT_TOTAL+'</div>'+
+    '<div class="sq">Selecionada: '+qtSelTotal()+'</div>'+
+    '<div class="xq">'+(e.n?'Excluída: '+e.q:'&nbsp;')+'</div>'+
+    '<div class="dif">'+difTxt(valSelTotal()-BASE)+'</div>'+
+    '<div class="sp"></div><button type="button" class="wa" data-wa="1">ENVIAR</button></div></th>';
+  document.getElementById("totais").innerHTML=h;
+}
+// iguala a altura dos quadros (botões sempre alinhados, qualquer fonte/sistema)
+function igualarQuadros(){
+  var bx=document.querySelectorAll("#totais .vbox"),m=0,i;
+  for(i=0;i<bx.length;i++)bx[i].style.height="auto";
+  for(i=0;i<bx.length;i++)m=Math.max(m,bx[i].offsetHeight);
+  for(i=0;i<bx.length;i++)bx[i].style.height=m+"px";
+}
+// topo congelado: cada linha do cabeçalho fica presa logo abaixo da anterior
+function fixarCabecalho(){
+  var rows=document.querySelectorAll("#desk thead tr"),top=0;
+  for(var r=0;r<rows.length;r++){
+    var ths=rows[r].children;for(var j=0;j<ths.length;j++)ths[j].style.top=top+"px";
+    top+=rows[r].getBoundingClientRect().height;
+  }
+}
+
+/* ---------- celular ---------- */
+function renderMobile(){
+  var e=excl(),dc=valSelTotal()-BASE;
+  document.getElementById("mbar").innerHTML='<div class="mt"><div class="ml">Personalizada</div><div class="mv">'+brl(valSelTotal())+'</div>'+
+    '<div class="mq">Selecionada <b>'+qtSelTotal()+'</b> de '+QT_TOTAL+(e.n?' · <span class="mx">'+e.n+' excluído'+(e.n>1?'s':'')+'</span>':'')+'</div></div>'+
+    '<button type="button" class="wa" data-wa="1">ENVIAR</button>';
+  document.getElementById("mvers").innerHTML=cardsVersoes().join("");
+  document.getElementById("mres").innerHTML=DADOS.length+' itens · '+un(QT_TOTAL)+' · '+difTxt(dc).replace('<br>',' ')+
+    (e.n?' · <span class="ex">Excluídos: '+e.n+' ('+un(e.q)+')</span>':'');
+  document.getElementById("mlist").innerHTML=DADOS.map(function(x,r){var ex=sel[r]===EXC;
+    var ops=x.v.map(function(o,i){var n=na(r,i);
+      return '<button type="button" class="po'+(sel[r]===i?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"><span class="rd"></span>'+
+        '<span class="pi"><span class="pv">'+VERSOES[i].n+' · '+VERSOES[i].d+'</span><br><span class="pm">'+o[1]+(n?'':' · Qtde '+o[3])+'</span>'+
+        (n?'':'<br><span class="vd">'+o[2]+'</span>')+'</span>'+
+        (n?'':olho(r,i,"span"))+'<span><span class="pr">'+(n?'Não consta':brl(o[0]))+'</span>'+(i>0?'<br><span class="df">'+dif(o[0]-x.v[0][0])+'</span>':'')+'</span></button>'}).join("");
+    ops+='<button type="button" class="po exb'+(ex?' sel':'')+'" data-r="'+r+'" data-i="'+EXC+'"><span class="rd"></span>EXCLUIR</button>';
+    return '<div class="pc'+(ex?' rowx':'')+'"><div class="ph"><b>'+x.pos+' · '+x.tipo+' · <span class="loc">'+x.loc+'</span></b>'+
+      '<div class="pd">'+num(x.larg)+' × '+num(x.alt)+' mm · Qtde '+x.qtd+'</div></div>'+ops+'</div>'}).join("");
+}
+
+function render(){
+  renderBody();renderTotais();renderMobile();
+  if(document.getElementById("desk").offsetParent!==null){igualarQuadros();fixarCabecalho()}
+}
+
+/* ---------- eventos (um único ouvinte, funciona com mouse e toque) ---------- */
+document.addEventListener("click",function(ev){
+  var t=ev.target;
+  var eye=t.closest("[data-img]");
+  if(eye){ev.preventDefault();ev.stopPropagation();var p=eye.getAttribute("data-img").split("_");abrirImagem(+p[0],+p[1]);return}
+  if(t.closest("[data-lbclose]")||t.id==="lb"){fecharImagem();return}
+  var wa=t.closest("[data-wa]");if(wa){enviarWhatsApp();return}
+  var all=t.closest("[data-all]");
+  if(all){var v=+all.getAttribute("data-all");               // mantém os itens excluídos
+    for(var r=0;r<sel.length;r++)if(sel[r]!==EXC)sel[r]=v;render();return}
+  var c=t.closest("td.opt,td.exc,button.po");
+  if(c){sel[+c.getAttribute("data-r")]=+c.getAttribute("data-i");render()}
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key==="Escape")fecharImagem();
+  if((ev.key==="Enter"||ev.key===" ")&&ev.target.matches&&ev.target.matches("span.eye")){ev.preventDefault();ev.target.click()}
+});
+var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,120)});
+window.addEventListener("orientationchange",function(){setTimeout(render,250)});
+
+/* ---------- WhatsApp: só os dados da coluna "Escolhida" ---------- */
+function enviarWhatsApp(){
+  var e=excl();
+  var linhas=DADOS.map(function(x,r){var i=sel[r],id=x.pos+" "+x.tipo+" "+x.loc;
+    if(i!==EXC&&na(r,i))return id+": NÃO CONSTA na "+VERSOES[i].n+" (não somado)";
+    return i===EXC?id+": EXCLUÍDO (não somado)":id+": "+brl(x.v[i][0]).replace(" "," ")+" ("+VERSOES[i].n+", Qtde "+QTDE_VERSAO[r][i]+")"});
+  var msg="*Perfecta Esquadrias, Orçamento Fernando Elias de Oliveira (versões escolhidas)*\n\n"+linhas.join("\n\n")+
+    "\n\n*Qtde selecionada:* "+qtSelTotal()+" de "+QT_TOTAL+(e.n?" ("+e.n+" excluído"+(e.n>1?"s":"")+", sem valor)":"")+
+    "\n*TOTAL:* "+brl(valSelTotal()).replace(" "," ");
+  var url="https://api.whatsapp.com/send?text="+encodeURIComponent(msg);
+  var toque=window.matchMedia&&window.matchMedia("(pointer:coarse)").matches;
+  if(toque){window.location.href=url;return}                  // Android/iOS: abre o app direto
+  var w=window.open(url,"_blank");if(!w)window.location.href=url; // Windows: nova aba (ou mesma, se pop-up bloqueado)
+}
+
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render);
+render();
+</script>
+</body>
+</html>
