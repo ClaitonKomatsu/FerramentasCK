@@ -17,6 +17,25 @@ h1{font-size:20px;margin:0 0 4px}
 .sub{color:var(--mut);margin-bottom:16px}
 .note{color:var(--mut);font-size:12px;margin-top:12px}
 
+/* ============ PAINEL: versões exibidas e anexos ============ */
+.topo{display:flex;flex-direction:column;gap:8px;height:100%;justify-content:space-between}
+.pt{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-weight:400;text-align:left}
+.ptt{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:2px 0 4px}
+.ptt+.vchks{margin-bottom:6px}
+.vchks{display:flex;flex-wrap:wrap;gap:4px}
+.vchk{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:14px;padding:3px 9px;font-size:12px;color:var(--mut);cursor:pointer;background:#fff;white-space:nowrap}
+.vchk.on{border-color:var(--acc);color:var(--acc);background:var(--accs);font-weight:600}
+.vchk span{font-weight:400;color:var(--mut);font-size:11px}
+.vchk input{margin:0;accent-color:var(--acc)}
+.anxs{display:flex;flex-direction:column;gap:3px;max-height:96px;overflow:auto}
+.anx{display:flex;align-items:center;gap:6px;width:100%;border:1px solid var(--line);background:#fff;border-radius:6px;padding:4px 8px;font-size:12px;color:var(--ink);cursor:pointer;text-align:left}
+.anx:hover{border-color:var(--acc);background:var(--accs)}
+.anx .an{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.anx .at{color:var(--mut);font-size:11px;white-space:nowrap}
+.anv{font-size:12px;color:var(--mut)}
+.mpainel{margin-bottom:10px}
+.mpainel .anxs{max-height:none}
+
 /* ============ TELA DE ACESSO ============ */
 body:not(.ok) .wrap{display:none}
 #login{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:16px;z-index:200}
@@ -270,13 +289,14 @@ th[data-sort].on .si{opacity:1}
 <!-- Celular / tablet -->
 <div id="mob">
   <div class="mbar" id="mbar"></div>
+  <div class="mpainel" id="mpainel"></div>
   <div class="mvers" id="mvers"></div>
   <div class="mres" id="mres"></div>
   <div class="msort">Ordenar: <button type="button" data-sort="pos">Pos.<span class="si"></span></button><button type="button" data-sort="tipo">Tipo<span class="si"></span></button><button type="button" data-sort="loc">Localização<span class="si"></span></button></div>
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). Os anexos da proposta podem ser baixados no mesmo quadro. Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -805,7 +825,7 @@ function naoConsta(){return AUTO.filter(function(a){return a}).length}
 // Selecionada (personalizada): itens com versão + itens excluídos (excluído conta como decidido, nunca subtrai)
 function qtSelTotal(){return DADOS.reduce(function(s,x,r){return s+(sel[r]===EXC?(AUTO[r]?0:x.qtd):QTDE_VERSAO[r][sel[r]])},0)}
 function valSelTotal(){return DADOS.reduce(function(s,x,r){return s+(sel[r]===EXC?0:x.v[sel[r]][0])},0)}
-function difTxt(dc){return Math.abs(dc)<0.005?'igual à Versão 1':(dc>0?'+ ':'− ')+brl(Math.abs(dc))+'<br>vs Versão 1'}
+function difTxt(dc){var r=(VERSOES[0]||{n:"Versão 1"}).n;return Math.abs(dc)<0.005?'igual à '+r:(dc>0?'+ ':'− ')+brl(Math.abs(dc))+'<br>vs '+r}
 
 
 /* ---------- desktop ---------- */
@@ -830,13 +850,13 @@ function cardsVersoes(){
     return '<div class="box vbox"><div class="lbl">'+v.n+'</div><div class="nm">'+v.d+'</div><div class="pn">Proposta N.º '+v.p+'</div>'+
       '<div class="val">'+brl(t)+'</div><div class="qt">Qtde total: '+qtVer(i)+'</div>'+
       '<div class="sq">Selecionada: '+qtSelVer(i)+'</div>'+
-      '<div class="dif">'+(i?dif(t-BASE)+'<br><span style="color:var(--mut)">vs Versão 1</span>':'Referência<br>&nbsp;')+'</div>'+
+      '<div class="dif">'+(i?dif(t-BASE)+'<br><span style="color:var(--mut)">vs '+VERSOES[0].n+'</span>':'Referência<br>&nbsp;')+'</div>'+
       '<div class="sp"></div><button type="button" data-all="'+i+'">Aplicar a todos</button></div>'});
 }
 function renderTotais(){
   var e=excl(),c=cardsVersoes();
-  var h='<th colspan="7"><div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
-    '<div class="ex">'+(e.n?'Excluídos: '+e.n+' '+(e.n===1?'item':'itens')+' ('+un(e.q)+')':'Nenhum item excluído')+'</div>'+(naoConsta()?'<div class="nx">Não constam na versão aplicada: '+naoConsta()+'</div>':'')+'</div></th>';
+  var h='<th colspan="7"><div class="topo">'+painelTopo()+'<div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
+    '<div class="ex">'+(e.n?'Excluídos: '+e.n+' '+(e.n===1?'item':'itens')+' ('+un(e.q)+')':'Nenhum item excluído')+'</div>'+(naoConsta()?'<div class="nx">Não constam na versão aplicada: '+naoConsta()+'</div>':'')+'</div></div></th>';
   h+=c.map(function(b){return '<th>'+b+'</th>'}).join("");
   h+='<th><div class="box vbox custom"><div class="lbl">Personalizada</div><div class="nm">Escolhidas</div>'+
     '<div class="val">'+brl(valSelTotal())+'</div><div class="qt">Qtde total: '+QT_TOTAL+'</div>'+
@@ -868,6 +888,7 @@ function renderMobile(){
   document.getElementById("mbar").innerHTML='<div class="mt"><div class="ml">Personalizada</div><div class="mv">'+brl(valSelTotal())+'</div>'+
     '<div class="mq">Selecionada <b>'+qtSelTotal()+'</b> de '+QT_TOTAL+(e.n?' · <span class="mx">'+e.n+' excluído'+(e.n>1?'s':'')+'</span>':'')+'</div></div>'+
     '<button type="button" class="wa" data-env="1">ENVIAR</button>';
+  document.getElementById("mpainel").innerHTML=painelTopo();
   document.getElementById("mvers").innerHTML=cardsVersoes().join("");
   document.getElementById("mres").innerHTML=DADOS.length+' itens · '+un(QT_TOTAL)+' · '+difTxt(dc).replace('<br>',' ')+
     (e.n?' · <span class="ex">Excluídos: '+e.n+' ('+un(e.q)+')</span>':'');
@@ -895,6 +916,7 @@ document.addEventListener("click",function(ev){
   var eye=t.closest("[data-img]");
   if(eye){ev.preventDefault();ev.stopPropagation();var p=eye.getAttribute("data-img").split("_");abrirImagem(+p[0],+p[1]);return}
   if(t.closest("[data-lbclose]")||t.id==="lb"){fecharImagem();return}
+  var ax=t.closest("[data-anx]");if(ax){baixarAnexo(ax.getAttribute("data-anx"));return}
   if(t.closest("[data-env]")){abrirEnvio();return}
   var so=t.closest("[data-sort]");if(so){ordenar(so.getAttribute("data-sort"));return}
   var ac=t.closest("[data-act]");
@@ -912,6 +934,8 @@ document.addEventListener("keydown",function(ev){
   if(ev.key==="Escape"){fecharImagem();fecharEnvio()}
   if((ev.key==="Enter"||ev.key===" ")&&ev.target.matches&&ev.target.matches("span.eye")){ev.preventDefault();ev.target.click()}
 });
+document.addEventListener("change",function(ev){var t=ev.target;
+  if(t.matches&&t.matches("input[data-ver]"))alternarVersao(+t.getAttribute("data-ver"),t.checked)});
 var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,120)});
 window.addEventListener("orientationchange",function(){setTimeout(render,250)});
 
@@ -1249,6 +1273,8 @@ function api(q){return fetch(API_URL,{method:"POST",body:JSON.stringify(q)}).the
 function b64bytes(b){var s=atob(b),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}
 var SESSAO=null;            // {token, proposta, pdfs, imagens}
 var AVISOS=[];              // conferências de totais
+var LIDAS=[];               // todas as versões lidas dos PDFs (cada uma com idx = posição original)
+var VIS=[];                 // versões marcadas para exibição (true/false por versão)
 function lgMsg(t,erro){var e=document.getElementById("lgm");e.textContent=t||"";e.className="lgm"+(erro?" er":"")}
 function lgPasso(n){document.getElementById("lg1").style.display=n===1?"":"none";document.getElementById("lg2").style.display=n===2?"":"none";
   document.getElementById("lg3").style.display=n===3?"":"none";
@@ -1285,7 +1311,9 @@ function carregarProposta(){
     return baixarArquivo(f.id).then(function(r){return palavrasPdf(b64bytes(r.b64))})
       .then(function(pg){var v=lerProposta(pg);v.arq=f.nome;lidas.push(v);k++;return prox()})}
   return prox().then(function(){
-    montarDados(lidas);iniciar();
+    LIDAS=lidas.map(function(v,i){v.idx=i;return v});VIS=LIDAS.map(function(){return true});
+    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};
+    montarDados(LIDAS);iniciar();
     document.getElementById("login").style.display="none";document.body.classList.add("ok")})
   .catch(function(e){lgPasso(2);lgMsg("Não foi possível ler a proposta: "+e.message,true)})}
 
@@ -1296,10 +1324,9 @@ function vd(s){s=String(s||"").toLowerCase().replace(/ - /g," ");return s&&s.ind
 function tituloNome(s){return String(s||"").toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase()}).replace(/ (De|Da|Do|Das|Dos|E) /g,function(m){return m.toLowerCase()})}
 
 function montarDados(lidas){
-  AVISOS=[];
-  var nv=lidas.length,imgs=SESSAO.imagens||{},pastas=Object.keys(imgs).sort(function(a,b){return a.localeCompare(b,"pt-BR",{numeric:true})});
+  var nv=lidas.length,imgs=SESSAO.imagens||{},pastas=Object.keys(imgs).filter(function(p){return p.toLowerCase()!=="anexos"}).sort(function(a,b){return a.localeCompare(b,"pt-BR",{numeric:true})});
   // imagens: pasta com o mesmo nome do PDF (V01.pdf -> V01); se não houver, a pasta na mesma posição
-  var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||pastas[i],m={};
+  var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||pastas[v.idx],m={};
     (imgs[pasta]||[]).forEach(function(f){m[arqTipo(semExt(f.nome)).toUpperCase()]=f.id});return m});
   // chave de cada peça: tipo + ocorrência (permite o mesmo tipo repetido na mesma versão)
   lidas.forEach(function(v){var c={};v.itens.forEach(function(it){c[it.tipo]=(c[it.tipo]||0)+1;it.k=it.tipo+"#"+c[it.tipo]})});
@@ -1314,20 +1341,54 @@ function montarDados(lidas){
     var v=por.map(function(it,i){if(!it)return [0,"Peça não orçada nesta versão","",0,"","","","","","","",0,0];
       var img=mapas[i][arqTipo(it.tipo).toUpperCase()]||"";   // imagem com o nome do TIPO (J02/J03 -> J02+J03.png)
       return [it.total,sc(it.desc),vd(it.vidro),it.qtd,it.pos,img,it.cor,it.det,it.desc,it.vidro,img,it.larg,it.alt]});
-    return {pos:ui===nv-1?ult.pos:ult.pos+" (V"+(ui+1)+")",tipo:ult.tipo,loc:loc,larg:ult.larg,alt:ult.alt,
+    return {k:k,pos:ui===nv-1?ult.pos:ult.pos+" (V"+(lidas[ui].idx+1)+")",tipo:ult.tipo,loc:loc,larg:ult.larg,alt:ult.alt,
       qtd:Math.max.apply(null,por.map(function(it){return it?it.qtd:0})),v:v}});
-  VERSOES=lidas.map(function(v,i){return {n:"Versão "+(i+1),d:v.cab.sub||"",p:v.cab.numero||semExt(v.arq),arq:v.arq}});
-  // conferência: soma dos itens x totais impressos no PDF
-  lidas.forEach(function(v,i){var s=v.itens.reduce(function(a,it){return a+it.total},0),q=v.itens.reduce(function(a,it){return a+it.qtd},0),
-    m=v.itens.reduce(function(a,it){return a+it.larg*it.alt*it.qtd},0)/1e6;
-    if(v.tot.valor!=null&&Math.abs(v.tot.valor-s)>0.01)AVISOS.push(VERSOES[i].n+": soma dos itens "+brl(s)+" difere do total do PDF "+brl(v.tot.valor)+".");
-    if(v.tot.qtd!=null&&v.tot.qtd!==q)AVISOS.push(VERSOES[i].n+": "+q+" esquadrias lidas, o PDF informa "+v.tot.qtd+".");
-    if(v.tot.m2!=null&&Math.abs(v.tot.m2-m)>0.02)AVISOS.push(VERSOES[i].n+": "+m2br(m)+" m² lidos, o PDF informa "+m2br(v.tot.m2)+" m².")});
+  VERSOES=lidas.map(function(v){return {n:"Versão "+(v.idx+1),d:v.cab.sub||"",p:v.cab.numero||semExt(v.arq),arq:v.arq,idx:v.idx}});
   var c=lidas[nv-1].cab,base=String(c.numero||SESSAO.proposta).split("/")[0];
   CLIENTE={nome:c.nome||"",obra:c.obra||"",end:c.end||"",numero:base+" (composição personalizada)",
     produto:String(VERSOES[0].d||"").split(" - ")[0]||"PROPOSTA",
     origem:"Composição a partir das propostas "+VERSOES.map(function(v){return v.p}).join(", ").replace(/, ([^,]*)$/," e $1")};
 }
+// conferência: soma dos itens x totais impressos em cada PDF (feita uma vez, com todas as versões)
+function conferir(lidas){AVISOS=[];
+  lidas.forEach(function(v,i){var nomeV="Versão "+(i+1);var s=v.itens.reduce(function(a,it){return a+it.total},0),q=v.itens.reduce(function(a,it){return a+it.qtd},0),
+    m=v.itens.reduce(function(a,it){return a+it.larg*it.alt*it.qtd},0)/1e6;
+    if(v.tot.valor!=null&&Math.abs(v.tot.valor-s)>0.01)AVISOS.push(nomeV+": soma dos itens "+brl(s)+" difere do total do PDF "+brl(v.tot.valor)+".");
+    if(v.tot.qtd!=null&&v.tot.qtd!==q)AVISOS.push(nomeV+": "+q+" esquadrias lidas, o PDF informa "+v.tot.qtd+".");
+    if(v.tot.m2!=null&&Math.abs(v.tot.m2-m)>0.02)AVISOS.push(nomeV+": "+m2br(m)+" m² lidos, o PDF informa "+m2br(v.tot.m2)+" m².")})}
+
+/* ---------- versões exibidas: só as marcadas entram na tabela e nos totais ---------- */
+function aplicarVersoes(){
+  var vistas=LIDAS.filter(function(v,i){return VIS[i]});
+  // guarda a escolha de cada peça (pela versão original) para manter depois da troca
+  var ant={};DADOS.forEach(function(x,r){ant[x.k]=sel[r]===EXC?"X":VERSOES[sel[r]].idx});
+  var ordAnt=ORD;
+  montarDados(vistas);iniciar();ORD=ordAnt;
+  DADOS.forEach(function(x,r){var p=ant[x.k];if(p==null)return;
+    if(p==="X"){sel[r]=EXC;return}
+    for(var i=0;i<NV;i++)if(VERSOES[i].idx===p&&x.v[i][3]>0){sel[r]=i;return}});
+  render()}
+function alternarVersao(idx,on){
+  VIS[idx]=on;
+  if(!VIS.some(Boolean)){VIS[idx]=true;toast("Deixe pelo menos uma versão marcada.");render();return}
+  aplicarVersoes()}
+// painel do canto superior esquerdo: versões exibidas + anexos
+function painelTopo(){
+  var h='<div class="pt"><div class="ptt">Versões exibidas</div><div class="vchks">'+LIDAS.map(function(v,i){
+      return '<label class="vchk'+(VIS[i]?' on':'')+'"><input type="checkbox" data-ver="'+i+'"'+(VIS[i]?' checked':'')+'> Versão '+(i+1)+' <span>'+esc(v.cab.numero||semExt(v.arq))+'</span></label>'}).join("")+'</div>';
+  var an=(SESSAO&&SESSAO.anexos)||[];
+  h+='<div class="ptt">Anexos'+(an.length?' ('+an.length+')':'')+'</div>';
+  h+=an.length?'<div class="anxs">'+an.map(function(a){
+      return '<button type="button" class="anx" data-anx="'+esc(a.id)+'" title="Baixar '+esc(a.nome)+'"><span class="clip">📎</span><span class="an">'+esc(a.nome)+'</span><span class="at">'+tamArq(a.tam)+'</span></button>'}).join("")+'</div>'
+    :'<div class="anv">Nenhum anexo nesta proposta.</div>';
+  return h+'</div>'}
+function tamArq(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
+function baixarAnexo(id){
+  var a=((SESSAO&&SESSAO.anexos)||[]).filter(function(x){return x.id===id})[0];if(!a)return;
+  toast("Baixando "+a.nome+"...");
+  baixarArquivo(id).then(function(r){var b=new Blob([b64bytes(r.b64)],{type:r.mime||"application/octet-stream"}),u=URL.createObjectURL(b),l=document.createElement("a");
+    l.href=u;l.download=r.nome||a.nome;document.body.appendChild(l);l.click();l.remove();setTimeout(function(){URL.revokeObjectURL(u)},60000);toast(a.nome+" baixado.")})
+  .catch(function(e){toast("Não foi possível baixar "+a.nome+": "+e.message)})}
 
 /* ---------- imagens das peças: baixadas sob demanda e guardadas na memória ---------- */
 var IMG_FULL={},IMG_PEND={};
@@ -1357,7 +1418,6 @@ function iniciar(){
   BASE=tot(0);
   QTDE_VERSAO=DADOS.map(function(x){return x.v.map(function(o){return o[3]})});
   QT_TOTAL=DADOS.reduce(function(s,x){return s+x.qtd},0);
-  ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};
   // cabeçalho da página e colunas conforme o número de versões
   var cli=tituloNome(CLIENTE.nome);
   document.title="Comparativo de Orçamento, "+cli+", Perfecta Esquadrias";
