@@ -54,6 +54,26 @@ h1{font-size:20px;margin:0 0 4px}
 .anxl{list-style:none;margin:0;padding:8px 14px 14px;overflow:auto}
 .anxl li{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
 .anxl li:last-child{border-bottom:none}
+.anxl li.vazio{color:var(--mut);font-size:13px}
+.anxf{border-top:1px solid var(--line);padding:10px 14px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.anxf span{font-size:12px;color:var(--mut)}
+.bup{border:none;background:var(--wa);color:#fff;border-radius:7px;padding:9px 16px;font-size:12px;font-weight:800;letter-spacing:.05em;cursor:pointer}
+.bup:disabled{opacity:.5;cursor:wait}
+.anxmsg{flex-basis:100%;font-size:12.5px;color:var(--mut)}
+.anxmsg .ok{color:var(--down)}.anxmsg .er{color:var(--up)}
+.cfm{position:fixed;inset:0;background:rgba(15,20,30,.55);z-index:130;display:flex;align-items:center;justify-content:center;padding:16px}
+.cfmb{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:20px;box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.cfmb p{margin:0 0 16px;font-size:14px;line-height:1.5;color:var(--ink,#1d2330);word-break:break-word}
+.cfma{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.cfma button{border-radius:7px;padding:9px 16px;font-size:13px;font-weight:700;cursor:pointer}
+.cfma .cn{background:#fff;border:1px solid var(--line);color:var(--mut)}
+.cfma .cs{background:var(--acc);border:1px solid var(--acc);color:#fff}
+.box button.sv,.mbar button.sv{background:#fff;border:1px solid #fff;color:var(--acc);font-weight:700;letter-spacing:.05em;margin-bottom:6px}
+.box button.sv:hover{background:var(--accs)}
+.box .svi{font-size:10px;color:#d6e2f0;margin-top:4px;text-align:center}
+.mbar .bt{display:flex;flex-direction:column;gap:6px}
+.mbar .bt button{padding:8px 14px}
+.mbar button.sv{margin-bottom:0}
 .aic{flex:0 0 58px;text-align:center;font-size:9.5px;font-weight:800;letter-spacing:.04em;border-radius:6px;padding:6px 2px;background:#eef0f3;color:var(--mut)}
 .aic.a-pdf{background:#fde8e8;color:#b42318}.aic.a-video{background:#efe7fb;color:#6b21a8}.aic.a-img{background:#e7f6ec;color:#1a7f37}.aic.a-txt{background:var(--accs);color:var(--acc)}
 .anm{flex:1;min-width:0}
@@ -355,7 +375,7 @@ th[data-sort].on .si{opacity:1}
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar. Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. SALVAR grava as versões exibidas, a escolha de cada item e a ordenação: na próxima vez que a proposta for aberta, essa posição é carregada automaticamente (um novo SALVAR substitui a anterior). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -379,6 +399,10 @@ th[data-sort].on .si{opacity:1}
   <div class="ovc">
     <div class="ovh"><b>Anexos da proposta</b><button type="button" data-fechar="anxm" aria-label="Fechar">×</button></div>
     <ul class="anxl" id="anxl"></ul>
+    <div class="anxf"><input type="file" id="anxin" multiple hidden onchange="carregarAnexos(this)">
+      <button type="button" class="bup" id="anxup" onclick="document.getElementById('anxin').click()">CARREGAR</button>
+      <span>Envie arquivos para a pasta Anexos (até 25 MB cada).</span>
+      <div class="anxmsg" id="anxmsg"></div></div>
   </div>
 </div>
 <div id="vw" class="ovl vwo" role="dialog" aria-modal="true" aria-label="Visualizar anexo">
@@ -935,7 +959,8 @@ function renderTotais(){
     '<div class="sq">Selecionada: '+qtSelTotal()+'</div>'+
     '<div class="xq">'+(e.n?'Excluída: '+e.q:'&nbsp;')+'</div>'+
     '<div class="dif">'+difTxt(valSelTotal()-BASE)+'</div>'+
-    '<div class="sp"></div><button type="button" class="wa" data-env="1" title="Gera a lista dos itens selecionados e a nova versão do orçamento em PDF">ENVIAR</button></div></th>';
+    '<div class="sp"></div><button type="button" class="sv" data-salvar="1" title="Grava as versões exibidas e a escolha de cada item. '+infoSalvo()+'">SALVAR</button>'+
+    '<button type="button" class="wa" data-env="1" title="Gera a lista dos itens selecionados e a nova versão do orçamento em PDF">ENVIAR</button><div class="svi">'+infoSalvo()+'</div></div></th>';
   document.getElementById("totais").innerHTML=h;
 }
 // iguala a altura dos quadros (botões sempre alinhados, qualquer fonte/sistema)
@@ -959,7 +984,7 @@ function renderMobile(){
   var e=excl(),dc=valSelTotal()-BASE;
   document.getElementById("mbar").innerHTML='<div class="mt"><div class="ml">Personalizada</div><div class="mv">'+brl(valSelTotal())+'</div>'+
     '<div class="mq">Selecionada <b>'+qtSelTotal()+'</b> de '+QT_TOTAL+(e.n?' · <span class="mx">'+e.n+' excluído'+(e.n>1?'s':'')+'</span>':'')+'</div></div>'+
-    '<button type="button" class="wa" data-env="1">ENVIAR</button>';
+    '<div class="bt"><button type="button" class="sv" data-salvar="1">SALVAR</button><button type="button" class="wa" data-env="1">ENVIAR</button></div>';
   document.getElementById("mpainel").innerHTML=painelTopo();
   document.getElementById("mvers").innerHTML=cardsVersoes().join("");
   document.getElementById("mres").innerHTML=DADOS.length+' itens · '+un(QT_TOTAL)+' · '+difTxt(dc).replace('<br>',' ')+
@@ -994,6 +1019,7 @@ document.addEventListener("click",function(ev){
   var fx=t.closest("[data-fechar]");if(fx){if(fx.getAttribute("data-fechar")==="vw")fecharVisualizador();else fecharAnexos();return}
   if(t.id==="vw"){fecharVisualizador();return}
   if(t.id==="anxm"){fecharAnexos();return}
+  if(t.closest("[data-salvar]")){salvarPosicao();return}
   if(t.closest("[data-env]")){abrirEnvio();return}
   var so=t.closest("[data-sort]");if(so){ordenar(so.getAttribute("data-sort"));return}
   var ac=t.closest("[data-act]");
@@ -1391,6 +1417,7 @@ function carregarProposta(){
     LIDAS=lidas.map(function(v,i){v.idx=i;return v});VIS=LIDAS.map(function(){return true});
     conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};
     montarDados(LIDAS);iniciar();
+    if(SESSAO.estado)aplicarEstado(SESSAO.estado);
     document.getElementById("login").style.display="none";document.body.classList.add("ok")})
   .catch(function(e){lgPasso(2);lgMsg("Não foi possível ler a proposta: "+e.message,true)})}
 
@@ -1401,7 +1428,7 @@ function vd(s){s=String(s||"").toLowerCase().replace(/ - /g," ");return s&&s.ind
 function tituloNome(s){return String(s||"").toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase()}).replace(/ (De|Da|Do|Das|Dos|E) /g,function(m){return m.toLowerCase()})}
 
 function montarDados(lidas){
-  var nv=lidas.length,imgs=SESSAO.imagens||{},pastas=Object.keys(imgs).filter(function(p){return p.toLowerCase()!=="anexos"}).sort(function(a,b){return a.localeCompare(b,"pt-BR",{numeric:true})});
+  var nv=lidas.length,imgs=SESSAO.imagens||{},pastas=Object.keys(imgs).filter(function(p){return !/^(anexos|v99)$/i.test(p)}).sort(function(a,b){return a.localeCompare(b,"pt-BR",{numeric:true})});
   // imagens: pasta com o mesmo nome do PDF (V01.pdf -> V01); se não houver, a pasta na mesma posição
   var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||pastas[v.idx],m={};
     (imgs[pasta]||[]).forEach(function(f){m[arqTipo(semExt(f.nome)).toUpperCase()]=f.id});return m});
@@ -1470,7 +1497,7 @@ function painelTopo(){
   var an=(SESSAO&&SESSAO.anexos)||[];
   return '<div class="pt"><div class="ptt">Versões exibidas</div><div class="vchks">'+LIDAS.map(function(v,i){
       return '<label class="vchk'+(VIS[i]?' on':'')+'"><input type="checkbox" data-ver="'+i+'"'+(VIS[i]?' checked':'')+'> Versão '+(i+1)+'</label>'}).join("")+'</div>'+
-    '<button type="button" class="anxbtn" data-anxs="1"'+(an.length?'':' disabled')+'><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button></div>'}
+    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button></div>'}
 function tamArq(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
 
 /* ---------- anexos: lista, visualização (PDF, vídeo, imagem, texto) e download ---------- */
@@ -1488,12 +1515,12 @@ function mimeAnexo(a,r){var t=tipoAnexo(a),n=String(a.nome).toLowerCase();
 function blobAnexo(id){var a=anexo(id);
   if(!ANX_CACHE[id])ANX_CACHE[id]=baixarArquivo(id).then(function(r){return new Blob([b64bytes(r.b64)],{type:mimeAnexo(a,r)})}).catch(function(e){delete ANX_CACHE[id];throw e});
   return ANX_CACHE[id]}
-function abrirAnexos(){var an=(SESSAO&&SESSAO.anexos)||[];
+function abrirAnexos(){listarAnexos();document.getElementById("anxm").classList.add("on");document.body.style.overflow="hidden"}
+function listarAnexos(){var an=(SESSAO&&SESSAO.anexos)||[];
   document.getElementById("anxl").innerHTML=an.map(function(a){var t=tipoAnexo(a),ic={pdf:"PDF",video:"VÍDEO",img:"IMAGEM",txt:"TEXTO"}[t]||"ARQUIVO";
     return '<li><span class="aic a-'+(t||"x")+'">'+ic+'</span><span class="anm"><b>'+esc(a.nome)+'</b><small>'+tamArq(a.tam)+'</small></span>'+
       (t?'<button type="button" class="bv" data-anx-ver="'+esc(a.id)+'">Visualizar</button>':'')+
-      '<button type="button" class="bd" data-anx-dl="'+esc(a.id)+'">Baixar</button></li>'}).join("")||'<li>Nenhum anexo nesta proposta.</li>';
-  document.getElementById("anxm").classList.add("on");document.body.style.overflow="hidden"}
+      '<button type="button" class="bd" data-anx-dl="'+esc(a.id)+'">Baixar</button></li>'}).join("")||'<li class="vazio">Nenhum anexo nesta proposta.</li>'}
 function fecharAnexos(){document.getElementById("anxm").classList.remove("on");if(!document.getElementById("lb").classList.contains("on"))document.body.style.overflow=""}
 function baixarAnexo(id){var a=anexo(id);if(!a)return;
   toast("Baixando "+a.nome+"...");
@@ -1564,6 +1591,78 @@ function iniciar(){
   av.innerHTML=AVISOS.length?'<b>Atenção, confira com os PDFs:</b><br>'+AVISOS.map(esc).join("<br>"):"";av.style.display=AVISOS.length?"":"none";
   render();
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(render)}
+
+
+/* ---------- CARREGAR: o cliente envia arquivos para a pasta Anexos ---------- */
+var MAX_ANEXO_MB=25,EXT_PROIBIDAS=/\.(exe|bat|cmd|com|scr|msi|vbs|vbe|js|jse|wsf|ps1|jar|reg|lnk|hta|html?)$/i;
+function blobB64(b){return new Promise(function(ok,falha){var r=new FileReader();r.onload=function(){ok(String(r.result).split(",")[1])};r.onerror=falha;r.readAsDataURL(b)})}
+function anxMsg(t,tipo){var e=document.getElementById("anxmsg");e.innerHTML=t||"";e.className="anxmsg"+(tipo?" "+tipo:"")}
+// confirmação dentro da página (a janela confirm() do navegador é bloqueada em alguns apps, como Instagram e WhatsApp)
+function perguntar(msg,sim,nao){return new Promise(function(ok){
+  var d=document.createElement("div");d.className="cfm";
+  d.innerHTML='<div class="cfmb" role="alertdialog" aria-modal="true"><p>'+msg+'</p><div class="cfma">'+
+    '<button type="button" class="cn">'+(nao||"Cancelar")+'</button><button type="button" class="cs">'+(sim||"Confirmar")+'</button></div></div>';
+  function fim(v){document.removeEventListener("keydown",tecla,true);d.remove();ok(v)}
+  function tecla(e){if(e.key==="Escape"){e.stopPropagation();e.preventDefault();fim(false)}}
+  document.addEventListener("keydown",tecla,true);
+  d.addEventListener("click",function(e){if(e.target.closest(".cs"))fim(true);else if(e.target.closest(".cn")||e.target===d)fim(false)});
+  document.body.appendChild(d);d.querySelector(".cs").focus()})}
+function nomeLimpo(n){return String(n||"").replace(/[\\\/:*?"<>|]/g,"").trim()}
+async function carregarAnexos(input){
+  var fs=[].slice.call(input.files||[]);input.value="";if(!fs.length)return;
+  var bt=document.getElementById("anxup"),feitos=[],subst=[],pulados=[],erros=[];bt.disabled=true;
+  for(var i=0;i<fs.length;i++){var f=fs[i],nome=nomeLimpo(f.name);
+    if(EXT_PROIBIDAS.test(nome)||nome.toLowerCase()==="senha.txt"){erros.push(f.name+": tipo de arquivo não permitido");continue}
+    if(f.size>MAX_ANEXO_MB*1048576){erros.push(f.name+": maior que "+MAX_ANEXO_MB+" MB");continue}
+    var pergunta=function(){return perguntar('Já existe um anexo chamado <b>'+esc(nome)+'</b>. Deseja substituir o original por este arquivo?','Substituir','Não enviar')};
+    var substituir=false;
+    if((SESSAO.anexos||[]).some(function(a){return a.nome===nome})){
+      if(!(await pergunta())){pulados.push(nome);continue}substituir=true}
+    anxMsg("Enviando "+esc(nome)+" ("+(i+1)+" de "+fs.length+")...");
+    try{var b64=await blobB64(f),q={acao:"anexar",token:SESSAO.token,nome:nome,mime:f.type||"application/octet-stream",b64:b64,substituir:substituir};
+      var r=await api(q);
+      // a lista estava desatualizada (outra pessoa enviou o mesmo nome): pergunta agora
+      if(!r.ok&&r.existe&&!substituir){if(!(await pergunta())){pulados.push(nome);continue}q.substituir=substituir=true;r=await api(q)}
+      if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.");return}erros.push(nome+": "+(r.erro||"falha"));continue}
+      var fora=r.substituidos||[];
+      SESSAO.anexos=(SESSAO.anexos||[]).filter(function(a){var sai=a.nome===r.anexo.nome||fora.indexOf(a.id)>=0;if(sai)delete ANX_CACHE[a.id];return !sai})
+        .concat([r.anexo]).sort(function(a,b){return a.nome.localeCompare(b.nome,"pt-BR",{numeric:true})});
+      ANX_CACHE[r.anexo.id]=Promise.resolve(new Blob([f],{type:mimeAnexo(r.anexo)}));
+      (substituir?subst:feitos).push(r.anexo.nome);listarAnexos()}
+    catch(e){erros.push(nome+": "+e.message)}}
+  bt.disabled=false;render();
+  var l=[];
+  if(feitos.length)l.push('<span class="ok">Enviado(s) para a pasta Anexos: '+feitos.map(esc).join(", ")+'</span>');
+  if(subst.length)l.push('<span class="ok">Substituído(s), o original foi para a lixeira do Drive: '+subst.map(esc).join(", ")+'</span>');
+  if(pulados.length)l.push('<span>Não enviado(s), mantido o original: '+pulados.map(esc).join(", ")+'</span>');
+  if(erros.length)l.push('<span class="er"><b>Não enviados:</b> '+erros.map(esc).join("; ")+'</span>');
+  anxMsg(l.join("<br>"))}
+
+/* ---------- SALVAR: posição atual (versões exibidas, escolha de cada peça, ordenação) em V99 ---------- */
+function estadoAtual(){var s={};
+  DADOS.forEach(function(x,r){s[x.k]=sel[r]===EXC?"X":VERSOES[sel[r]].arq});
+  return {formato:1,salvoEm:hoje().br,versoes:LIDAS.map(function(v,i){return {arq:v.arq,exibida:!!VIS[i]}}),sel:s,ord:{c:ORD.c,d:ORD.d}}}
+function salvarPosicao(){
+  var bts=document.querySelectorAll("[data-salvar]");[].forEach.call(bts,function(b){b.disabled=true});
+  var est=estadoAtual();
+  api({acao:"salvar",token:SESSAO.token,estado:est}).then(function(r){
+    if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.");return}throw new Error(r.erro||"falha")}
+    SESSAO.estado=est;toast("Posição salva em "+est.salvoEm+". Será carregada ao abrir esta proposta.");render()})
+  .catch(function(e){toast("Não foi possível salvar: "+e.message)})
+  .then(function(){[].forEach.call(document.querySelectorAll("[data-salvar]"),function(b){b.disabled=false})})}
+// ao abrir: aplica a posição salva (peças ou versões que não existem mais são ignoradas)
+function aplicarEstado(est){try{
+  if(!est||!est.versoes)return;
+  LIDAS.forEach(function(v,i){var f=est.versoes.filter(function(e){return e.arq===v.arq})[0];if(f)VIS[i]=!!f.exibida});
+  if(!VIS.some(Boolean))VIS=LIDAS.map(function(){return true});
+  montarDados(LIDAS.filter(function(v,i){return VIS[i]}));iniciar();
+  DADOS.forEach(function(x,r){var a=(est.sel||{})[x.k];if(a==null)return;
+    if(a==="X"){sel[r]=EXC;return}
+    for(var i=0;i<NV;i++)if(VERSOES[i].arq===a&&x.v[i][3]>0){sel[r]=i;return}});
+  if(est.ord&&(est.ord.c===null||/^(pos|tipo|loc)$/.test(est.ord.c)))ORD={c:est.ord.c,d:est.ord.d===-1?-1:1};
+  render();setTimeout(function(){toast("Carregada a posição salva em "+(est.salvoEm||"data não informada")+".")},400)}
+  catch(e){console.error(e)}}
+function infoSalvo(){return SESSAO&&SESSAO.estado&&SESSAO.estado.salvoEm?"Salvo em "+SESSAO.estado.salvoEm:"Ainda não salvo"}
 
 document.getElementById("lglogo").src=LOGO;
 lgInicio();
