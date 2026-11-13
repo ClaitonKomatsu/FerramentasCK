@@ -23,6 +23,10 @@
             --whatsapp-hover: #1EBE5D;
             --wol-btn-bg: #2e5984;
             --wol-btn-hover: #244669;
+            --audio-btn-bg: #d97706;
+            --audio-btn-hover: #b45309;
+            --stop-btn-bg: #dc2626;
+            --stop-btn-hover: #b91c1c;
         }
 
         * {
@@ -95,9 +99,67 @@
             font-weight: 600;
         }
 
-        .share-btn-container {
+        .header-actions {
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .audio-controls-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .audio-btn {
+            display: inline-flex;
+            align-items: center;
             justify-content: center;
+            gap: 8px;
+            flex: 1;
+            background-color: var(--audio-btn-bg);
+            color: white;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .audio-btn:hover {
+            background-color: var(--audio-btn-hover);
+        }
+
+        .audio-btn:active {
+            transform: scale(0.98);
+        }
+
+        .stop-audio-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background-color: var(--stop-btn-bg);
+            color: white;
+            font-weight: bold;
+            font-size: 0.95rem;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .stop-audio-btn:hover {
+            background-color: var(--stop-btn-hover);
+        }
+
+        .stop-audio-btn:active {
+            transform: scale(0.98);
         }
 
         .whatsapp-share-btn {
@@ -127,7 +189,7 @@
             transform: scale(0.98);
         }
 
-        .whatsapp-icon {
+        .btn-icon {
             width: 20px;
             height: 20px;
             fill: currentColor;
@@ -341,9 +403,23 @@
             Leia no wol.jw.org
         </a>
         <select id="dateSelector" class="date-picker"></select>
-        <div class="share-btn-container">
+        <div class="header-actions">
+            <div class="audio-controls-row">
+                <button id="audioPlayPauseBtn" class="audio-btn" type="button">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <span id="audioBtnLabel">Ouvir Conteúdo</span>
+                </button>
+                <button id="audioStopBtn" class="stop-audio-btn" type="button" title="Parar leitura">
+                    <svg class="btn-icon" viewBox="0 0 24 24">
+                        <path d="M6 6h12v12H6z"/>
+                    </svg>
+                    Parar
+                </button>
+            </div>
             <button id="whatsappShareBtn" class="whatsapp-share-btn" type="button">
-                <svg class="whatsapp-icon" viewBox="0 0 24 24">
+                <svg class="btn-icon" viewBox="0 0 24 24">
                     <path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.838.502 3.56 1.373 5.044L2 22l5.068-1.332a9.98 9.98 0 0 0 4.963 1.363h.005c5.535 0 10.031-4.496 10.031-10.031C22.067 6.496 17.566 2 12.031 2zm5.882 14.183c-.244.686-1.42 1.31-1.954 1.365-.516.052-1.18.074-3.413-.85-2.855-1.183-4.69-4.088-4.832-4.277-.142-.189-1.155-1.536-1.155-2.929 0-1.393.73-2.079.99-2.363.26-.284.568-.355.757-.355.189 0 .378.002.544.01.176.009.414-.067.647.494.244.59.832 2.031.905 2.18.073.149.122.325.024.52-.098.195-.147.316-.293.488-.146.172-.307.385-.439.516-.146.146-.298.305-.129.595.17.29.754 1.243 1.616 2.012 1.111.99 2.049 1.296 2.339 1.442.29.146.46.122.631-.073.171-.195.732-.853.927-1.146.195-.293.39-.244.659-.146.268.098 1.707.805 2 .951.293.146.488.22.561.341.073.122.073.707-.171 1.393z"/>
                 </svg>
                 Compartilhar via WhatsApp
@@ -591,6 +667,109 @@
         let currentSelectedData = null;
         let todayIsoDate = "";
 
+        // Controle de Síntese de Voz (Web Speech API)
+        const synth = window.speechSynthesis;
+        let isSpeaking = false;
+        let isPaused = false;
+
+        function updateAudioUI(state) {
+            const label = document.getElementById("audioBtnLabel");
+            const stopBtn = document.getElementById("audioStopBtn");
+
+            if (state === "playing") {
+                label.textContent = "Pausar Leitura";
+                stopBtn.style.display = "inline-flex";
+            } else if (state === "paused") {
+                label.textContent = "Continuar Leitura";
+                stopBtn.style.display = "inline-flex";
+            } else {
+                label.textContent = "Ouvir Conteúdo";
+                stopBtn.style.display = "none";
+            }
+        }
+
+        function stopAudio() {
+            if (synth) {
+                synth.cancel();
+            }
+            isSpeaking = false;
+            isPaused = false;
+            updateAudioUI("stopped");
+        }
+
+        function buildAudioText(dayData) {
+            return `Examinando as Escrituras Diariamente. ${dayData.displayDate}. ` +
+                   `Texto Bíblico: ${dayData.textoBiblicoRef}. ${dayData.textoBiblico}. ` +
+                   `Examine: ${dayData.examine}. ` +
+                   `Resumo: ${dayData.resumo}. ` +
+                   `Comentário: ${dayData.comentario}. ` +
+                   `Curiosidade: ${dayData.curiosidade}. ` +
+                   `Bom exemplo: ${dayData.bomExemplo}. ` +
+                   `Mau exemplo: ${dayData.mauExemplo}. ` +
+                   `Sobre Jeová: ${dayData.sobreJeova}. ` +
+                   `Para meditação: ${dayData.paraMeditacao}. ` +
+                   `Aplicação pessoal: ${dayData.aplicacaoPessoal}. ` +
+                   `Aplicação para o ministério: ${dayData.aplicacaoMinisterio}. ` +
+                   `Frase de impacto: ${dayData.fraseImpacto}.`;
+        }
+
+        function toggleAudioPlayback() {
+            if (!('speechSynthesis' in window)) {
+                alert("Desculpe, o seu navegador não suporta leitura de texto em voz alta.");
+                return;
+            }
+
+            if (isSpeaking && !isPaused) {
+                synth.pause();
+                isPaused = true;
+                updateAudioUI("paused");
+                return;
+            }
+
+            if (isSpeaking && isPaused) {
+                synth.resume();
+                isPaused = false;
+                updateAudioUI("playing");
+                return;
+            }
+
+            if (!currentSelectedData) return;
+
+            synth.cancel();
+            const textToRead = buildAudioText(currentSelectedData);
+            const utterance = new SpeechSynthesisUtterance(textToRead);
+            utterance.lang = "pt-BR";
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+
+            // Tenta selecionar uma voz em português do Brasil caso disponível
+            const voices = synth.getVoices();
+            const ptBrVoice = voices.find(v => v.lang === "pt-BR" || v.lang === "pt_BR");
+            if (ptBrVoice) {
+                utterance.voice = ptBrVoice;
+            }
+
+            utterance.onstart = () => {
+                isSpeaking = true;
+                isPaused = false;
+                updateAudioUI("playing");
+            };
+
+            utterance.onend = () => {
+                isSpeaking = false;
+                isPaused = false;
+                updateAudioUI("stopped");
+            };
+
+            utterance.onerror = () => {
+                isSpeaking = false;
+                isPaused = false;
+                updateAudioUI("stopped");
+            };
+
+            synth.speak(utterance);
+        }
+
         function formatDateToISO(d) {
             const year = d.getFullYear();
             const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -636,6 +815,9 @@
         function loadDateSelect() {
             const select = document.getElementById("dateSelector");
             const shareBtn = document.getElementById("whatsappShareBtn");
+            const audioPlayPauseBtn = document.getElementById("audioPlayPauseBtn");
+            const audioStopBtn = document.getElementById("audioStopBtn");
+
             select.innerHTML = "";
 
             const now = new Date();
@@ -691,6 +873,7 @@
             updateWolButtonVisibility();
 
             select.addEventListener("change", (e) => {
+                stopAudio(); // Interrompe o áudio ao trocar a data
                 const selectedIndex = parseInt(e.target.value, 10);
                 currentSelectedData = daysToUse[selectedIndex].dayData;
                 renderContent(currentSelectedData);
@@ -698,6 +881,15 @@
             });
 
             shareBtn.addEventListener("click", shareToWhatsApp);
+            audioPlayPauseBtn.addEventListener("click", toggleAudioPlayback);
+            audioStopBtn.addEventListener("click", stopAudio);
+
+            // Garante que as vozes sejam carregadas em navegadores baseados no Chromium
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
         }
 
         function createSection(title, content, isBiblicalText = false, isQuote = false, linkBiblia = "", bibliaRef = "") {
@@ -879,10 +1071,10 @@
             videoCard.appendChild(vContent);
             container.appendChild(videoCard);
 
-            // Quadro PESQUISA com o termo sugerido pré-preenchido
             container.appendChild(createSearchSection(dayData.termoPesquisaSugerido));
         }
 
+        window.addEventListener("beforeunload", stopAudio);
         document.addEventListener("DOMContentLoaded", loadDateSelect);
     </script>
 </body>
