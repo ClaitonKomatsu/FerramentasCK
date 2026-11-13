@@ -1429,8 +1429,11 @@ function tituloNome(s){return String(s||"").toLowerCase().replace(/(^|\s)(\S)/g,
 
 function montarDados(lidas){
   var nv=lidas.length,imgs=SESSAO.imagens||{},pastas=Object.keys(imgs).filter(function(p){return !/^(anexos|v99)$/i.test(p)}).sort(function(a,b){return a.localeCompare(b,"pt-BR",{numeric:true})});
-  // imagens: pasta com o mesmo nome do PDF (V01.pdf -> V01); se não houver, a pasta na mesma posição
-  var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||pastas[v.idx],m={};
+  // imagens: só da pasta da própria versão, com o mesmo nome do PDF (V02.pdf -> V02) ou o mesmo número (V02.pdf -> V2).
+  // Sem a pasta, a versão fica sem imagens (o olho não aparece): nunca usa a pasta de outra versão.
+  var numVer=function(s){var m=String(s).match(/^v\s*0*(\d+)$/i);return m?+m[1]:null};
+  var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),n=numVer(nome),
+    pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||(n===null?null:pastas.filter(function(p){return numVer(p)===n})[0]),m={};
     (imgs[pasta]||[]).forEach(function(f){m[arqTipo(semExt(f.nome)).toUpperCase()]=f.id});return m});
   // chave de cada peça: tipo + ocorrência (permite o mesmo tipo repetido na mesma versão)
   lidas.forEach(function(v){var c={};v.itens.forEach(function(it){c[it.tipo]=(c[it.tipo]||0)+1;it.k=it.tipo+"#"+c[it.tipo]})});
