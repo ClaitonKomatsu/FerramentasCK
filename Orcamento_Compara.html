@@ -434,7 +434,7 @@ th[data-sort].on .si{opacity:1}
 </div>
 <div class="wrap">
 <h1>Perfecta Esquadrias, Proposta Comercial</h1>
-<div class="sub"><span id="cliente"></span> · <button type="button" class="troca" onclick="location.reload()">Trocar proposta</button><br>Comparativo de orçamento por versão. Escolha uma versão em cada item para montar a composição personalizada. Para retirar um item do valor, deixe a quantidade em 0.</div>
+<div class="sub"><span id="cliente"></span> · <button type="button" class="troca" onclick="trocarProposta()">Trocar proposta</button><br>Comparativo de orçamento por versão. Escolha uma versão em cada item para montar a composição personalizada. Para retirar um item do valor, deixe a quantidade em 0.</div>
 
 <div id="avisos" class="avisos" style="display:none"></div>
 
@@ -461,7 +461,7 @@ th[data-sort].on .si{opacity:1}
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma versão marcada, ou fica fora do valor quando a quantidade é 0. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão (com as quantidades originais). Os botões − e + da coluna Qtde mudam a quantidade da peça em todas as versões (0 exclui a peça do valor; + volta a incluir): o valor é recalculado pelo preço unitário de cada versão e o número fica destacado; o quadro de cada versão passa a mostrar também o valor original do PDF. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", todas as peças passam para essa versão com as quantidades do PDF dela (inclusive as que estavam com quantidade 0); a peça que não consta na versão aplicada mantém a versão e a quantidade que já estavam escolhidas. Cada item sempre tem uma versão marcada, ou fica fora do valor quando a quantidade é 0. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão (com as quantidades originais). Os botões − e + da coluna Qtde mudam a quantidade da peça em todas as versões (0 exclui a peça do valor; + volta a incluir): o valor é recalculado pelo preço unitário de cada versão e o número fica destacado; o quadro de cada versão passa a mostrar também o valor original do PDF. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -1127,8 +1127,7 @@ document.addEventListener("click",function(ev){
     if(a==="close")fecharEnvio();else if(a==="dl")baixarPdfs();else if(a==="sh")compartilhar();else if(a==="png")baixarImagem();return}
   if(t.id==="env"){fecharEnvio();return}
   var all=t.closest("[data-all]");
-  if(all){var v=+all.getAttribute("data-all");               // mantém os itens excluídos pelo usuário
-    for(var r=0;r<sel.length;r++)if(!(sel[r]===EXC&&!AUTO[r]))aplicar(v,r);render();return}
+  if(all){aplicarATodos(+all.getAttribute("data-all"));return}
   var c=t.closest("td.opt,td.exc,button.po");
   if(c){if(c.classList.contains("na")||c.disabled)return;     // "Não consta": opção desabilitada
     var cr=+c.getAttribute("data-r");sel[cr]=+c.getAttribute("data-i");AUTO[cr]=0;render()}
@@ -1491,7 +1490,8 @@ function lgInicio(){
     document.getElementById("lgb1").disabled=true;return}
   document.getElementById("lgside").innerHTML=conhecaHtml();
   document.getElementById("lgredes").innerHTML=redesHtml().replace('<div class="redes">','<div class="redes"><a class="rede site" href="'+SITE+'" target="_blank" rel="noopener" title="Site da Perfecta Esquadrias"><img src="'+LOGO+'" alt="Perfecta"><span>Site</span></a>');
-  var q=(location.search.match(/[?&]p=(\d+)/)||[])[1];if(q)document.getElementById("lgp").value=q;lgPasso(q?2:1);ajustarRedes()}
+  var q=(location.search.match(/[?&]p=(\d+)/)||[])[1];if(q)document.getElementById("lgp").value=q;lgPasso(q?2:1);ajustarRedes();
+  var g=sessaoGuardada();if(g&&g.t)retomarSessao(g)}
 function lgEntrar(){
   var p=document.getElementById("lgp").value.replace(/\D/g,""),s=document.getElementById("lgs").value;
   if(!p){lgMsg("Informe o número da proposta (somente números).",true);lgPasso(1);return}
@@ -1500,11 +1500,25 @@ function lgEntrar(){
   api({acao:"entrar",proposta:p,senha:s}).then(function(r){
     document.getElementById("lgs").value="";
     if(!r.ok){lgPasso(r.etapa==="proposta"?1:2);lgMsg(r.erro||"Não foi possível entrar.",true);return}
-    SESSAO=r;return carregarProposta()})
+    SESSAO=r;guardarSessao();return carregarProposta()})
   .catch(function(e){lgPasso(2);lgMsg("Falha de comunicação com o servidor ("+e.message+"). Verifique a internet e tente de novo.",true)})}
 function baixarArquivo(id){return api({acao:"arquivo",token:SESSAO.token,id:id}).then(function(r){
   if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.")}throw new Error(r.erro||"Falha ao baixar arquivo")}return r})}
-function sairSessao(msg){if(AUTOSAVE)AUTOSAVE.armado=false;SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
+/* ---------- recarregar a página (F5) não pede a senha de novo ----------
+   O token da sessão fica guardado só nesta aba (sessionStorage): some ao fechar a aba ou ao clicar em "Trocar proposta",
+   e o servidor só o aceita por até 6 horas depois da entrada. */
+var CHAVE_SESSAO="perfecta_comparativo_sessao";
+function guardarSessao(){try{sessionStorage.setItem(CHAVE_SESSAO,JSON.stringify({t:SESSAO.token,p:SESSAO.proposta}))}catch(e){}}
+function esquecerSessao(){try{sessionStorage.removeItem(CHAVE_SESSAO)}catch(e){}}
+function sessaoGuardada(){try{return JSON.parse(sessionStorage.getItem(CHAVE_SESSAO)||"null")}catch(e){return null}}
+function retomarSessao(g){
+  document.getElementById("lgp").value=g.p||"";lgPasso(3);lgMsg("Reabrindo a proposta "+(g.p||"")+"...");
+  api({acao:"retomar",token:g.t}).then(function(r){
+    if(!r.ok){esquecerSessao();lgPasso(2);lgMsg(r.etapa==="sessao"?"A sessão expirou. Informe a senha de novo.":(r.erro||"Entre novamente."),true);return}
+    SESSAO=r;guardarSessao();return carregarProposta()})
+  .catch(function(e){lgPasso(2);lgMsg("Falha de comunicação com o servidor ("+e.message+"). Verifique a internet e tente de novo.",true)})}
+function trocarProposta(){esquecerSessao();location.reload()}
+function sairSessao(msg){esquecerSessao();if(AUTOSAVE)AUTOSAVE.armado=false;SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
 
 /* ---------- carga: baixa os PDFs de cada versão, lê os itens e monta o comparativo ---------- */
 // Leitura pronta de cada versão: o Cadastro grava o resultado da leitura do PDF (_dados.json) e o servidor
@@ -1582,19 +1596,28 @@ function aplicarQtds(){DADOS.forEach(aplicarQtdLinha)}
 function qtdAlterada(x){return QTD[x.k]!=null}
 // quantidade 0 = item excluído do valor (substitui a antiga coluna EXCLUIR)
 function excluidoPeloCliente(r){return sel[r]===EXC&&!AUTO[r]}
-function qtdMostrada(r){return excluidoPeloCliente(r)?0:DADOS[r].qtd}
-function definirQtd(x,q){if(q===x.orig.qtd)delete QTD[x.k];else QTD[x.k]=q;aplicarQtdLinha(x)}
+// quantidade exibida = a da versão escolhida (cada versão pode ter quantidade diferente no PDF)
+function qtdMostrada(r){if(excluidoPeloCliente(r))return 0;var x=DADOS[r];return sel[r]<EXC&&x.v[sel[r]][3]>0?x.v[sel[r]][3]:x.qtd}
+// sem alteração quando todas as versões em que a peça consta já têm essa quantidade no PDF
+function igualAoPdf(x,q){return x.orig.v.every(function(b){return !b[1]||b[1]===q})}
+function definirQtd(x,q){if(igualAoPdf(x,q))delete QTD[x.k];else QTD[x.k]=q;aplicarQtdLinha(x)}
+function recalcularQtds(){QTDE_VERSAO=DADOS.map(function(x){return x.v.map(function(o){return o[3]})});
+  QT_TOTAL=DADOS.reduce(function(s,y){return s+y.qtd},0);BASE=tot(0)}
+// APLICAR A TODOS: escolhe a versão em todas as peças em que ela consta e volta às quantidades do PDF dessa versão
+// (inclusive as peças que estavam com quantidade 0). As peças que não constam nela ficam como estão.
+function aplicarATodos(v){
+  DADOS.forEach(function(x,r){if(!x.orig||!x.orig.v[v][1])return;
+    delete QTD[x.k];aplicarQtdLinha(x);sel[r]=v;AUTO[r]=0});
+  recalcularQtds();render()}
 function algumaQtdAlterada(){return DADOS.some(qtdAlterada)}
 function totOriginal(i){return DADOS.reduce(function(s,x){return s+(x.orig?x.orig.v[i][0]:x.v[i][0])},0)}
 function mudarQtd(r,d){var x=DADOS[r],atual=qtdMostrada(r),q=Math.max(0,Math.min(QTD_MAX,atual+d));if(q===atual)return;
   if(q===0){sel[r]=EXC;AUTO[r]=0;render();return}                       // zerou: sai do valor
   if(atual===0){var v=primeiraVersao(r);if(v===EXC){toast("Esta peça não consta nas versões exibidas.");return}
     sel[r]=v;AUTO[r]=0;q=1}                                              // voltou de 0: entra com 1 na primeira versão em que consta
-  definirQtd(x,q);
-  QTDE_VERSAO[r]=x.v.map(function(o){return o[3]});
-  QT_TOTAL=DADOS.reduce(function(s,y){return s+y.qtd},0);BASE=tot(0);render()}
+  definirQtd(x,q);recalcularQtds();render()}
 function qtdHtml(r){var x=DADOS[r],q=qtdMostrada(r),zero=q===0,alt=!zero&&qtdAlterada(x);
-  return '<span class="qtc'+(alt?' alt':'')+(zero?' zero':'')+'" title="'+(zero?'Item excluído do valor. Use + para incluir de novo.':'Quantidade no PDF: '+x.orig.qtd+'. Zere para excluir do valor.')+'">'+
+  return '<span class="qtc'+(alt?' alt':'')+(zero?' zero':'')+'" title="'+(zero?'Item excluído do valor. Use + para incluir de novo.':'Quantidade no PDF: '+(sel[r]<EXC&&x.orig.v[sel[r]][1]?x.orig.v[sel[r]][1]:x.orig.qtd)+'. Zere para excluir do valor.')+'">'+
     '<button type="button" data-qtd="'+r+'" data-d="-1" aria-label="Diminuir quantidade"'+(zero?' disabled':'')+'>−</button>'+
     '<b>'+q+'</b><button type="button" data-qtd="'+r+'" data-d="1" aria-label="Aumentar quantidade">+</button></span>'}
 
