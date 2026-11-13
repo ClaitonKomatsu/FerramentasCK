@@ -411,13 +411,21 @@ async function gravar(){
     var fila=tarefas.slice(nPdf),idx=0;                                     // imagens e anexos, 3 de cada vez
     async function trab(){while(idx<fila.length){var t=fila[idx++];await envia(t);feitas++;prog()}}
     await Promise.all([trab(),trab(),trab()]);
+    // leitura pronta de cada versão (_dados.json), gravada por último: o Comparativo abre sem baixar nem ler os PDFs
+    var semDados=[];
+    if(!erros.length)for(var j=0;j<CAD.versoes.length;j++){var v=CAD.versoes[j];
+      msg("m5","Gravando a leitura da versão "+esc(v.nome)+"...");
+      var txt=JSON.stringify({formato:1,arq:v.nome+".pdf",tamPdf:v.arq.size,geradoEm:new Date().toISOString(),prop:v.prop},function(k,val){return k==="geo"?undefined:val});
+      try{var d=await api(com({acao:"gravar",pasta:v.nome,nome:"_dados.json",mime:"application/json",b64:await blobB64(new Blob([txt],{type:"application/json"}))}));
+        if(!d.ok)semDados.push(v.nome)}catch(e){semDados.push(v.nome)}}
     $("barra").style.width="100%";
     if(erros.length){msg("m5","<b>Gravação terminou com "+erros.length+" erro(s):</b><br>"+erros.map(esc).join("<br>")+"<br>Confira a internet e clique em Gravar de novo.","er");$("b4").disabled=false;return}
     var link=COMPARATIVO_URL?'<br><a href="'+esc(COMPARATIVO_URL)+(COMPARATIVO_URL.indexOf("?")<0?"?":"&")+'p='+CAD.proposta+'" target="_blank" rel="noopener">Abrir no Comparativo</a>':"";
     var partes=[];if(nPdf)partes.push(nPdf+" PDF(s), "+nImg+" imagens");if(CAD.anexos.length)partes.push(CAD.anexos.length+" anexo(s)");
     var sen=CAD.sit&&CAD.sit.existe?(CAD.sit.temSenha?"Senha do cliente (sem alteração): <b>"+esc(CAD.sit.senha)+"</b>.":"<b>Atenção:</b> a proposta ainda não tem senha; use \"Cadastrar outra proposta\", informe o mesmo número e salve uma senha."):
       "Senha do cliente gravada: <b>"+esc(CAD.senha)+"</b>.";
-    msg("m5","<b>Proposta "+CAD.proposta+" gravada:</b> "+partes.join(" e ")+" em Orçamentos / "+CAD.proposta+".<br>"+sen+link,"ok");
+    msg("m5","<b>Proposta "+CAD.proposta+" gravada:</b> "+partes.join(" e ")+" em Orçamentos / "+CAD.proposta+".<br>"+sen+link+
+      (semDados.length?'<div class="msg av">A leitura rápida não foi gravada para '+semDados.map(esc).join(", ")+': o Comparativo funciona, mas abre mais devagar (lê o PDF). Confira se o Apps Script está na última versão e grave de novo.</div>':""),"ok");
     $("b5").style.display="";
   }catch(e){msg("m5","Erro na gravação: "+esc(e.message),"er");$("b4").disabled=false}}
 function novo(){try{sessionStorage.setItem("cad_k",CAD.chave)}catch(e){}location.reload()}
