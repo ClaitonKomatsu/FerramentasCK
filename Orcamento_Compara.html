@@ -158,7 +158,49 @@ body:not(.ok) .wrap{display:none}
 #login .ck small{font-size:11.5px;color:var(--mut)}
 #login .ck svg{width:16px;height:16px;color:var(--acc);flex:0 0 16px}
 #login .rede.site img{width:auto;height:16px;border-radius:0}
-@media (max-width:760px){#login{align-items:flex-start}#login .lgwrap{flex-direction:column}#login .lgside{flex-basis:auto}}
+/* ===== tela de entrada: redes | acesso | Conheça mais (PC); acesso + redes, e Conheça mais embaixo (celular) ===== */
+#login .lgwrap{display:grid;grid-template-columns:auto 330px 260px;grid-template-areas:"soc card side";gap:18px;align-items:start;justify-content:center;width:auto;max-width:none}
+#login .lgsoc{grid-area:soc;padding-top:22px}
+#login .lgc{grid-area:card;width:330px;max-width:none;padding:24px 20px}
+#login .lgside{grid-area:side}
+#login .lgsoc .redes{display:flex;flex-direction:column;align-items:stretch;gap:10px}
+#login .lgsoc .rede{padding:7px 14px 7px 7px;font-size:14px;gap:8px;border-radius:22px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+#login .lgsoc .rede img{width:24px;height:24px}
+#login .lgsoc .rede.site img{width:auto;height:20px}
+#login .lglogo{height:56px}
+#login h2{font-size:20px;letter-spacing:.14em;margin:0 0 16px}
+#login .lgf{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px}
+#login .lgf label{flex:0 0 74px;margin:0;text-align:right;font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--ink)}
+#login .lgf input{flex:0 0 auto;width:calc(8ch + 26px);margin:0;padding:9px 10px;font-size:18px}
+#login #lgb1{display:block;width:calc(74px + 10px + 8ch + 26px);margin:6px auto 0;font-size:15px}
+#login button.ck{width:100%;font:inherit;font-weight:400;text-align:left;background:#fff;color:var(--ink);border-radius:10px;padding:11px 12px;cursor:pointer}
+#login button.ck b{font-weight:700}
+@media (max-width:760px){
+  #login{align-items:flex-start;padding:12px}
+  #login .lgwrap{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"card soc" "side side";gap:10px;width:100%}
+  #login .lgc{width:auto;padding:16px 10px}
+  #login .lglogo{height:46px}
+  #login h2{font-size:17px;margin-bottom:12px}
+  #login .lgsoc{padding-top:0}
+  #login .lgsoc .redes{gap:8px}
+  #login .lgsoc .rede{font-size:12.5px;padding:6px 10px 6px 6px}
+  #login .lgsoc .rede img{width:22px;height:22px}
+  #login .lgf{gap:6px}
+  #login .lgf label{flex-basis:62px;font-size:11px;letter-spacing:.03em}
+  #login #lgb1{width:calc(62px + 6px + 8ch + 26px)}
+  #login .lgside{padding:16px 12px}
+}
+/* ===== quantidade com − e + ===== */
+.qtc{display:inline-flex;align-items:center;gap:3px;white-space:nowrap}
+.qtc button{width:22px;height:22px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--acc);font-size:15px;line-height:1;font-weight:700;padding:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
+.qtc button:hover:not(:disabled){border-color:var(--acc);background:var(--accs)}
+.qtc button:disabled{opacity:.35;cursor:default}
+.qtc b{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
+.qtc.alt b{color:#fff;background:var(--acc);border-radius:5px;padding:1px 4px}
+td.qtdc{text-align:center!important}
+.box .og{font-size:10px;color:var(--mut);margin-top:1px}
+@media (max-width:1000px){.pd .qtc{vertical-align:middle;margin-left:4px}.pd .qtc button{width:32px;height:32px;font-size:18px}.pd .qtc b{min-width:26px;font-size:15px}}
+
 #login .lgr{font-size:11.5px;color:var(--mut);margin-top:8px}
 #login .lgsiga{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
 #login .lgsiga .ptt{text-align:center;margin-bottom:8px}
@@ -176,7 +218,7 @@ body:not(.ok) .wrap{display:none}
 #mob{display:none}
 .wrap{max-width:1600px;margin:0 auto;padding:24px}
 table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;table-layout:fixed;background:var(--card);border:1px solid var(--line);border-radius:10px}
-col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:52px}col.c-exc{width:50px}col.c-v{width:15.5%}col.c-esc{width:12%}
+col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:78px}col.c-exc{width:50px}col.c-v{width:15.5%}col.c-esc{width:12%}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
 /* cabeçalho congelado: cada th é "sticky" com o topo calculado em JS (funciona em Chrome, Edge, Firefox e Safari) */
 thead th{position:-webkit-sticky;position:sticky;z-index:10;background:#fafbfc;font-size:12px;color:var(--mut)}
@@ -373,18 +415,17 @@ th[data-sort].on .si{opacity:1}
 <body>
 <div id="login">
  <div class="lgwrap">
+  <div class="lgsoc" id="lgredes"></div>
   <div class="lgc">
     <img class="lglogo" id="lglogo" alt="Perfecta Esquadrias">
-    <h2>Comparativo de Orçamento</h2>
-    <div id="lg1"><label for="lgp">Número de Proposta (consulte Depto Coml)</label>
-      <input id="lgp" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')document.getElementById('lgs').focus()">
-      <label for="lgs">Senha de acesso</label>
-      <input id="lgs" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')lgEntrar()">
+    <h2>ORÇAMENTOS</h2>
+    <div id="lg1">
+      <div class="lgf"><label for="lgp">PROPOSTA</label><input id="lgp" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')document.getElementById('lgs').focus()"></div>
+      <div class="lgf"><label for="lgs">SENHA</label><input id="lgs" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')lgEntrar()"></div>
       <button type="button" id="lgb1" onclick="lgEntrar()">Entrar</button>
-      <div class="lgr">Acesso restrito ao cliente da proposta.</div></div>
+      <div class="lgr">Acesso restrito ao cliente da proposta.<br>Número da proposta: consulte o Depto. Comercial.</div></div>
     <div id="lg3" style="display:none"><div class="spin"></div></div>
     <div id="lgm" class="lgm" role="status"></div>
-    <div class="lgsiga"><div class="ptt">Siga a Perfecta</div><div id="lgredes"></div></div>
   </div>
   <aside class="lgside" id="lgside"></aside>
  </div>
@@ -418,7 +459,7 @@ th[data-sort].on .si{opacity:1}
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão (com as quantidades originais). Os botões − e + da coluna Qtde mudam a quantidade da peça em todas as versões: o valor é recalculado pelo preço unitário de cada versão e o número fica destacado; o quadro de cada versão passa a mostrar também o valor original do PDF. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -438,8 +479,8 @@ th[data-sort].on .si{opacity:1}
 </div>
 <div id="toast" role="status"></div>
 <div id="apr" role="dialog" aria-modal="true" aria-label="Apresentação Perfecta Esquadrias">
-  <div class="aprbar"><img id="aprlogo" alt="Perfecta Esquadrias"><div class="aprt">Conheça a Perfecta Esquadrias</div>
-    <div class="aprm" id="aprm" role="status"></div><button type="button" id="aprb" disabled>Preparando o comparativo...</button></div>
+  <div class="aprbar"><img id="aprlogo" alt="Perfecta Esquadrias"><div class="aprt">A Perfecta Esquadrias</div>
+    <div class="aprm"></div><button type="button" id="aprb">FECHAR</button></div>
   <div class="aprp" id="aprp"></div>
 </div>
 
@@ -986,7 +1027,7 @@ function renderBody(){
               :ex?'<span class="xl">Excluído</span><div class="md">não somado</div>'
               :brl(x.v[sel[r]][0])+'<div class="md">'+VERSOES[sel[r]].n+' · Qtde '+QTDE_VERSAO[r][sel[r]]+'</div>';
     return '<tr class="'+(ex?'rowx':au?'rowna':'')+'"><td>'+x.pos+'</td><td>'+x.tipo+'</td><td class="p-loc">'+x.loc+'</td>'+
-      '<td class="num">'+num(x.larg)+'</td><td class="num">'+num(x.alt)+'</td><td class="num">'+x.qtd+'</td>'+
+      '<td class="num">'+num(x.larg)+'</td><td class="num">'+num(x.alt)+'</td><td class="num qtdc">'+qtdHtml(r)+'</td>'+
       '<td class="exc'+(ex?' on':'')+'" data-r="'+r+'" data-i="'+EXC+'" title="Excluir este item do valor"><input type="radio" tabindex="-1" '+(ex?'checked':'')+'></td>'+
       '<td class="imgt'+(vi?' on':'')+'" data-imgrow="'+r+'" title="'+(vi?'Ocultar':'Mostrar')+' as imagens das versões desta peça"><span class="tg">'+OLHO+'</span></td>'+
       opts+'<td class="chosen num esc">'+esc+'</td></tr>'}).join("");
@@ -996,6 +1037,7 @@ function cardsVersoes(){
     return '<div class="box vbox"><div class="lbl">'+v.n+'</div><div class="nm">'+v.d+'</div><div class="pn">Proposta N.º '+v.p+'</div>'+
       '<div class="val">'+brl(t)+'</div><div class="qt">Qtde total: '+qtVer(i)+'</div>'+
       '<div class="sq">Selecionada: '+qtSelVer(i)+'</div>'+
+      (algumaQtdAlterada()?'<div class="og">No PDF: '+brl(totOriginal(i))+'</div>':'')+
       '<div class="dif">'+(i?dif(t-BASE)+'<br><span style="color:var(--mut)">vs '+VERSOES[0].n+'</span>':'Referência<br>&nbsp;')+'</div>'+
       '<div class="sp"></div><div class="bts"><button type="button" data-all="'+i+'">Aplicar a todos</button>'+
       '<button type="button" class="dl" data-pdf="'+i+'" title="Baixar o PDF completo da '+v.n+' (todas as peças)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>Baixar proposta</button></div></div>'});
@@ -1050,7 +1092,7 @@ function renderMobile(){
     ops+='<button type="button" class="po exb'+(ex?' sel':'')+'" data-r="'+r+'" data-i="'+EXC+'"><span class="rd"></span>EXCLUIR</button>';
     if(au)ops='<div class="pna">Não consta na '+VERSOES[au-1].n+' (não somado). Escolha outra versão ou EXCLUIR.</div>'+ops;
     return '<div class="pc'+(ex?' rowx':au?' rowna':'')+'"><div class="ph"><button type="button" class="mimg'+(imgsAbertas(r)?' on':'')+'" data-imgrow="'+r+'" aria-label="Imagens das versões">'+OLHO+'</button><b>'+x.pos+' · '+x.tipo+' · <span class="loc">'+x.loc+'</span></b>'+
-      '<div class="pd">'+num(x.larg)+' × '+num(x.alt)+' mm · Qtde '+x.qtd+'</div></div>'+ops+'</div>'}).join("");
+      '<div class="pd">'+num(x.larg)+' × '+num(x.alt)+' mm · Qtde '+qtdHtml(r)+'</div></div>'+ops+'</div>'}).join("");
 }
 
 function render(){
@@ -1071,7 +1113,9 @@ document.addEventListener("click",function(ev){
   var fx=t.closest("[data-fechar]");if(fx){if(fx.getAttribute("data-fechar")==="vw")fecharVisualizador();else fecharAnexos();return}
   if(t.id==="vw"){fecharVisualizador();return}
   if(t.id==="anxm"){fecharAnexos();return}
-  if(t.id==="aprb"){if(!t.disabled)fecharApresentacao();return}
+  if(t.id==="aprb"){fecharApresentacao();return}
+  if(t.closest("[data-apr]")){abrirApresentacao();return}
+  var qb=t.closest("[data-qtd]");if(qb){ev.preventDefault();ev.stopPropagation();if(!qb.disabled)mudarQtd(+qb.getAttribute("data-qtd"),+qb.getAttribute("data-d"));return}
   var pd=t.closest("[data-pdf]");if(pd){baixarProposta(+pd.getAttribute("data-pdf"));return}
   var ir=t.closest("[data-imgrow]");if(ir){ev.preventDefault();alternarImagens(+ir.getAttribute("data-imgrow"));return}
   if(t.closest("[data-imgall]")){alternarTodasImagens();return}
@@ -1089,7 +1133,7 @@ document.addEventListener("click",function(ev){
     var cr=+c.getAttribute("data-r");sel[cr]=+c.getAttribute("data-i");AUTO[cr]=0;render()}
 });
 document.addEventListener("keydown",function(ev){
-  if(ev.key==="Escape"){if(aprAberta())return;if(fecharVisualizador())return;if(document.getElementById("anxm").classList.contains("on")){fecharAnexos();return}fecharImagem();fecharEnvio()}
+  if(ev.key==="Escape"){if(fecharApresentacao())return;if(fecharVisualizador())return;if(document.getElementById("anxm").classList.contains("on")){fecharAnexos();return}fecharImagem();fecharEnvio()}
   if((ev.key==="Enter"||ev.key===" ")&&ev.target.matches&&ev.target.matches("span.eye")){ev.preventDefault();ev.target.click()}
 });
 document.addEventListener("change",function(ev){var t=ev.target;
@@ -1451,13 +1495,11 @@ function lgEntrar(){
   api({acao:"entrar",proposta:p,senha:s}).then(function(r){
     document.getElementById("lgs").value="";
     if(!r.ok){lgPasso(r.etapa==="proposta"?1:2);lgMsg(r.erro||"Não foi possível entrar.",true);return}
-    SESSAO=r;PRONTO=false;
-    if(r.apresentacao)abrirApresentacao(r.apresentacao);     // apresentação da Perfecta enquanto o comparativo é preparado
-    return carregarProposta()})
+    SESSAO=r;return carregarProposta()})
   .catch(function(e){lgPasso(2);lgMsg("Falha de comunicação com o servidor ("+e.message+"). Verifique a internet e tente de novo.",true)})}
 function baixarArquivo(id){return api({acao:"arquivo",token:SESSAO.token,id:id}).then(function(r){
   if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.")}throw new Error(r.erro||"Falha ao baixar arquivo")}return r})}
-function sairSessao(msg){if(AUTOSAVE)AUTOSAVE.armado=false;fecharApresentacao(true);SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
+function sairSessao(msg){if(AUTOSAVE)AUTOSAVE.armado=false;SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
 
 /* ---------- carga: baixa os PDFs de cada versão, lê os itens e monta o comparativo ---------- */
 // Leitura pronta de cada versão: o Cadastro grava o resultado da leitura do PDF (_dados.json) e o servidor
@@ -1465,12 +1507,12 @@ function sairSessao(msg){if(AUTOSAVE)AUTOSAVE.armado=false;fecharApresentacao(tr
 var FORMATO_DADOS=1;
 function dadosProntos(f){var d=(SESSAO.dados||{})[f.nome];return d&&d.formato===FORMATO_DADOS&&d.prop&&d.prop.itens&&d.prop.itens.length?d.prop:null}
 function garantirWorker(){if(!WORKER_OK){pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([document.getElementById("pdfjs-worker").textContent],{type:"text/javascript"}));WORKER_OK=true}}
-var WORKER_OK=false,PRONTO=false;
+var WORKER_OK=false;
 function carregarProposta(){
   var pdfs=SESSAO.pdfs||[];
   if(!pdfs.length){falhaCarga("Nenhum PDF de versão encontrado na pasta da proposta "+SESSAO.proposta+".");return}
   var faltam=pdfs.filter(function(f){return !dadosProntos(f)}).length,feitos=0;
-  function aviso(){var t=faltam?"Baixando e lendo os PDFs das versões ("+feitos+" de "+faltam+")...":"Montando o comparativo...";lgMsg(t);aprStatus(false,t)}
+  function aviso(){lgMsg(faltam?"Baixando e lendo os PDFs das versões ("+feitos+" de "+faltam+")...":"Montando o comparativo...")}
   if(faltam)garantirWorker();
   aviso();
   // todos os PDFs que faltam são baixados ao mesmo tempo
@@ -1480,38 +1522,35 @@ function carregarProposta(){
       .then(function(pg){var v=lerProposta(pg);v.arq=f.nome;feitos++;aviso();return v})}))
   .then(function(lidas){
     LIDAS=lidas.map(function(v,i){v.idx=i;return v});VIS=LIDAS.map(function(){return true});
-    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};VERIMG={};PDF_CACHE={};AUTOSAVE.armado=false;
+    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};VERIMG={};PDF_CACHE={};QTD={};AUTOSAVE.armado=false;
     montarDados(LIDAS);iniciar();
     if(SESSAO.estado)aplicarEstado(SESSAO.estado);
     armarAutosave();
-    PRONTO=true;
-    if(aprAberta())aprStatus(true);else mostrarComparativo()})
+    mostrarComparativo()})
   .catch(function(e){falhaCarga("Não foi possível ler a proposta: "+e.message)})}
 function mostrarComparativo(){document.getElementById("login").style.display="none";document.body.classList.add("ok");render()}
-function falhaCarga(t){fecharApresentacao(true);lgPasso(2);lgMsg(t,true)}
+function falhaCarga(t){lgPasso(2);lgMsg(t,true)}
 
-/* ---------- apresentação da Perfecta (Apresentacao.pdf), mostrada logo após a senha ---------- */
+/* ---------- apresentação da Perfecta (Apresentacao.pdf da pasta Orçamentos), aberta por "A Perfecta" ---------- */
+var APR_BYTES=null;
 function aprAberta(){return document.getElementById("apr").classList.contains("on")}
-function aprStatus(pronto,texto){var b=document.getElementById("aprb");if(!b)return;
-  b.disabled=!pronto;b.textContent=pronto?"PROSSEGUIR":"Preparando o comparativo...";
-  document.getElementById("aprm").textContent=pronto?"":(texto||"")}
-function abrirApresentacao(a){
-  var w=document.getElementById("apr"),pg=document.getElementById("aprp");
+function abrirApresentacao(){
+  var w=document.getElementById("apr"),pg=document.getElementById("aprp"),vez={};abrirApresentacao.vez=vez;
   pg.innerHTML='<div class="aprld"><div class="spin"></div><div>Carregando a apresentação...</div></div>';
-  aprStatus(false,"");w.classList.add("on");document.body.style.overflow="hidden";w.scrollTop=0;
-  var s=SESSAO;garantirWorker();
-  baixarArquivo(a.id).then(function(r){if(SESSAO!==s||!aprAberta())return;
-    return pdfjsLib.getDocument({data:b64bytes(r.b64)}).promise.then(function(doc){
+  w.classList.add("on");document.body.style.overflow="hidden";w.scrollTop=0;garantirWorker();
+  (APR_BYTES?Promise.resolve(APR_BYTES):api({acao:"apresentacao"}).then(function(r){
+    if(!r.ok)throw new Error(r.erro||"indisponível");APR_BYTES=b64bytes(r.b64);return APR_BYTES}))
+  .then(function(bytes){if(abrirApresentacao.vez!==vez||!aprAberta())return;
+    return pdfjsLib.getDocument({data:bytes.slice(0)}).promise.then(function(doc){
       pg.innerHTML="";var larg=Math.min(pg.clientWidth||900,1100),dpr=Math.min(window.devicePixelRatio||1,2),n=0;
-      function prox(){if(n>=doc.numPages||SESSAO!==s||!aprAberta())return;n++;
+      function prox(){if(n>=doc.numPages||abrirApresentacao.vez!==vez||!aprAberta())return;n++;
         return doc.getPage(n).then(function(p){var v0=p.getViewport({scale:1}),e=larg/v0.width,v=p.getViewport({scale:e*dpr});
-          var c=document.createElement("canvas");c.width=Math.round(v.width);c.height=Math.round(v.height);c.style.width=Math.round(v0.width*e)+"px";
-          pg.appendChild(c);return p.render({canvasContext:c.getContext("2d"),viewport:v}).promise}).then(prox)}
+          var cv=document.createElement("canvas");cv.width=Math.round(v.width);cv.height=Math.round(v.height);cv.style.width=Math.round(v0.width*e)+"px";
+          pg.appendChild(cv);return p.render({canvasContext:cv.getContext("2d"),viewport:v}).promise}).then(prox)}
       return prox()})})
-  .catch(function(){if(SESSAO!==s)return;pg.innerHTML='<div class="aprld">Não foi possível abrir a apresentação agora.</div>'})}
-function fecharApresentacao(semMostrar){var w=document.getElementById("apr");if(!w.classList.contains("on"))return;
-  w.classList.remove("on");document.body.style.overflow="";document.getElementById("aprp").innerHTML="";
-  if(!semMostrar&&PRONTO)mostrarComparativo()}
+  .catch(function(e){if(abrirApresentacao.vez!==vez)return;pg.innerHTML='<div class="aprld">Não foi possível abrir a apresentação agora ('+esc(e.message)+').</div>'})}
+function fecharApresentacao(){var w=document.getElementById("apr");if(!w.classList.contains("on"))return false;
+  w.classList.remove("on");document.body.style.overflow="";document.getElementById("aprp").innerHTML="";abrirApresentacao.vez=null;return true}
 
 /* ---------- baixar a proposta completa (PDF original de cada versão) ---------- */
 var PDF_CACHE={};
@@ -1522,6 +1561,31 @@ function baixarProposta(i){var v=VERSOES[i],f=(SESSAO.pdfs||[]).filter(function(
   PDF_CACHE[f.id].then(function(b){var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=nome;document.body.appendChild(a);a.click();a.remove();
     setTimeout(function(){URL.revokeObjectURL(u)},4000);toast("Proposta "+v.p+" salva na pasta de downloads.")})
   .catch(function(e){toast("Não foi possível baixar: "+e.message)})}
+
+/* ---------- quantidade de cada peça (botões − e +) ----------
+   Vale para todas as versões da peça: valor = preço unitário de cada versão (total do PDF ÷ quantidade do PDF) × nova quantidade.
+   Volta ao original quando a quantidade é igual à do PDF. Fica salva com as demais escolhas. */
+var QTD={};          // chave da peça -> quantidade escolhida pelo cliente
+var QTD_MAX=999;
+function aplicarQtdLinha(x){
+  if(!x.orig)x.orig={qtd:x.qtd,v:x.v.map(function(o){return [o[0],o[3]]})};
+  var q=QTD[x.k];
+  x.v.forEach(function(o,i){var b=x.orig.v[i];
+    if(q==null||!b[1]){o[0]=b[0];o[3]=b[1]}else{o[3]=q;o[0]=Math.round(b[0]/b[1]*q*100)/100}});
+  x.qtd=q==null?x.orig.qtd:q}
+function aplicarQtds(){DADOS.forEach(aplicarQtdLinha)}
+function qtdAlterada(x){return QTD[x.k]!=null}
+function algumaQtdAlterada(){return DADOS.some(qtdAlterada)}
+function totOriginal(i){return DADOS.reduce(function(s,x){return s+(x.orig?x.orig.v[i][0]:x.v[i][0])},0)}
+function mudarQtd(r,d){var x=DADOS[r],q=Math.max(1,Math.min(QTD_MAX,x.qtd+d));if(q===x.qtd)return;
+  if(q===x.orig.qtd)delete QTD[x.k];else QTD[x.k]=q;
+  aplicarQtdLinha(x);
+  QTDE_VERSAO[r]=x.v.map(function(o){return o[3]});
+  QT_TOTAL=DADOS.reduce(function(s,y){return s+y.qtd},0);BASE=tot(0);render()}
+function qtdHtml(r){var x=DADOS[r],alt=qtdAlterada(x);
+  return '<span class="qtc'+(alt?' alt':'')+'"'+(alt?' title="Quantidade no PDF: '+x.orig.qtd+'"':'')+'>'+
+    '<button type="button" data-qtd="'+r+'" data-d="-1" aria-label="Diminuir quantidade"'+(x.qtd<=1?' disabled':'')+'>−</button>'+
+    '<b>'+x.qtd+'</b><button type="button" data-qtd="'+r+'" data-d="1" aria-label="Aumentar quantidade">+</button></span>'}
 
 /* ---------- imagens de todas as versões de uma peça (coluna do olho) ---------- */
 var VERIMG={};       // chave da peça -> true quando as imagens estão abertas
@@ -1606,7 +1670,9 @@ var CONHECA=[
   {t:"Soluções Perfecta",d:"Linhas e produtos",u:"https://perfectaesquadrias.com.br/solucoes/"},
   {t:"Galeria",d:"Obras e projetos",u:"https://perfectaesquadrias.com.br/galeria/"},
   {t:"Perguntas Frequentes",d:"Dúvidas mais comuns",u:"https://perfectaesquadrias.com.br/perguntas-frequentes/"}];
-function conhecaHtml(){return '<h3>Conheça mais...</h3>'+CONHECA.map(function(k){
+function conhecaHtml(){return '<h3>Conheça mais...</h3>'+
+  '<button type="button" class="ck" data-apr="1"><span><b>A Perfecta</b><small>Apresentação da empresa</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>'+
+  CONHECA.map(function(k){
   return '<a class="ck" href="'+k.u+'" target="_blank" rel="noopener"><span><b>'+k.t+'</b><small>'+k.d+'</small></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>'}).join("")}
 var REDES=[
   {n:"Instagram",u:"https://www.instagram.com/perfectaesquadrias/",img:"data:image/png;base64,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"},
@@ -1695,6 +1761,7 @@ function carregarImagens(ids,aviso){var lista=ids.filter(function(id,i){return i
 /* ---------- monta a tela depois da carga ---------- */
 function iniciar(){
   NV=VERSOES.length;EXC=NV;
+  aplicarQtds();                          // quantidades alteradas pelo cliente (− e +)
   sel=DADOS.map(function(){return 0});AUTO=DADOS.map(function(){return 0});
   DADOS.forEach(function(x,r){sel[r]=primeiraVersao(r)});
   BASE=tot(0);
@@ -1704,7 +1771,7 @@ function iniciar(){
   var cli=tituloNome(CLIENTE.nome);
   document.title="Comparativo de Orçamento, "+cli+", Perfecta Esquadrias";
   document.getElementById("cliente").innerHTML='<b>Cliente: '+esc(cli)+'</b> · Obra: '+esc(CLIENTE.end)+' · Propostas '+esc(VERSOES.map(function(v){return v.p}).join(", "));
-  var cw=Math.max(10,Math.min(16,64/NV));
+  var cw=Math.max(10,Math.min(15,60/NV));
   document.getElementById("cols").innerHTML='<col class="c-pos"><col class="c-tipo"><col><col class="c-dim"><col class="c-dim"><col class="c-qtd"><col class="c-exc"><col class="c-exc">'+
     VERSOES.map(function(){return '<col style="width:'+cw+'%">'}).join("")+'<col class="c-esc">';
   var hr=document.getElementById("hr2");[].slice.call(hr.querySelectorAll("th.vl")).forEach(function(t){t.remove()});
@@ -1764,7 +1831,7 @@ async function carregarAnexos(input){
 /* ---------- SALVAR: posição atual (versões exibidas, escolha de cada peça, ordenação) em V99 ---------- */
 function estadoAtual(){var s={};
   DADOS.forEach(function(x,r){s[x.k]=sel[r]===EXC?"X":VERSOES[sel[r]].arq});
-  return {formato:1,salvoEm:hoje().br,versoes:LIDAS.map(function(v,i){return {arq:v.arq,exibida:!!VIS[i]}}),sel:s,ord:{c:ORD.c,d:ORD.d},imagens:Object.keys(VERIMG)}}
+  return {formato:1,salvoEm:hoje().br,versoes:LIDAS.map(function(v,i){return {arq:v.arq,exibida:!!VIS[i]}}),sel:s,ord:{c:ORD.c,d:ORD.d},imagens:Object.keys(VERIMG),qtd:JSON.parse(JSON.stringify(QTD))}}
 /* SALVAMENTO AUTOMÁTICO: toda alteração (versões exibidas, escolha de cada item, ordenação, imagens abertas)
    é gravada em V99 cerca de 1,5 s depois da última mudança; vale para a próxima vez que a proposta for aberta. */
 var AUTOSAVE={armado:false,base:"",t:null,enviando:false,pend:false,status:""};
@@ -1794,6 +1861,7 @@ function aplicarEstado(est){try{
   if(!est||!est.versoes)return;
   LIDAS.forEach(function(v,i){var f=est.versoes.filter(function(e){return e.arq===v.arq})[0];if(f)VIS[i]=!!f.exibida});
   if(!VIS.some(Boolean))VIS=LIDAS.map(function(){return true});
+  QTD={};var qs=est.qtd||{};Object.keys(qs).forEach(function(k){var n=Math.round(+qs[k]);if(n>=1&&n<=QTD_MAX)QTD[k]=n});
   montarDados(LIDAS.filter(function(v,i){return VIS[i]}));iniciar();
   DADOS.forEach(function(x,r){var a=(est.sel||{})[x.k];if(a==null)return;
     if(a==="X"){sel[r]=EXC;return}
