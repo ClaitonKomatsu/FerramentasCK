@@ -93,6 +93,43 @@ h1{font-size:20px;margin:0 0 4px}
 .vwl{margin:auto;padding:30px;color:var(--mut);font-size:14px}
 .vwl.er{color:var(--up);font-weight:600}
 @media print{.ovl{display:none!important}}
+/* ============ apresentação (após a senha) ============ */
+#apr{position:fixed;inset:0;z-index:210;background:#e9ecf1;display:none;overflow:auto;-webkit-overflow-scrolling:touch}
+#apr.on{display:block}
+.aprbar{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid var(--line);padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top));box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.aprbar img{height:36px;mix-blend-mode:multiply}
+.aprt{font-weight:700;font-size:15px;color:var(--ink)}
+.aprm{flex:1;font-size:12px;color:var(--mut);text-align:right}
+#aprb{border:none;border-radius:8px;background:var(--acc);color:#fff;font-weight:800;letter-spacing:.06em;font-size:14px;padding:11px 22px;cursor:pointer;white-space:nowrap}
+#aprb:disabled{background:#9fb3c8;cursor:wait;letter-spacing:0;font-weight:600}
+.aprp{max-width:1100px;margin:0 auto;padding:16px 12px 40px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.aprp canvas{max-width:100%;height:auto;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.12);border-radius:4px}
+.aprld{padding:60px 0;color:var(--mut);text-align:center;font-size:14px}
+.aprld .spin,.pimg .spin{width:30px;height:30px;border:3px solid var(--accs);border-top-color:var(--acc);border-radius:50%;margin:8px auto;animation:gira 1s linear infinite}
+@media (max-width:760px){.aprt{display:none}.aprm{font-size:11px}.aprbar img{height:30px}#aprb{padding:10px 14px}}
+/* ============ imagens das versões dentro da tabela ============ */
+th.imgh,td.imgt{text-align:center;border-left:1px solid var(--line);vertical-align:middle}
+th.exch,th.imgh{vertical-align:bottom}
+th.imgh{cursor:pointer;color:var(--acc)!important}
+th.exch svg,th.imgh svg{width:18px;height:18px;vertical-align:middle}
+td.imgt{cursor:pointer}
+td.imgt .tg{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid var(--line);border-radius:8px;color:var(--mut);background:#fff}
+td.imgt .tg svg{width:17px;height:17px}
+td.imgt:hover .tg{border-color:var(--acc);color:var(--acc)}
+td.imgt.on{background:var(--accs)}
+td.imgt.on .tg{background:var(--acc);border-color:var(--acc);color:#fff}
+.pimg{height:150px;border:1px solid var(--line);border-radius:8px;background:#fff;margin:0 0 8px;display:flex;align-items:center;justify-content:center;cursor:zoom-in;overflow:hidden}
+.pimg img{max-width:100%;max-height:100%;object-fit:contain}
+.pimg.sem{cursor:default;font-size:11px;color:var(--mut);font-style:italic}
+.pimg span{font-size:11px;color:var(--mut)}
+th.vl .hv,th.esc .hv{display:block;font-size:13px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;margin-top:2px}
+th.esc .hv{color:var(--acc)}
+.box .bts{display:flex;flex-direction:column;gap:5px;margin-top:auto}
+.box .bts button{margin-top:0}
+.box button.dl{display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.box button.dl svg{width:13px;height:13px}
+.box.custom .svi{font-size:10px;color:#d6e2f0;margin-top:5px;text-align:center;min-height:13px}
+
 
 /* ============ TELA DE ACESSO ============ */
 body:not(.ok) .wrap{display:none}
@@ -103,11 +140,6 @@ body:not(.ok) .wrap{display:none}
 #login label{display:block;text-align:left;font-size:12px;color:var(--mut);margin-bottom:4px}
 #login input{width:100%;font-size:18px;padding:11px 12px;border:1px solid #c9d0d8;border-radius:8px;margin-bottom:12px;letter-spacing:.04em}
 #login input:focus{outline:2px solid var(--accs);border-color:var(--acc)}
-#login .lgimg{border:1px solid var(--line);border-radius:8px;padding:6px 10px 8px;margin:0 0 12px;text-align:left}
-#login .lgimg legend{font-size:12px;color:var(--mut);padding:0 4px}
-#login .lgimg label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink,#1d2330);margin:4px 0;cursor:pointer;line-height:1.35}
-#login .lgimg input{width:auto;margin:2px 0 0;padding:0;flex:none;pointer-events:auto;cursor:pointer}
-.imgst{font-size:11px;color:var(--mut);min-height:0}
 #login button{width:100%;padding:12px;border:none;border-radius:8px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
 #login button:disabled{opacity:.45;cursor:not-allowed}
 #login .lgi{font-size:13px;margin-bottom:12px;text-align:left}
@@ -144,11 +176,11 @@ body:not(.ok) .wrap{display:none}
 #mob{display:none}
 .wrap{max-width:1600px;margin:0 auto;padding:24px}
 table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;table-layout:fixed;background:var(--card);border:1px solid var(--line);border-radius:10px}
-col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:52px}col.c-exc{width:66px}col.c-v{width:15.5%}col.c-esc{width:12%}
+col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:52px}col.c-exc{width:50px}col.c-v{width:15.5%}col.c-esc{width:12%}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
 /* cabeçalho congelado: cada th é "sticky" com o topo calculado em JS (funciona em Chrome, Edge, Firefox e Safari) */
 thead th{position:-webkit-sticky;position:sticky;z-index:10;background:#fafbfc;font-size:12px;color:var(--mut)}
-thead tr.tot th{background:var(--bg);border-bottom:none;padding:10px 6px;vertical-align:bottom}
+thead tr.tot th{background:var(--bg);border-bottom:none;padding:10px 6px;vertical-align:bottom;position:static}
 thead tr.tot th:first-child{padding-left:0}
 thead tr.tot th:last-child{padding-right:0}
 .vl{border-left:1px solid var(--line)}
@@ -302,6 +334,12 @@ th[data-sort].on .si{opacity:1}
   .mres .ex{color:var(--up);font-weight:600}
   .pc{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}
   .pc .ph{padding:10px 12px;border-bottom:1px solid var(--line)}
+  .ph .mimg{float:right;margin:-2px 0 0 8px;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--mut);display:flex;align-items:center;justify-content:center;padding:0}
+  .ph .mimg svg{width:18px;height:18px}
+  .ph .mimg.on{background:var(--acc);border-color:var(--acc);color:#fff}
+  .po .pimg{display:flex;height:140px;margin:2px 0 8px;width:100%}
+  .mres .svi{font-size:11px;color:var(--mut)}
+
   .pc .ph b{font-size:15px}
   .pc .ph .pd{font-size:12px;color:var(--mut);margin-top:2px}
   .pc.rowx .ph b,.pc.rowx .ph .pd{color:#a3a8b1}
@@ -342,10 +380,6 @@ th[data-sort].on .si{opacity:1}
       <input id="lgp" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')document.getElementById('lgs').focus()">
       <label for="lgs">Senha de acesso</label>
       <input id="lgs" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')lgEntrar()">
-      <fieldset class="lgimg"><legend>Imagens das peças</legend>
-        <label><input type="radio" name="lgimg" value="0" checked><span><b>Sem imagens</b> (usa menos internet): cada imagem é carregada só quando você clicar no olho da peça.</span></label>
-        <label><input type="radio" name="lgimg" value="1"><span><b>Com imagens</b>: todas são carregadas em segundo plano depois de abrir, e o olho passa a mostrar a imagem na hora.</span></label>
-      </fieldset>
       <button type="button" id="lgb1" onclick="lgEntrar()">Entrar</button>
       <div class="lgr">Acesso restrito ao cliente da proposta.</div></div>
     <div id="lg3" style="display:none"><div class="spin"></div></div>
@@ -367,7 +401,7 @@ th[data-sort].on .si{opacity:1}
 <colgroup id="cols"></colgroup>
 <thead>
 <tr class="tot" id="totais"></tr>
-<tr id="hr2"><th data-sort="pos" title="Ordenar por posição">Pos.<span class="si"></span></th><th data-sort="tipo" title="Ordenar por tipo">Tipo<span class="si"></span></th><th data-sort="loc" title="Ordenar por localização">Localização<span class="si"></span></th><th class="num">Largura (mm)</th><th class="num">Altura (mm)</th><th class="num">Qtde</th><th class="exch">EXCLUIR</th>
+<tr id="hr2"><th data-sort="pos" title="Ordenar por posição">Pos.<span class="si"></span></th><th data-sort="tipo" title="Ordenar por tipo">Tipo<span class="si"></span></th><th data-sort="loc" title="Ordenar por localização">Localização<span class="si"></span></th><th class="num">Largura (mm)</th><th class="num">Altura (mm)</th><th class="num">Qtde</th><th class="exch" title="Excluir item do valor" aria-label="Excluir"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></th><th class="imgh" data-imgall="1" title="Mostrar ou ocultar as imagens de todas as peças" aria-label="Imagens"><span class="olhoh"></span></th>
 <th class="esc num">Valor</th></tr>
 </thead>
 <tbody id="body"></tbody>
@@ -384,7 +418,7 @@ th[data-sort].on .si{opacity:1}
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. SALVAR grava as versões exibidas, a escolha de cada item e a ordenação: na próxima vez que a proposta for aberta, essa posição é carregada automaticamente (um novo SALVAR substitui a anterior). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", a peça que não consta na versão aplicada mantém a versão que já estava escolhida. Cada item sempre tem uma opção marcada: uma versão ou EXCLUIR. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -403,6 +437,11 @@ th[data-sort].on .si{opacity:1}
   </div>
 </div>
 <div id="toast" role="status"></div>
+<div id="apr" role="dialog" aria-modal="true" aria-label="Apresentação Perfecta Esquadrias">
+  <div class="aprbar"><img id="aprlogo" alt="Perfecta Esquadrias"><div class="aprt">Conheça a Perfecta Esquadrias</div>
+    <div class="aprm" id="aprm" role="status"></div><button type="button" id="aprb" disabled>Preparando o comparativo...</button></div>
+  <div class="aprp" id="aprp"></div>
+</div>
 
 <div id="anxm" class="ovl" role="dialog" aria-modal="true" aria-label="Anexos da proposta">
   <div class="ovc">
@@ -937,8 +976,9 @@ function difTxt(dc){var r=(VERSOES[0]||{n:"Versão 1"}).n;return Math.abs(dc)<0.
 function renderBody(){
   document.getElementById("body").innerHTML=ordem().map(function(r){var x=DADOS[r];
     var au=AUTO[r],ex=sel[r]===EXC&&!au;
+    var vi=imgsAbertas(r);
     var opts=x.v.map(function(o,i){var on=sel[r]===i,n=na(r,i);
-      return '<td class="opt vl'+(on?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"'+(n?' aria-disabled="true" title="Peça não orçada nesta versão: opção indisponível"':'')+'>'+
+      return '<td class="opt vl'+(on?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"'+(n?' aria-disabled="true" title="Peça não orçada nesta versão: opção indisponível"':'')+'>'+(vi&&!n?figImg(r,i):'')+
         '<div class="pr"><input type="radio" tabindex="-1" '+(on?'checked':'')+(n?' disabled':'')+'>'+(n?'Não consta':brl(o[0]))+(n?'':olho(r,i))+'</div>'+
         '<div class="md">'+o[1]+'</div>'+(n?'':'<div class="vd">'+o[2]+'</div><div class="qd">Pos. '+o[4]+' · Qtde: '+o[3]+'</div>'+detHtml(o))+
         (i>0?'<div class="df">'+dif(o[0]-x.v[0][0])+'</div>':'')+'</td>'}).join("");
@@ -948,6 +988,7 @@ function renderBody(){
     return '<tr class="'+(ex?'rowx':au?'rowna':'')+'"><td>'+x.pos+'</td><td>'+x.tipo+'</td><td class="p-loc">'+x.loc+'</td>'+
       '<td class="num">'+num(x.larg)+'</td><td class="num">'+num(x.alt)+'</td><td class="num">'+x.qtd+'</td>'+
       '<td class="exc'+(ex?' on':'')+'" data-r="'+r+'" data-i="'+EXC+'" title="Excluir este item do valor"><input type="radio" tabindex="-1" '+(ex?'checked':'')+'></td>'+
+      '<td class="imgt'+(vi?' on':'')+'" data-imgrow="'+r+'" title="'+(vi?'Ocultar':'Mostrar')+' as imagens das versões desta peça"><span class="tg">'+OLHO+'</span></td>'+
       opts+'<td class="chosen num esc">'+esc+'</td></tr>'}).join("");
 }
 function cardsVersoes(){
@@ -956,11 +997,12 @@ function cardsVersoes(){
       '<div class="val">'+brl(t)+'</div><div class="qt">Qtde total: '+qtVer(i)+'</div>'+
       '<div class="sq">Selecionada: '+qtSelVer(i)+'</div>'+
       '<div class="dif">'+(i?dif(t-BASE)+'<br><span style="color:var(--mut)">vs '+VERSOES[0].n+'</span>':'Referência<br>&nbsp;')+'</div>'+
-      '<div class="sp"></div><button type="button" data-all="'+i+'">Aplicar a todos</button></div>'});
+      '<div class="sp"></div><div class="bts"><button type="button" data-all="'+i+'">Aplicar a todos</button>'+
+      '<button type="button" class="dl" data-pdf="'+i+'" title="Baixar o PDF completo da '+v.n+' (todas as peças)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>Baixar proposta</button></div></div>'});
 }
 function renderTotais(){
   var e=excl(),c=cardsVersoes();
-  var h='<th colspan="7"><div class="topo">'+painelTopo()+'<div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
+  var h='<th colspan="8"><div class="topo">'+painelTopo()+'<div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
     '<div class="ex">'+(e.n?'Excluídos: '+e.n+' '+(e.n===1?'item':'itens')+' ('+un(e.q)+')':'Nenhum item excluído')+'</div>'+(naoConsta()?'<div class="nx">Não constam na versão aplicada: '+naoConsta()+'</div>':'')+'</div></div></th>';
   h+=c.map(function(b){return '<th>'+b+'</th>'}).join("");
   h+='<th><div class="box vbox custom"><div class="lbl">Personalizada</div><div class="nm">Escolhidas</div>'+
@@ -968,10 +1010,14 @@ function renderTotais(){
     '<div class="sq">Selecionada: '+qtSelTotal()+'</div>'+
     '<div class="xq">'+(e.n?'Excluída: '+e.q:'&nbsp;')+'</div>'+
     '<div class="dif">'+difTxt(valSelTotal()-BASE)+'</div>'+
-    '<div class="sp"></div><button type="button" class="sv" data-salvar="1" title="Grava as versões exibidas e a escolha de cada item. '+infoSalvo()+'">SALVAR</button>'+
-    '<button type="button" class="wa" data-env="1" title="Gera a lista dos itens selecionados e a nova versão do orçamento em PDF">ENVIAR</button><div class="svi">'+infoSalvo()+'</div></div></th>';
+    '<div class="sp"></div><button type="button" class="wa" data-env="1" title="Gera a lista dos itens selecionados e a nova versão do orçamento em PDF">ENVIAR</button>'+
+    '<div class="svi" title="Suas escolhas são salvas automaticamente e voltam na próxima vez que a proposta for aberta.">'+infoSalvo()+'</div></div></th>';
   document.getElementById("totais").innerHTML=h;
+  var vl=document.querySelectorAll("#hr2 th.vl");
+  for(var i=0;i<vl.length;i++)vl[i].innerHTML='Valor / Modelo<span class="hv">'+VERSOES[i].n+' - '+brl0(tot(i))+'</span>';
+  document.querySelector("#hr2 th.esc").innerHTML='Valor<span class="hv">'+brl0(valSelTotal())+'</span>';
 }
+function brl0(v){return "R$ "+num(Math.round(v))}
 // iguala a altura dos quadros (botões sempre alinhados, qualquer fonte/sistema)
 function igualarQuadros(){
   var bx=document.querySelectorAll("#totais .vbox"),m=0,i;
@@ -979,13 +1025,9 @@ function igualarQuadros(){
   for(i=0;i<bx.length;i++)m=Math.max(m,bx[i].offsetHeight);
   for(i=0;i<bx.length;i++)bx[i].style.height=m+"px";
 }
-// topo congelado: cada linha do cabeçalho fica presa logo abaixo da anterior
+// topo congelado no PC: só a linha de títulos (com o valor de cada versão); os quadros rolam com a página
 function fixarCabecalho(){
-  var rows=document.querySelectorAll("#desk thead tr"),top=0;
-  for(var r=0;r<rows.length;r++){
-    var ths=rows[r].children;for(var j=0;j<ths.length;j++)ths[j].style.top=top+"px";
-    top+=rows[r].getBoundingClientRect().height;
-  }
+  var ths=document.getElementById("hr2").children;for(var j=0;j<ths.length;j++)ths[j].style.top="0px";
 }
 
 /* ---------- celular ---------- */
@@ -993,27 +1035,28 @@ function renderMobile(){
   var e=excl(),dc=valSelTotal()-BASE;
   document.getElementById("mbar").innerHTML='<div class="mt"><div class="ml">Personalizada</div><div class="mv">'+brl(valSelTotal())+'</div>'+
     '<div class="mq">Selecionada <b>'+qtSelTotal()+'</b> de '+QT_TOTAL+(e.n?' · <span class="mx">'+e.n+' excluído'+(e.n>1?'s':'')+'</span>':'')+'</div></div>'+
-    '<div class="bt"><button type="button" class="sv" data-salvar="1">SALVAR</button><button type="button" class="wa" data-env="1">ENVIAR</button></div>';
+    '<button type="button" class="wa" data-env="1">ENVIAR</button>';
   document.getElementById("mpainel").innerHTML=painelTopo();
   document.getElementById("mvers").innerHTML=cardsVersoes().join("");
-  document.getElementById("mres").innerHTML=DADOS.length+' itens · '+un(QT_TOTAL)+' · '+difTxt(dc).replace('<br>',' ')+
+  document.getElementById("mres").innerHTML='<span class="svi">'+infoSalvo()+'</span><br>'+DADOS.length+' itens · '+un(QT_TOTAL)+' · '+difTxt(dc).replace('<br>',' ')+
     (e.n?' · <span class="ex">Excluídos: '+e.n+' ('+un(e.q)+')</span>':'');
   document.getElementById("mlist").innerHTML=ordem().map(function(r){var x=DADOS[r],ex=sel[r]===EXC;
     var ops=x.v.map(function(o,i){var n=na(r,i);
       return '<button type="button" class="po'+(sel[r]===i?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"'+(n?' disabled aria-disabled="true"':'')+'><span class="rd"></span>'+
-        '<span class="pi"><span class="pv">'+VERSOES[i].n+' · '+VERSOES[i].p+' · '+VERSOES[i].d+'</span><br><span class="pm">'+o[1]+(n?'':' · Qtde '+o[3])+'</span>'+
+        '<span class="pi">'+(imgsAbertas(r)&&!n?figImg(r,i).replace(/<div/g,'<span').replace(/<\/div>/g,'</span>'):'')+'<span class="pv">'+VERSOES[i].n+' · '+VERSOES[i].p+' · '+VERSOES[i].d+'</span><br><span class="pm">'+o[1]+(n?'':' · Qtde '+o[3])+'</span>'+
         (n?'':'<br><span class="vd">'+o[2]+'</span>'+detHtml(o).replace(/<div/g,'<span style="display:block"').replace(/<\/div>/g,'</span>'))+'</span>'+
         (n?'':olho(r,i,"span"))+'<span><span class="pr">'+(n?'Não consta':brl(o[0]))+'</span>'+(i>0?'<br><span class="df">'+dif(o[0]-x.v[0][0])+'</span>':'')+'</span></button>'}).join("");
     var au=AUTO[r];if(au)ex=false;
     ops+='<button type="button" class="po exb'+(ex?' sel':'')+'" data-r="'+r+'" data-i="'+EXC+'"><span class="rd"></span>EXCLUIR</button>';
     if(au)ops='<div class="pna">Não consta na '+VERSOES[au-1].n+' (não somado). Escolha outra versão ou EXCLUIR.</div>'+ops;
-    return '<div class="pc'+(ex?' rowx':au?' rowna':'')+'"><div class="ph"><b>'+x.pos+' · '+x.tipo+' · <span class="loc">'+x.loc+'</span></b>'+
+    return '<div class="pc'+(ex?' rowx':au?' rowna':'')+'"><div class="ph"><button type="button" class="mimg'+(imgsAbertas(r)?' on':'')+'" data-imgrow="'+r+'" aria-label="Imagens das versões">'+OLHO+'</button><b>'+x.pos+' · '+x.tipo+' · <span class="loc">'+x.loc+'</span></b>'+
       '<div class="pd">'+num(x.larg)+' × '+num(x.alt)+' mm · Qtde '+x.qtd+'</div></div>'+ops+'</div>'}).join("");
 }
 
 function render(){
   renderBody();renderTotais();renderMobile();setas();
   if(document.getElementById("desk").offsetParent!==null){igualarQuadros();fixarCabecalho()}
+  verificarAutosave();
 }
 
 /* ---------- eventos (um único ouvinte, funciona com mouse e toque) ---------- */
@@ -1028,7 +1071,10 @@ document.addEventListener("click",function(ev){
   var fx=t.closest("[data-fechar]");if(fx){if(fx.getAttribute("data-fechar")==="vw")fecharVisualizador();else fecharAnexos();return}
   if(t.id==="vw"){fecharVisualizador();return}
   if(t.id==="anxm"){fecharAnexos();return}
-  if(t.closest("[data-salvar]")){salvarPosicao();return}
+  if(t.id==="aprb"){if(!t.disabled)fecharApresentacao();return}
+  var pd=t.closest("[data-pdf]");if(pd){baixarProposta(+pd.getAttribute("data-pdf"));return}
+  var ir=t.closest("[data-imgrow]");if(ir){ev.preventDefault();alternarImagens(+ir.getAttribute("data-imgrow"));return}
+  if(t.closest("[data-imgall]")){alternarTodasImagens();return}
   if(t.closest("[data-env]")){abrirEnvio();return}
   var so=t.closest("[data-sort]");if(so){ordenar(so.getAttribute("data-sort"));return}
   var ac=t.closest("[data-act]");
@@ -1043,7 +1089,7 @@ document.addEventListener("click",function(ev){
     var cr=+c.getAttribute("data-r");sel[cr]=+c.getAttribute("data-i");AUTO[cr]=0;render()}
 });
 document.addEventListener("keydown",function(ev){
-  if(ev.key==="Escape"){if(fecharVisualizador())return;if(document.getElementById("anxm").classList.contains("on")){fecharAnexos();return}fecharImagem();fecharEnvio()}
+  if(ev.key==="Escape"){if(aprAberta())return;if(fecharVisualizador())return;if(document.getElementById("anxm").classList.contains("on")){fecharAnexos();return}fecharImagem();fecharEnvio()}
   if((ev.key==="Enter"||ev.key===" ")&&ev.target.matches&&ev.target.matches("span.eye")){ev.preventDefault();ev.target.click()}
 });
 document.addEventListener("change",function(ev){var t=ev.target;
@@ -1401,53 +1447,98 @@ function lgEntrar(){
   var p=document.getElementById("lgp").value.replace(/\D/g,""),s=document.getElementById("lgs").value;
   if(!p){lgMsg("Informe o número da proposta (somente números).",true);lgPasso(1);return}
   if(!s){lgMsg("Informe a senha de acesso.",true);lgPasso(2);return}
-  COM_IMAGENS=(document.querySelector('input[name="lgimg"]:checked')||{}).value==="1";
   lgPasso(3);lgMsg("Conferindo proposta e senha...");
   api({acao:"entrar",proposta:p,senha:s}).then(function(r){
     document.getElementById("lgs").value="";
     if(!r.ok){lgPasso(r.etapa==="proposta"?1:2);lgMsg(r.erro||"Não foi possível entrar.",true);return}
-    SESSAO=r;return carregarProposta()})
+    SESSAO=r;PRONTO=false;
+    if(r.apresentacao)abrirApresentacao(r.apresentacao);     // apresentação da Perfecta enquanto o comparativo é preparado
+    return carregarProposta()})
   .catch(function(e){lgPasso(2);lgMsg("Falha de comunicação com o servidor ("+e.message+"). Verifique a internet e tente de novo.",true)})}
 function baixarArquivo(id){return api({acao:"arquivo",token:SESSAO.token,id:id}).then(function(r){
   if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.")}throw new Error(r.erro||"Falha ao baixar arquivo")}return r})}
-function sairSessao(msg){SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
+function sairSessao(msg){if(AUTOSAVE)AUTOSAVE.armado=false;fecharApresentacao(true);SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
 
 /* ---------- carga: baixa os PDFs de cada versão, lê os itens e monta o comparativo ---------- */
 // Leitura pronta de cada versão: o Cadastro grava o resultado da leitura do PDF (_dados.json) e o servidor
 // devolve junto com a entrada. Sem ela (proposta cadastrada antes), o PDF é baixado e lido aqui, como antes.
 var FORMATO_DADOS=1;
 function dadosProntos(f){var d=(SESSAO.dados||{})[f.nome];return d&&d.formato===FORMATO_DADOS&&d.prop&&d.prop.itens&&d.prop.itens.length?d.prop:null}
+function garantirWorker(){if(!WORKER_OK){pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([document.getElementById("pdfjs-worker").textContent],{type:"text/javascript"}));WORKER_OK=true}}
+var WORKER_OK=false,PRONTO=false;
 function carregarProposta(){
   var pdfs=SESSAO.pdfs||[];
-  if(!pdfs.length){lgPasso(2);lgMsg("Nenhum PDF de versão encontrado na pasta da proposta "+SESSAO.proposta+".",true);return}
+  if(!pdfs.length){falhaCarga("Nenhum PDF de versão encontrado na pasta da proposta "+SESSAO.proposta+".");return}
   var faltam=pdfs.filter(function(f){return !dadosProntos(f)}).length,feitos=0;
-  function aviso(){lgMsg(faltam?"Baixando e lendo os PDFs das versões ("+feitos+" de "+faltam+")...":"Montando o comparativo...")}
-  if(faltam)pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([document.getElementById("pdfjs-worker").textContent],{type:"text/javascript"}));
+  function aviso(){var t=faltam?"Baixando e lendo os PDFs das versões ("+feitos+" de "+faltam+")...":"Montando o comparativo...";lgMsg(t);aprStatus(false,t)}
+  if(faltam)garantirWorker();
   aviso();
-  // todos os PDFs que faltam são baixados ao mesmo tempo (antes era um de cada vez)
+  // todos os PDFs que faltam são baixados ao mesmo tempo
   return Promise.all(pdfs.map(function(f){var d=dadosProntos(f);
     if(d){var v=JSON.parse(JSON.stringify(d));v.arq=f.nome;return v}
     return baixarArquivo(f.id).then(function(r){return palavrasPdf(b64bytes(r.b64))})
       .then(function(pg){var v=lerProposta(pg);v.arq=f.nome;feitos++;aviso();return v})}))
   .then(function(lidas){
     LIDAS=lidas.map(function(v,i){v.idx=i;return v});VIS=LIDAS.map(function(){return true});
-    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};PRE={n:0,f:0,on:false};
+    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};VERIMG={};PDF_CACHE={};AUTOSAVE.armado=false;
     montarDados(LIDAS);iniciar();
-    var todas=[];DADOS.forEach(function(x){x.v.forEach(function(o){if(o[10])todas.push(o[10])})});
     if(SESSAO.estado)aplicarEstado(SESSAO.estado);
-    document.getElementById("login").style.display="none";document.body.classList.add("ok");
-    if(COM_IMAGENS)precarregarImagens(todas)})
-  .catch(function(e){lgPasso(2);lgMsg("Não foi possível ler a proposta: "+e.message,true)})}
+    armarAutosave();
+    PRONTO=true;
+    if(aprAberta())aprStatus(true);else mostrarComparativo()})
+  .catch(function(e){falhaCarga("Não foi possível ler a proposta: "+e.message)})}
+function mostrarComparativo(){document.getElementById("login").style.display="none";document.body.classList.add("ok");render()}
+function falhaCarga(t){fecharApresentacao(true);lgPasso(2);lgMsg(t,true)}
 
-/* ---------- imagens das peças: opção da tela inicial ----------
-   Sem imagens (padrão): cada imagem é baixada só quando o cliente clica no olho daquela versão da peça.
-   Com imagens: depois que o comparativo abre, todas são baixadas em segundo plano (o olho passa a abrir na hora). */
-var COM_IMAGENS=false,PRE={n:0,f:0,on:false};
-function textoPre(){return PRE.on?"Carregando imagens: "+PRE.f+" de "+PRE.n+"...":PRE.n?"Imagens carregadas: "+PRE.n+".":""}
-function mostraPre(){[].forEach.call(document.querySelectorAll(".imgst"),function(e){e.textContent=textoPre()})}
-function precarregarImagens(ids){
-  var s=SESSAO;PRE={n:ids.filter(function(id,i){return ids.indexOf(id)===i}).length,f:0,on:true};mostraPre();
-  carregarImagens(ids,function(f){if(SESSAO!==s)return;PRE.f=f;mostraPre()}).then(function(){if(SESSAO!==s)return;PRE.on=false;mostraPre()})}
+/* ---------- apresentação da Perfecta (Apresentacao.pdf), mostrada logo após a senha ---------- */
+function aprAberta(){return document.getElementById("apr").classList.contains("on")}
+function aprStatus(pronto,texto){var b=document.getElementById("aprb");if(!b)return;
+  b.disabled=!pronto;b.textContent=pronto?"PROSSEGUIR":"Preparando o comparativo...";
+  document.getElementById("aprm").textContent=pronto?"":(texto||"")}
+function abrirApresentacao(a){
+  var w=document.getElementById("apr"),pg=document.getElementById("aprp");
+  pg.innerHTML='<div class="aprld"><div class="spin"></div><div>Carregando a apresentação...</div></div>';
+  aprStatus(false,"");w.classList.add("on");document.body.style.overflow="hidden";w.scrollTop=0;
+  var s=SESSAO;garantirWorker();
+  baixarArquivo(a.id).then(function(r){if(SESSAO!==s||!aprAberta())return;
+    return pdfjsLib.getDocument({data:b64bytes(r.b64)}).promise.then(function(doc){
+      pg.innerHTML="";var larg=Math.min(pg.clientWidth||900,1100),dpr=Math.min(window.devicePixelRatio||1,2),n=0;
+      function prox(){if(n>=doc.numPages||SESSAO!==s||!aprAberta())return;n++;
+        return doc.getPage(n).then(function(p){var v0=p.getViewport({scale:1}),e=larg/v0.width,v=p.getViewport({scale:e*dpr});
+          var c=document.createElement("canvas");c.width=Math.round(v.width);c.height=Math.round(v.height);c.style.width=Math.round(v0.width*e)+"px";
+          pg.appendChild(c);return p.render({canvasContext:c.getContext("2d"),viewport:v}).promise}).then(prox)}
+      return prox()})})
+  .catch(function(){if(SESSAO!==s)return;pg.innerHTML='<div class="aprld">Não foi possível abrir a apresentação agora.</div>'})}
+function fecharApresentacao(semMostrar){var w=document.getElementById("apr");if(!w.classList.contains("on"))return;
+  w.classList.remove("on");document.body.style.overflow="";document.getElementById("aprp").innerHTML="";
+  if(!semMostrar&&PRONTO)mostrarComparativo()}
+
+/* ---------- baixar a proposta completa (PDF original de cada versão) ---------- */
+var PDF_CACHE={};
+function baixarProposta(i){var v=VERSOES[i],f=(SESSAO.pdfs||[]).filter(function(p){return p.nome===v.arq})[0];if(!f)return;
+  var nome="Proposta "+String(v.p).replace(/[\\/:*?"<>|]/g,"-")+" - Perfecta Esquadrias.pdf";
+  if(!PDF_CACHE[f.id])PDF_CACHE[f.id]=baixarArquivo(f.id).then(function(r){return new Blob([b64bytes(r.b64)],{type:"application/pdf"})}).catch(function(e){delete PDF_CACHE[f.id];throw e});
+  toast("Baixando a proposta "+v.p+"...");
+  PDF_CACHE[f.id].then(function(b){var u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=nome;document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},4000);toast("Proposta "+v.p+" salva na pasta de downloads.")})
+  .catch(function(e){toast("Não foi possível baixar: "+e.message)})}
+
+/* ---------- imagens de todas as versões de uma peça (coluna do olho) ---------- */
+var VERIMG={};       // chave da peça -> true quando as imagens estão abertas
+function imgsAbertas(r){return !!VERIMG[DADOS[r].k]}
+function alternarImagens(r){var k=DADOS[r].k;if(VERIMG[k])delete VERIMG[k];else VERIMG[k]=true;render();if(VERIMG[k])buscarImagensLinha([r])}
+function alternarTodasImagens(){var todas=DADOS.every(function(x){return VERIMG[x.k]});
+  if(todas)VERIMG={};else DADOS.forEach(function(x){VERIMG[x.k]=true});render();if(!todas)buscarImagensLinha(ordem())}
+function figImg(r,i){var o=DADOS[r].v[i],id=o[10];
+  if(!id)return '<div class="pimg sem">Sem imagem nesta versão</div>';
+  return '<div class="pimg" data-img="'+r+'_'+i+'" title="Ampliar">'+(IMGS[id]?'<img alt="'+esc(DADOS[r].tipo)+'" src="'+imgData(id)+'">':'<div class="spin"></div>')+'</div>'}
+function buscarImagensLinha(rs){var ids=[];rs.forEach(function(r){DADOS[r].v.forEach(function(o,i){if(o[10]&&!na(r,i))ids.push(o[10])})});
+  var s=SESSAO;
+  ids.forEach(function(id){carregarImg(id).then(function(){if(SESSAO!==s)return;
+    [].forEach.call(document.querySelectorAll('.pimg[data-img]'),function(e){var p=e.getAttribute("data-img").split("_"),o=DADOS[+p[0]]&&DADOS[+p[0]].v[+p[1]];
+      if(o&&o[10]===id&&!e.querySelector("img"))e.innerHTML='<img alt="" src="'+imgData(id)+'">'})}).catch(function(){
+    [].forEach.call(document.querySelectorAll('.pimg[data-img]'),function(e){var p=e.getAttribute("data-img").split("_"),o=DADOS[+p[0]]&&DADOS[+p[0]].v[+p[1]];
+      if(o&&o[10]===id&&!e.querySelector("img"))e.innerHTML='<span>Imagem indisponível</span>'})})})}
 
 function semExt(n){return String(n).replace(/\.[^.]+$/,"")}
 function sc(s){s=String(s||"").toLowerCase().replace(" - (","(").replace("(2 vidros - 1 tela interna)"," (2 vidros + 1 tela interna)").replace(/ - /g," · ").replace(/  +/g," ").replace("º","°");
@@ -1528,7 +1619,7 @@ function painelTopo(){
   var an=(SESSAO&&SESSAO.anexos)||[];
   return '<div class="pt"><div class="ptt">Versões exibidas</div><div class="vchks">'+LIDAS.map(function(v,i){
       return '<label class="vchk'+(VIS[i]?' on':'')+'"><input type="checkbox" data-ver="'+i+'"'+(VIS[i]?' checked':'')+'> Versão '+(i+1)+'</label>'}).join("")+'</div>'+
-    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button><div class="imgst" role="status">'+textoPre()+'</div></div>'}
+    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button></div>'}
 function tamArq(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
 
 /* ---------- anexos: lista, visualização (PDF, vídeo, imagem, texto) e download ---------- */
@@ -1614,10 +1705,11 @@ function iniciar(){
   document.title="Comparativo de Orçamento, "+cli+", Perfecta Esquadrias";
   document.getElementById("cliente").innerHTML='<b>Cliente: '+esc(cli)+'</b> · Obra: '+esc(CLIENTE.end)+' · Propostas '+esc(VERSOES.map(function(v){return v.p}).join(", "));
   var cw=Math.max(10,Math.min(16,64/NV));
-  document.getElementById("cols").innerHTML='<col class="c-pos"><col class="c-tipo"><col><col class="c-dim"><col class="c-dim"><col class="c-qtd"><col class="c-exc">'+
+  document.getElementById("cols").innerHTML='<col class="c-pos"><col class="c-tipo"><col><col class="c-dim"><col class="c-dim"><col class="c-qtd"><col class="c-exc"><col class="c-exc">'+
     VERSOES.map(function(){return '<col style="width:'+cw+'%">'}).join("")+'<col class="c-esc">';
   var hr=document.getElementById("hr2");[].slice.call(hr.querySelectorAll("th.vl")).forEach(function(t){t.remove()});
   hr.lastElementChild.insertAdjacentHTML("beforebegin",VERSOES.map(function(){return '<th class="vl">Valor / Modelo</th>'}).join(""));
+  hr.querySelector(".olhoh").innerHTML=OLHO;
   var av=document.getElementById("avisos");
   av.innerHTML=AVISOS.length?'<b>Atenção, confira com os PDFs:</b><br>'+AVISOS.map(esc).join("<br>"):"";av.style.display=AVISOS.length?"":"none";
   render();
@@ -1672,15 +1764,31 @@ async function carregarAnexos(input){
 /* ---------- SALVAR: posição atual (versões exibidas, escolha de cada peça, ordenação) em V99 ---------- */
 function estadoAtual(){var s={};
   DADOS.forEach(function(x,r){s[x.k]=sel[r]===EXC?"X":VERSOES[sel[r]].arq});
-  return {formato:1,salvoEm:hoje().br,versoes:LIDAS.map(function(v,i){return {arq:v.arq,exibida:!!VIS[i]}}),sel:s,ord:{c:ORD.c,d:ORD.d}}}
-function salvarPosicao(){
-  var bts=document.querySelectorAll("[data-salvar]");[].forEach.call(bts,function(b){b.disabled=true});
-  var est=estadoAtual();
-  api({acao:"salvar",token:SESSAO.token,estado:est}).then(function(r){
+  return {formato:1,salvoEm:hoje().br,versoes:LIDAS.map(function(v,i){return {arq:v.arq,exibida:!!VIS[i]}}),sel:s,ord:{c:ORD.c,d:ORD.d},imagens:Object.keys(VERIMG)}}
+/* SALVAMENTO AUTOMÁTICO: toda alteração (versões exibidas, escolha de cada item, ordenação, imagens abertas)
+   é gravada em V99 cerca de 1,5 s depois da última mudança; vale para a próxima vez que a proposta for aberta. */
+var AUTOSAVE={armado:false,base:"",t:null,enviando:false,pend:false,status:""};
+function assinatura(){var e=estadoAtual();delete e.salvoEm;return JSON.stringify(e)}
+function armarAutosave(){AUTOSAVE={armado:true,base:assinatura(),t:null,enviando:false,pend:false,
+  status:SESSAO.estado&&SESSAO.estado.salvoEm?"Salvo em "+SESSAO.estado.salvoEm:"Salvamento automático ativo"};mostraSalvo()}
+function verificarAutosave(){if(!AUTOSAVE.armado||!SESSAO)return;
+  if(assinatura()===AUTOSAVE.base){if(!AUTOSAVE.enviando&&AUTOSAVE.t){clearTimeout(AUTOSAVE.t);AUTOSAVE.t=null;AUTOSAVE.pend=false}return}
+  AUTOSAVE.pend=true;AUTOSAVE.status="Salvando...";mostraSalvo();
+  clearTimeout(AUTOSAVE.t);AUTOSAVE.t=setTimeout(gravarAutosave,1500)}
+function gravarAutosave(){AUTOSAVE.t=null;if(!SESSAO||!AUTOSAVE.armado)return;
+  if(AUTOSAVE.enviando){AUTOSAVE.t=setTimeout(gravarAutosave,800);return}
+  var est=estadoAtual(),ass=assinatura(),s=SESSAO;AUTOSAVE.enviando=true;
+  api({acao:"salvar",token:s.token,estado:est}).then(function(r){
     if(!r.ok){if(r.etapa==="sessao"){sairSessao("Sessão expirada. Entre novamente.");return}throw new Error(r.erro||"falha")}
-    SESSAO.estado=est;toast("Posição salva em "+est.salvoEm+". Será carregada ao abrir esta proposta.");render()})
-  .catch(function(e){toast("Não foi possível salvar: "+e.message)})
-  .then(function(){[].forEach.call(document.querySelectorAll("[data-salvar]"),function(b){b.disabled=false})})}
+    if(SESSAO!==s)return;s.estado=est;AUTOSAVE.base=ass;AUTOSAVE.pend=assinatura()!==ass;
+    AUTOSAVE.status=AUTOSAVE.pend?"Salvando...":"Salvo em "+est.salvoEm})
+  .catch(function(e){AUTOSAVE.status="Não salvo: "+e.message+". Nova tentativa na próxima alteração.";AUTOSAVE.pend=false})
+  .then(function(){AUTOSAVE.enviando=false;mostraSalvo();if(AUTOSAVE.pend&&SESSAO===s&&!AUTOSAVE.t)AUTOSAVE.t=setTimeout(gravarAutosave,300)})}
+function mostraSalvo(){[].forEach.call(document.querySelectorAll(".svi"),function(e){e.textContent=AUTOSAVE.status})}
+function infoSalvo(){return AUTOSAVE.status||""}
+// ao sair da página com alteração pendente: envia mesmo assim (keepalive)
+window.addEventListener("pagehide",function(){if(AUTOSAVE.armado&&SESSAO&&(AUTOSAVE.t||AUTOSAVE.pend)&&assinatura()!==AUTOSAVE.base){
+  try{fetch(API_URL,{method:"POST",keepalive:true,body:JSON.stringify({acao:"salvar",token:SESSAO.token,estado:estadoAtual()})})}catch(e){}}});
 // ao abrir: aplica a posição salva (peças ou versões que não existem mais são ignoradas)
 function aplicarEstado(est){try{
   if(!est||!est.versoes)return;
@@ -1691,11 +1799,12 @@ function aplicarEstado(est){try{
     if(a==="X"){sel[r]=EXC;return}
     for(var i=0;i<NV;i++)if(VERSOES[i].arq===a&&x.v[i][3]>0){sel[r]=i;return}});
   if(est.ord&&(est.ord.c===null||/^(pos|tipo|loc)$/.test(est.ord.c)))ORD={c:est.ord.c,d:est.ord.d===-1?-1:1};
-  render();setTimeout(function(){toast("Carregada a posição salva em "+(est.salvoEm||"data não informada")+".")},400)}
+  VERIMG={};(est.imagens||[]).forEach(function(k){if(DADOS.some(function(x){return x.k===k}))VERIMG[k]=true});
+  render();var abertas=[];DADOS.forEach(function(x,r){if(VERIMG[x.k])abertas.push(r)});if(abertas.length)buscarImagensLinha(abertas)}
   catch(e){console.error(e)}}
 function infoSalvo(){return SESSAO&&SESSAO.estado&&SESSAO.estado.salvoEm?"Salvo em "+SESSAO.estado.salvoEm:"Ainda não salvo"}
 
-document.getElementById("lglogo").src=LOGO;
+document.getElementById("lglogo").src=LOGO;document.getElementById("aprlogo").src=LOGO;
 lgInicio();
 </script>
 </body>
