@@ -103,6 +103,11 @@ body:not(.ok) .wrap{display:none}
 #login label{display:block;text-align:left;font-size:12px;color:var(--mut);margin-bottom:4px}
 #login input{width:100%;font-size:18px;padding:11px 12px;border:1px solid #c9d0d8;border-radius:8px;margin-bottom:12px;letter-spacing:.04em}
 #login input:focus{outline:2px solid var(--accs);border-color:var(--acc)}
+#login .lgimg{border:1px solid var(--line);border-radius:8px;padding:6px 10px 8px;margin:0 0 12px;text-align:left}
+#login .lgimg legend{font-size:12px;color:var(--mut);padding:0 4px}
+#login .lgimg label{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--ink,#1d2330);margin:4px 0;cursor:pointer;line-height:1.35}
+#login .lgimg input{width:auto;margin:2px 0 0;padding:0;flex:none;pointer-events:auto;cursor:pointer}
+.imgst{font-size:11px;color:var(--mut);min-height:0}
 #login button{width:100%;padding:12px;border:none;border-radius:8px;background:var(--acc);color:#fff;font-size:15px;font-weight:700;cursor:pointer}
 #login button:disabled{opacity:.45;cursor:not-allowed}
 #login .lgi{font-size:13px;margin-bottom:12px;text-align:left}
@@ -337,6 +342,10 @@ th[data-sort].on .si{opacity:1}
       <input id="lgp" type="text" inputmode="numeric" pattern="[0-9]*" autocomplete="off" oninput="this.value=this.value.replace(/\D/g,'')" onkeydown="if(event.key==='Enter')document.getElementById('lgs').focus()">
       <label for="lgs">Senha de acesso</label>
       <input id="lgs" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')lgEntrar()">
+      <fieldset class="lgimg"><legend>Imagens das peças</legend>
+        <label><input type="radio" name="lgimg" value="0" checked><span><b>Sem imagens</b> (usa menos internet): cada imagem é carregada só quando você clicar no olho da peça.</span></label>
+        <label><input type="radio" name="lgimg" value="1"><span><b>Com imagens</b>: todas são carregadas em segundo plano depois de abrir, e o olho passa a mostrar a imagem na hora.</span></label>
+      </fieldset>
       <button type="button" id="lgb1" onclick="lgEntrar()">Entrar</button>
       <div class="lgr">Acesso restrito ao cliente da proposta.</div></div>
     <div id="lg3" style="display:none"><div class="spin"></div></div>
@@ -1392,6 +1401,7 @@ function lgEntrar(){
   var p=document.getElementById("lgp").value.replace(/\D/g,""),s=document.getElementById("lgs").value;
   if(!p){lgMsg("Informe o número da proposta (somente números).",true);lgPasso(1);return}
   if(!s){lgMsg("Informe a senha de acesso.",true);lgPasso(2);return}
+  COM_IMAGENS=(document.querySelector('input[name="lgimg"]:checked')||{}).value==="1";
   lgPasso(3);lgMsg("Conferindo proposta e senha...");
   api({acao:"entrar",proposta:p,senha:s}).then(function(r){
     document.getElementById("lgs").value="";
@@ -1403,23 +1413,41 @@ function baixarArquivo(id){return api({acao:"arquivo",token:SESSAO.token,id:id})
 function sairSessao(msg){SESSAO=null;document.body.classList.remove("ok");document.getElementById("login").style.display="";lgPasso(1);lgMsg(msg||"",!!msg)}
 
 /* ---------- carga: baixa os PDFs de cada versão, lê os itens e monta o comparativo ---------- */
+// Leitura pronta de cada versão: o Cadastro grava o resultado da leitura do PDF (_dados.json) e o servidor
+// devolve junto com a entrada. Sem ela (proposta cadastrada antes), o PDF é baixado e lido aqui, como antes.
+var FORMATO_DADOS=1;
+function dadosProntos(f){var d=(SESSAO.dados||{})[f.nome];return d&&d.formato===FORMATO_DADOS&&d.prop&&d.prop.itens&&d.prop.itens.length?d.prop:null}
 function carregarProposta(){
   var pdfs=SESSAO.pdfs||[];
   if(!pdfs.length){lgPasso(2);lgMsg("Nenhum PDF de versão encontrado na pasta da proposta "+SESSAO.proposta+".",true);return}
-  pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([document.getElementById("pdfjs-worker").textContent],{type:"text/javascript"}));
-  var lidas=[],k=0;
-  function prox(){
-    if(k>=pdfs.length)return Promise.resolve();
-    var f=pdfs[k];lgMsg("Baixando e lendo "+f.nome+" ("+(k+1)+" de "+pdfs.length+")...");
+  var faltam=pdfs.filter(function(f){return !dadosProntos(f)}).length,feitos=0;
+  function aviso(){lgMsg(faltam?"Baixando e lendo os PDFs das versões ("+feitos+" de "+faltam+")...":"Montando o comparativo...")}
+  if(faltam)pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([document.getElementById("pdfjs-worker").textContent],{type:"text/javascript"}));
+  aviso();
+  // todos os PDFs que faltam são baixados ao mesmo tempo (antes era um de cada vez)
+  return Promise.all(pdfs.map(function(f){var d=dadosProntos(f);
+    if(d){var v=JSON.parse(JSON.stringify(d));v.arq=f.nome;return v}
     return baixarArquivo(f.id).then(function(r){return palavrasPdf(b64bytes(r.b64))})
-      .then(function(pg){var v=lerProposta(pg);v.arq=f.nome;lidas.push(v);k++;return prox()})}
-  return prox().then(function(){
+      .then(function(pg){var v=lerProposta(pg);v.arq=f.nome;feitos++;aviso();return v})}))
+  .then(function(lidas){
     LIDAS=lidas.map(function(v,i){v.idx=i;return v});VIS=LIDAS.map(function(){return true});
-    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};
+    conferir(LIDAS);ORD={c:null,d:1};IMGS={};IMG_FULL={};IMG_PEND={};PRE={n:0,f:0,on:false};
     montarDados(LIDAS);iniciar();
+    var todas=[];DADOS.forEach(function(x){x.v.forEach(function(o){if(o[10])todas.push(o[10])})});
     if(SESSAO.estado)aplicarEstado(SESSAO.estado);
-    document.getElementById("login").style.display="none";document.body.classList.add("ok")})
+    document.getElementById("login").style.display="none";document.body.classList.add("ok");
+    if(COM_IMAGENS)precarregarImagens(todas)})
   .catch(function(e){lgPasso(2);lgMsg("Não foi possível ler a proposta: "+e.message,true)})}
+
+/* ---------- imagens das peças: opção da tela inicial ----------
+   Sem imagens (padrão): cada imagem é baixada só quando o cliente clica no olho daquela versão da peça.
+   Com imagens: depois que o comparativo abre, todas são baixadas em segundo plano (o olho passa a abrir na hora). */
+var COM_IMAGENS=false,PRE={n:0,f:0,on:false};
+function textoPre(){return PRE.on?"Carregando imagens: "+PRE.f+" de "+PRE.n+"...":PRE.n?"Imagens carregadas: "+PRE.n+".":""}
+function mostraPre(){[].forEach.call(document.querySelectorAll(".imgst"),function(e){e.textContent=textoPre()})}
+function precarregarImagens(ids){
+  var s=SESSAO;PRE={n:ids.filter(function(id,i){return ids.indexOf(id)===i}).length,f:0,on:true};mostraPre();
+  carregarImagens(ids,function(f){if(SESSAO!==s)return;PRE.f=f;mostraPre()}).then(function(){if(SESSAO!==s)return;PRE.on=false;mostraPre()})}
 
 function semExt(n){return String(n).replace(/\.[^.]+$/,"")}
 function sc(s){s=String(s||"").toLowerCase().replace(" - (","(").replace("(2 vidros - 1 tela interna)"," (2 vidros + 1 tela interna)").replace(/ - /g," · ").replace(/  +/g," ").replace("º","°");
@@ -1500,7 +1528,7 @@ function painelTopo(){
   var an=(SESSAO&&SESSAO.anexos)||[];
   return '<div class="pt"><div class="ptt">Versões exibidas</div><div class="vchks">'+LIDAS.map(function(v,i){
       return '<label class="vchk'+(VIS[i]?' on':'')+'"><input type="checkbox" data-ver="'+i+'"'+(VIS[i]?' checked':'')+'> Versão '+(i+1)+'</label>'}).join("")+'</div>'+
-    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button></div>'}
+    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button><div class="imgst" role="status">'+textoPre()+'</div></div>'}
 function tamArq(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
 
 /* ---------- anexos: lista, visualização (PDF, vídeo, imagem, texto) e download ---------- */
