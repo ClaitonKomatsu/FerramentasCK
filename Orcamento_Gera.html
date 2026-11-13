@@ -215,7 +215,7 @@ function mostrarPainel(){var s=CAD.sit,h;
       '<div class="msg" id="mAnexos"></div></div>'+
     '<div class="sec"><h4>Ao gravar novas versões</h4>'+
       '<label class="rd"><input type="radio" name="modo" value="sub"'+(CAD.modo!=="limpar"?" checked":"")+'> Substituir apenas as versões enviadas (as demais continuam)</label>'+
-      '<label class="rd"><input type="radio" name="modo" value="limpar"'+(CAD.modo==="limpar"?" checked":"")+'> Excluir todo o conteúdo atual das versões (PDFs e pastas V01, V02...) e gravar só as enviadas. A senha e os Anexos são mantidos.</label></div>'+
+      '<label class="rd"><input type="radio" name="modo" value="limpar"'+(CAD.modo==="limpar"?" checked":"")+'> Excluir todo o conteúdo atual das versões (PDFs, pastas V01, V02... e a V99 com a posição salva pelo cliente) e gravar só as enviadas. A senha e os Anexos são mantidos.</label></div>'+
     '<button type="button" onclick="irPdfs()">Próximo: PDFs das versões</button> '+
     '<button type="button" class="sec2" onclick="irAnexos()">Pular versões (só anexos)</button>';
   }
