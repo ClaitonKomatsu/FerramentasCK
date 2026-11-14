@@ -37,6 +37,8 @@ h1{font-size:20px;margin:0 0 4px}
 .mpainel .anxs{max-height:none}
 
 /* ---- botão Anexos, redes sociais e janelas de anexos ---- */
+button.anxbtn.rec{margin-left:6px;border-color:var(--line);color:var(--mut)}
+button.anxbtn.rec:hover{border-color:var(--acc);color:var(--acc)}
 .anxbtn{display:inline-flex;align-items:center;gap:6px;margin:4px 0 6px;border:1px solid var(--acc);background:#fff;color:var(--acc);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.04em;cursor:pointer}
 .anxbtn svg{width:15px;height:15px}
 .anxbtn:hover{background:var(--accs)}
@@ -461,7 +463,7 @@ th[data-sort].on .si{opacity:1}
   <div id="mlist"></div>
 </div>
 
-<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. Ao usar "Aplicar a todos", todas as peças passam para essa versão com as quantidades do PDF dela (inclusive as que estavam com quantidade 0); a peça que não consta na versão aplicada mantém a versão e a quantidade que já estavam escolhidas. Cada item sempre tem uma versão marcada, ou fica fora do valor quando a quantidade é 0. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão (com as quantidades originais). Os botões − e + da coluna Qtde mudam a quantidade da peça em todas as versões (0 exclui a peça do valor; + volta a incluir): o valor é recalculado pelo preço unitário de cada versão e o número fica destacado; o quadro de cada versão passa a mostrar também o valor original do PDF. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
+<div class="note">"Não consta" indica peça que não foi orçada naquela versão e não pode ser escolhida. RECOMEÇAR volta tudo à posição inicial (todas as versões, escolha padrão, quantidades dos PDFs), descartando a posição salva. Ao usar "Aplicar a todos", todas as peças voltam às quantidades dos PDFs (inclusive as que estavam com quantidade 0) e passam para essa versão; a peça que não consta nela fica na versão mais alta em que consta. Cada item sempre tem uma versão marcada, ou fica fora do valor quando a quantidade é 0. Por padrão vem marcada a Versão 1; se a peça não constar nela, a Versão 2, e assim por diante. ENVIAR gera 2 PDFs: a Lista dos Itens Selecionados e a Nova Versão do Orçamento no padrão Perfecta, só com as opções escolhidas. Use "Versões exibidas" para escolher quais versões aparecem: as peças das versões desmarcadas saem da tabela e dos totais (se a peça existir em outra versão marcada, passa a usar essa versão). O botão ANEXOS mostra os arquivos da proposta para visualizar (PDF, vídeo, imagem e texto) ou baixar, e o botão CARREGAR, dentro dele, envia novos arquivos (até 25 MB cada) para a pasta Anexos; se já existir um arquivo com o mesmo nome, é pedida confirmação para substituir o original. As versões exibidas, a escolha de cada item, a ordenação e as imagens abertas são salvas automaticamente a cada alteração e voltam na próxima vez que a proposta for aberta. "Baixar proposta", em cada quadro, baixa o PDF completo daquela versão (com as quantidades originais). Os botões − e + da coluna Qtde mudam a quantidade da peça em todas as versões (0 exclui a peça do valor; + volta a incluir): o valor é recalculado pelo preço unitário de cada versão e o número fica destacado; o quadro de cada versão passa a mostrar também o valor original do PDF. O ícone de olho ao lado da lixeira mostra as imagens de todas as versões da peça (o olho do título abre ou fecha todas). Clique em Pos., Tipo ou Localização para ordenar (crescente, decrescente, original). O ícone de olho em cada versão abre a imagem da peça daquela versão. A coluna Pos. segue a numeração da última versão; a posição de cada peça em cada PDF aparece dentro da célula. Diferenças calculadas sempre em relação à Versão 1 (Original): vermelho indica valor maior, verde indica economia. Item excluído conta como já decidido na quantidade selecionada, mas seu valor não é somado.</div>
 </div>
 
 <div id="env" role="dialog" aria-modal="true" aria-label="Enviar orçamento">
@@ -1120,6 +1122,7 @@ document.addEventListener("click",function(ev){
   var pd=t.closest("[data-pdf]");if(pd){baixarProposta(+pd.getAttribute("data-pdf"));return}
   var ir=t.closest("[data-imgrow]");if(ir){ev.preventDefault();alternarImagens(+ir.getAttribute("data-imgrow"));return}
   if(t.closest("[data-imgall]")){alternarTodasImagens();return}
+  if(t.closest("[data-recomecar]")){recomecar();return}
   if(t.closest("[data-env]")){abrirEnvio();return}
   var so=t.closest("[data-sort]");if(so){ordenar(so.getAttribute("data-sort"));return}
   var ac=t.closest("[data-act]");
@@ -1603,11 +1606,14 @@ function igualAoPdf(x,q){return x.orig.v.every(function(b){return !b[1]||b[1]===
 function definirQtd(x,q){if(igualAoPdf(x,q))delete QTD[x.k];else QTD[x.k]=q;aplicarQtdLinha(x)}
 function recalcularQtds(){QTDE_VERSAO=DADOS.map(function(x){return x.v.map(function(o){return o[3]})});
   QT_TOTAL=DADOS.reduce(function(s,y){return s+y.qtd},0);BASE=tot(0)}
-// APLICAR A TODOS: escolhe a versão em todas as peças em que ela consta e volta às quantidades do PDF dessa versão
-// (inclusive as peças que estavam com quantidade 0). As peças que não constam nela ficam como estão.
+// APLICAR A TODOS: todas as peças voltam às quantidades dos PDFs (inclusive as que estavam com quantidade 0).
+// Cada peça fica na versão aplicada; se não constar nela, na versão mais alta em que consta.
 function aplicarATodos(v){
-  DADOS.forEach(function(x,r){if(!x.orig||!x.orig.v[v][1])return;
-    delete QTD[x.k];aplicarQtdLinha(x);sel[r]=v;AUTO[r]=0});
+  DADOS.forEach(function(x,r){if(!x.orig)return;
+    delete QTD[x.k];aplicarQtdLinha(x);AUTO[r]=0;
+    if(x.orig.v[v][1]){sel[r]=v;return}
+    for(var i=NV-1;i>=0;i--)if(x.orig.v[i][1]){sel[r]=i;return}
+    sel[r]=EXC});
   recalcularQtds();render()}
 function algumaQtdAlterada(){return DADOS.some(qtdAlterada)}
 function totOriginal(i){return DADOS.reduce(function(s,x){return s+(x.orig?x.orig.v[i][0]:x.v[i][0])},0)}
@@ -1719,7 +1725,9 @@ function painelTopo(){
   var an=(SESSAO&&SESSAO.anexos)||[];
   return '<div class="pt"><div class="ptt">Versões exibidas</div><div class="vchks">'+LIDAS.map(function(v,i){
       return '<label class="vchk'+(VIS[i]?' on':'')+'"><input type="checkbox" data-ver="'+i+'"'+(VIS[i]?' checked':'')+'> Versão '+(i+1)+'</label>'}).join("")+'</div>'+
-    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button></div>'}
+    '<button type="button" class="anxbtn" data-anxs="1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5l-8.6 8.6a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>ANEXOS ('+an.length+')</button>'+
+    '<button type="button" class="anxbtn rec" data-recomecar="1" title="Volta tudo à posição inicial, como na primeira vez que a proposta foi aberta">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>RECOMEÇAR</button></div>'}
 function tamArq(n){n=+n||0;return n>1048576?(n/1048576).toFixed(1).replace(".",",")+" MB":Math.max(1,Math.round(n/1024))+" KB"}
 
 /* ---------- anexos: lista, visualização (PDF, vídeo, imagem, texto) e download ---------- */
@@ -1905,6 +1913,17 @@ function aplicarEstado(est){try{
   render();var abertas=[];DADOS.forEach(function(x,r){if(VERIMG[x.k])abertas.push(r)});if(abertas.length)buscarImagensLinha(abertas)}
   catch(e){console.error(e)}}
 function infoSalvo(){return SESSAO&&SESSAO.estado&&SESSAO.estado.salvoEm?"Salvo em "+SESSAO.estado.salvoEm:"Ainda não salvo"}
+
+
+/* ---------- RECOMEÇAR: ignora a posição salva e mostra a proposta como na primeira abertura ----------
+   Todas as versões exibidas, escolha padrão de cada item, quantidades dos PDFs, sem imagens abertas e ordem original.
+   O salvamento automático continua: a posição inicial passa a ser a salva, e cada nova alteração é gravada de novo. */
+function recomecar(){
+  perguntar("Voltar tudo à <b>posição inicial</b>, como na primeira vez que a proposta foi aberta?<br>As escolhas e quantidades atuais serão descartadas.","Recomeçar","Cancelar").then(function(sim){
+    if(!sim||!SESSAO)return;
+    VIS=LIDAS.map(function(){return true});QTD={};VERIMG={};ORD={c:null,d:1};
+    montarDados(LIDAS);iniciar();window.scrollTo(0,0);
+    toast("Posição inicial restaurada. As próximas alterações serão salvas automaticamente.")})}
 
 document.getElementById("lglogo").src=LOGO;document.getElementById("aprlogo").src=LOGO;
 lgInicio();
