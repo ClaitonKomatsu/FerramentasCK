@@ -199,6 +199,9 @@ body:not(.ok) .wrap{display:none}
 .qtc button:disabled{opacity:.35;cursor:default}
 .qtc b{min-width:20px;text-align:center;font-variant-numeric:tabular-nums}
 .qtc.alt b{color:#fff;background:var(--acc);border-radius:5px;padding:1px 4px}
+.dm{font-size:11.5px;font-weight:600;color:var(--ink);margin:1px 0}
+.dm.dif{color:var(--acc)}
+.dm.dif::before{content:"≠ ";font-weight:700}
 .qtc.zero b{color:#fff;background:var(--up);border-radius:5px;padding:1px 4px}
 .pna.px{color:var(--up)}
 td.qtdc{text-align:center!important}
@@ -222,7 +225,7 @@ td.qtdc{text-align:center!important}
 #mob{display:none}
 .wrap{max-width:1600px;margin:0 auto;padding:24px}
 table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;table-layout:fixed;background:var(--card);border:1px solid var(--line);border-radius:10px}
-col.c-pos{width:44px}col.c-tipo{width:64px}col.c-dim{width:70px}col.c-qtd{width:78px}col.c-exc{width:50px}col.c-v{width:15.5%}col.c-esc{width:12%}
+col.c-pos{width:44px}col.c-tipo{width:64px}col.c-qtd{width:78px}col.c-exc{width:50px}col.c-v{width:15.5%}col.c-esc{width:12%}
 th,td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
 /* cabeçalho congelado: cada th é "sticky" com o topo calculado em JS (funciona em Chrome, Edge, Firefox e Safari) */
 thead th{position:-webkit-sticky;position:sticky;z-index:10;background:#fafbfc;font-size:12px;color:var(--mut)}
@@ -446,7 +449,7 @@ th[data-sort].on .si{opacity:1}
 <colgroup id="cols"></colgroup>
 <thead>
 <tr class="tot" id="totais"></tr>
-<tr id="hr2"><th data-sort="pos" title="Ordenar por posição">Pos.<span class="si"></span></th><th data-sort="tipo" title="Ordenar por tipo">Tipo<span class="si"></span></th><th data-sort="loc" title="Ordenar por localização">Localização<span class="si"></span></th><th class="num">Largura (mm)</th><th class="num">Altura (mm)</th><th class="num">Qtde</th><th class="imgh" data-imgall="1" title="Mostrar ou ocultar as imagens de todas as peças" aria-label="Imagens"><span class="olhoh"></span></th>
+<tr id="hr2"><th data-sort="pos" title="Ordenar por posição">Pos.<span class="si"></span></th><th data-sort="tipo" title="Ordenar por tipo">Tipo<span class="si"></span></th><th data-sort="loc" title="Ordenar por localização">Localização<span class="si"></span></th><th class="num">Qtde</th><th class="imgh" data-imgall="1" title="Mostrar ou ocultar as imagens de todas as peças" aria-label="Imagens"><span class="olhoh"></span></th>
 <th class="esc num">Valor</th></tr>
 </thead>
 <tbody id="body"></tbody>
@@ -1025,13 +1028,13 @@ function renderBody(){
     var opts=x.v.map(function(o,i){var on=sel[r]===i,n=na(r,i);
       return '<td class="opt vl'+(on?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"'+(n?' aria-disabled="true" title="Peça não orçada nesta versão: opção indisponível"':'')+'>'+(vi&&!n?figImg(r,i):'')+
         '<div class="pr"><input type="radio" tabindex="-1" '+(on?'checked':'')+(n?' disabled':'')+'>'+(n?'Não consta':brl(o[0]))+(n?'':olho(r,i))+'</div>'+
-        '<div class="md">'+o[1]+'</div>'+(n?'':'<div class="vd">'+o[2]+'</div><div class="qd">Pos. '+o[4]+' · Qtde: '+o[3]+'</div>'+detHtml(o))+
+        '<div class="md">'+o[1]+'</div>'+(n?'':dimHtml(x,i)+'<div class="vd">'+o[2]+'</div><div class="qd">Pos. '+o[4]+' · Qtde: '+o[3]+'</div>'+detHtml(o))+
         (i>0?'<div class="df">'+dif(o[0]-x.v[0][0])+'</div>':'')+'</td>'}).join("");
     var esc=au?'<span class="nc">Não consta</span><div class="md">na '+VERSOES[au-1].n+' · não somado</div>'
               :ex?'<span class="xl">Excluído</span><div class="md">não somado</div>'
               :brl(x.v[sel[r]][0])+'<div class="md">'+VERSOES[sel[r]].n+' · Qtde '+QTDE_VERSAO[r][sel[r]]+'</div>';
     return '<tr class="'+(ex?'rowx':au?'rowna':'')+'"><td>'+x.pos+'</td><td>'+x.tipo+'</td><td class="p-loc">'+x.loc+'</td>'+
-      '<td class="num">'+num(x.larg)+'</td><td class="num">'+num(x.alt)+'</td><td class="num qtdc">'+qtdHtml(r)+'</td>'+
+      '<td class="num qtdc">'+qtdHtml(r)+'</td>'+
       '<td class="imgt'+(vi?' on':'')+'" data-imgrow="'+r+'" title="'+(vi?'Ocultar':'Mostrar')+' as imagens das versões desta peça"><span class="tg">'+OLHO+'</span></td>'+
       opts+'<td class="chosen num esc">'+esc+'</td></tr>'}).join("");
 }
@@ -1047,7 +1050,7 @@ function cardsVersoes(){
 }
 function renderTotais(){
   var e=excl(),c=cardsVersoes();
-  var h='<th colspan="7"><div class="topo">'+painelTopo()+'<div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
+  var h='<th colspan="5"><div class="topo">'+painelTopo()+'<div class="box info"><div class="lbl">Total geral</div><div class="val">'+DADOS.length+' itens · '+un(QT_TOTAL)+'</div>'+
     '<div class="ex">'+(e.n?'Excluídos: '+e.n+' '+(e.n===1?'item':'itens')+' ('+un(e.q)+')':'Nenhum item excluído')+'</div>'+(naoConsta()?'<div class="nx">Não constam na versão aplicada: '+naoConsta()+'</div>':'')+'</div></div></th>';
   h+=c.map(function(b){return '<th>'+b+'</th>'}).join("");
   h+='<th><div class="box vbox custom"><div class="lbl">Personalizada</div><div class="nm">Escolhidas</div>'+
@@ -1088,14 +1091,14 @@ function renderMobile(){
   document.getElementById("mlist").innerHTML=ordem().map(function(r){var x=DADOS[r],ex=sel[r]===EXC;
     var ops=x.v.map(function(o,i){var n=na(r,i);
       return '<button type="button" class="po'+(sel[r]===i?' sel':'')+(n?' na':'')+'" data-r="'+r+'" data-i="'+i+'"'+(n?' disabled aria-disabled="true"':'')+'><span class="rd"></span>'+
-        '<span class="pi">'+(imgsAbertas(r)&&!n?figImg(r,i).replace(/<div/g,'<span').replace(/<\/div>/g,'</span>'):'')+'<span class="pv">'+VERSOES[i].n+' · '+VERSOES[i].p+' · '+VERSOES[i].d+'</span><br><span class="pm">'+o[1]+(n?'':' · Qtde '+o[3])+'</span>'+
-        (n?'':'<br><span class="vd">'+o[2]+'</span>'+detHtml(o).replace(/<div/g,'<span style="display:block"').replace(/<\/div>/g,'</span>'))+'</span>'+
+        '<span class="pi">'+(imgsAbertas(r)&&!n?figImg(r,i).replace(/<div/g,'<span').replace(/<\/div>/g,'</span>'):'')+'<span class="pv">'+VERSOES[i].n+' · '+VERSOES[i].p+' · '+VERSOES[i].d+'</span><br><span class="pm">'+o[1]+(n?'':' · Qtde '+o[3])+'</span>'+(n?'':dimHtml(x,i).replace('<div','<span style="display:block"').replace('</div>','</span>'))+
+        (n?'':'<span class="vd" style="display:block">'+o[2]+'</span>'+detHtml(o).replace(/<div/g,'<span style="display:block"').replace(/<\/div>/g,'</span>'))+'</span>'+
         (n?'':olho(r,i,"span"))+'<span><span class="pr">'+(n?'Não consta':brl(o[0]))+'</span>'+(i>0?'<br><span class="df">'+dif(o[0]-x.v[0][0])+'</span>':'')+'</span></button>'}).join("");
     var au=AUTO[r];if(au)ex=false;
     if(ex)ops='<div class="pna px">Excluído do valor (quantidade 0). Use + para incluir de novo.</div>'+ops;
     if(au)ops='<div class="pna">Não consta na '+VERSOES[au-1].n+' (não somado). Escolha outra versão ou zere a quantidade.</div>'+ops;
     return '<div class="pc'+(ex?' rowx':au?' rowna':'')+'"><div class="ph"><button type="button" class="mimg'+(imgsAbertas(r)?' on':'')+'" data-imgrow="'+r+'" aria-label="Imagens das versões">'+OLHO+'</button><b>'+x.pos+' · '+x.tipo+' · <span class="loc">'+x.loc+'</span></b>'+
-      '<div class="pd">'+num(x.larg)+' × '+num(x.alt)+' mm · Qtde '+qtdHtml(r)+'</div></div>'+ops+'</div>'}).join("");
+      '<div class="pd">Qtde '+qtdHtml(r)+'</div></div>'+ops+'</div>'}).join("");
 }
 
 function render(){
@@ -1158,7 +1161,7 @@ function imgUrl(id,w){return "https://drive.google.com/thumbnail?id="+id+"&sz=w"
 function hoje(){var d=new Date(),p=function(n){return (n<10?"0":"")+n};
   return {br:p(d.getDate())+"/"+p(d.getMonth()+1)+"/"+d.getFullYear()+" "+p(d.getHours())+":"+p(d.getMinutes()),
           iso:d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate())}}
-function m2(x,i){return x.larg*x.alt*QTDE_VERSAO[DADOS.indexOf(x)][i]/1e6}
+function m2(x,i){var o=x.v[i];return (o[11]||x.larg)*(o[12]||x.alt)*QTDE_VERSAO[DADOS.indexOf(x)][i]/1e6}
 function m2br(v){return v.toFixed(2).replace(".",",")}
 
 // Itens que entram na composição (escolhidos, não excluídos e que constam na versão escolhida)
@@ -1186,7 +1189,7 @@ function desenharImagem(cb){
     var cols=[["Pos.",48],["Tipo",92],["Localização",220],["Dimensões",112],["Qtde",48],["Versão",120],["Modelo",370],["Valor",150]];
     var cv=document.createElement("canvas"),ctx=cv.getContext("2d");
     var linhas=DADOS.map(function(x,r){var i=sel[r],au=AUTO[r],ex=i===EXC&&!au,n=!!au,o=i===EXC?null:x.v[i];
-      return {pos:String(r+1),tipo:x.tipo,loc:x.loc,dim:num(x.larg)+" × "+num(x.alt),qtd:ex||n?"-":String(o[3]),
+      return {pos:String(r+1),tipo:x.tipo,loc:x.loc,dim:o?num(o[11]||x.larg)+" × "+num(o[12]||x.alt):num(x.larg)+" × "+num(x.alt),qtd:ex||n?"-":String(o[3]),
         ver:ex?"Excluído":n?"Não consta":VERSOES[i].n,mod:ex?"":n?"Não orçado na "+VERSOES[au-1].n:o[1],
         val:ex||n?"não somado":brl(o[0]),apag:ex||n}});
     ctx.font="14px "+F;
@@ -1400,7 +1403,8 @@ function agruparLinhas(ws,tol){var L=[];
 function numBR(s){return parseFloat(String(s).replace(/\./g,"").replace(",","."))}
 var RE_TIPO=/^[A-Z]{1,3}\d+[A-Z]?([\/+&,;-][A-Z]{0,3}\d+[A-Z]?)*$/;
 // TIPO como está no PDF (ex.: J02/J03), só ajustando espaços em volta dos separadores
-function limpaTipo(s){return String(s||"").replace(/\s*([\/+&,;-])\s*/g,"$1").replace(/\s+/g," ").trim()}
+// a cota do desenho (ex.: "3.000") às vezes fica na mesma faixa do TIPO: números no formato de milhar no fim são descartados
+function limpaTipo(s){return String(s||"").replace(/\s*([\/+&,;-])\s*/g,"$1").replace(/\s+/g," ").trim().replace(/(\s+\d{1,3}(\.\d{3})+)+$/,"")}
 // nome de arquivo da imagem: caracteres proibidos em nome de arquivo e espaços viram "+" (J02/J03 -> J02+J03)
 function arqTipo(t){return limpaTipo(t).replace(/[\\\/:*?"<>|\s]+/g,"+").replace(/\++/g,"+").replace(/^\+|\+$/g,"")}
 
@@ -1658,7 +1662,9 @@ function montarDados(lidas){
   var mapas=lidas.map(function(v,i){var nome=semExt(v.arq).toUpperCase(),n=numVer(nome),
     pasta=pastas.filter(function(p){return p.toUpperCase()===nome})[0]||(n===null?null:pastas.filter(function(p){return numVer(p)===n})[0]),m={};
     (imgs[pasta]||[]).forEach(function(f){m[arqTipo(semExt(f.nome)).toUpperCase()]=f.id});return m});
-  // chave de cada peça: tipo + ocorrência (permite o mesmo tipo repetido na mesma versão)
+  // TIPO limpo (corrige leituras antigas que grudaram a cota do desenho, ex.: "C13 3.000" -> "C13"); o original fica para achar a imagem
+  lidas.forEach(function(v){v.itens.forEach(function(it){if(it.tipoPdf==null)it.tipoPdf=it.tipo;it.tipo=limpaTipo(it.tipoPdf)})});
+  // chave de cada peça: tipo + ocorrência (permite o mesmo tipo repetido na mesma versão). Medidas diferentes ficam na mesma linha.
   lidas.forEach(function(v){var c={};v.itens.forEach(function(it){c[it.tipo]=(c[it.tipo]||0)+1;it.k=it.tipo+"#"+c[it.tipo]})});
   // ordem: a da última versão; peças que só existem em versões anteriores entram logo após a peça que as precede nelas
   var ordemK=lidas[nv-1].itens.map(function(it){return it.k});
@@ -1669,7 +1675,7 @@ function montarDados(lidas){
     var ult=null,ui=-1;por.forEach(function(it,i){if(it){ult=it;ui=i}});
     var loc="";for(var i=nv-1;i>=0;i--)if(por[i]&&por[i].loc){loc=por[i].loc;break}
     var v=por.map(function(it,i){if(!it)return [0,"Peça não orçada nesta versão","",0,"","","","","","","",0,0];
-      var img=mapas[i][arqTipo(it.tipo).toUpperCase()]||"";   // imagem com o nome do TIPO (J02/J03 -> J02+J03.png)
+      var img=mapas[i][arqTipo(it.tipo).toUpperCase()]||mapas[i][arqTipo(it.tipoPdf).toUpperCase()]||"";   // imagem com o nome do TIPO (J02/J03 -> J02+J03.png)
       return [it.total,sc(it.desc),vd(it.vidro),it.qtd,it.pos,img,it.cor,it.det,it.desc,it.vidro,img,it.larg,it.alt]});
     return {k:k,pos:ui===nv-1?ult.pos:ult.pos+" (V"+(lidas[ui].idx+1)+")",tipo:ult.tipo,loc:loc,larg:ult.larg,alt:ult.alt,
       qtd:Math.max.apply(null,por.map(function(it){return it?it.qtd:0})),v:v}});
@@ -1813,8 +1819,8 @@ function iniciar(){
   var cli=tituloNome(CLIENTE.nome);
   document.title="Comparativo de Orçamento, "+cli+", Perfecta Esquadrias";
   document.getElementById("cliente").innerHTML='<b>Cliente: '+esc(cli)+'</b> · Obra: '+esc(CLIENTE.end)+' · Propostas '+esc(VERSOES.map(function(v){return v.p}).join(", "));
-  var cw=Math.max(10,Math.min(15,60/NV));
-  document.getElementById("cols").innerHTML='<col class="c-pos"><col class="c-tipo"><col><col class="c-dim"><col class="c-dim"><col class="c-qtd"><col class="c-exc">'+
+  var cw=Math.max(10,Math.min(15,58/NV));
+  document.getElementById("cols").innerHTML='<col class="c-pos"><col class="c-tipo"><col class="c-loc"><col class="c-qtd"><col class="c-exc">'+
     VERSOES.map(function(){return '<col style="width:'+cw+'%">'}).join("")+'<col class="c-esc">';
   var hr=document.getElementById("hr2");[].slice.call(hr.querySelectorAll("th.vl")).forEach(function(t){t.remove()});
   hr.lastElementChild.insertAdjacentHTML("beforebegin",VERSOES.map(function(){return '<th class="vl">Valor / Modelo</th>'}).join(""));
@@ -1924,6 +1930,12 @@ function recomecar(){
     VIS=LIDAS.map(function(){return true});QTD={};VERIMG={};ORD={c:null,d:1};
     montarDados(LIDAS);iniciar();window.scrollTo(0,0);
     toast("Posição inicial restaurada. As próximas alterações serão salvas automaticamente.")})}
+
+/* medidas de cada versão (a mesma peça pode ter medidas diferentes entre versões) */
+function dimTxt(o){return o[11]&&o[12]?num(o[11])+" × "+num(o[12])+" mm":""}
+function dimDifere(x,i){var d=dimTxt(x.v[i]);return x.v.some(function(o,j){return j!==i&&o[3]>0&&dimTxt(o)&&dimTxt(o)!==d})}
+function dimHtml(x,i){var d=dimTxt(x.v[i]);if(!d)return "";var dif=dimDifere(x,i);
+  return '<div class="dm'+(dif?' dif':'')+'"'+(dif?' title="Medidas diferentes entre as versões"':'')+'>'+d+'</div>'}
 
 document.getElementById("lglogo").src=LOGO;document.getElementById("aprlogo").src=LOGO;
 lgInicio();
